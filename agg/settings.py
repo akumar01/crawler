@@ -66,10 +66,11 @@ ROBOTSTXT_OBEY = True
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
 #    'agg.pipelines.AggPipeline': 300,
-	'scrapy.pipelines.files.FilesPipeline' : 1
+	'agg.pipelines.AggPipeline' : 0,
+	'scrapy.pipelines.files.FilesPipeline' : 1,
 }
 # File download location
-FILES_STORE = '/media/sf_Shared/pdfs'
+FILES_STORE = 'C:/Users/Ankit/Documents/crawler_project/crawler/agg/files'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html

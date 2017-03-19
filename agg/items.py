@@ -7,8 +7,9 @@
 
 import scrapy
 
-
-class AggItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class JournalArticle(scrapy.Item):
+	title = scrapy.Field()
+	authors = scrapy.Field()
+	tags = scrapy.Field()
+	file_urls = scrapy.Field()
+	files = scrapy.Field()

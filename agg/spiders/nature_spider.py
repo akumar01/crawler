@@ -1,4 +1,5 @@
 import scrapy
+from agg.items import JournalArticle
 
 class NatureSpider(scrapy.Spider):
 	name = "nature_news"
@@ -23,13 +24,18 @@ class NatureSpider(scrapy.Spider):
 			except:
 				continue
 
-			yield {
-				'title' : a_tags[0],
-				'author' : article.css("ul.authors").css("li::text").extract(),
-				'tags' : a_tags[PDF_ind + 1:],
+			news_article = JournalArticle()
+			news_article["title"] = a_tags[0]
+			news_article["authors"] = article.css("ul.authors").css("li::text").extract()
+			news_article["tags"] = a_tags[PDF_ind + 1]
+			pdf_url = article.css('a::attr(href)')[PDF_ind].extract()
+			news_article["file_urls"] = ["http://www.nature.com" +\
+									article.css('a::attr(href)')[PDF_ind].extract()]
+#			news_article["pdf_url"] = 
+#			yield {
+#				'title' : a_tags[0],
+#				'author' : article.css("ul.authors").css("li::text").extract(),
+#				'tags' : a_tags[PDF_ind + 1:],
 #				'file_urls' : 
-			}
-
-		with open(filename, 'wb') as f:
-			f.write(response.body)
-		self.log('Saved file %s' % filename)
+#			}
+			yield news_article
