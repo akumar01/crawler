@@ -1,4 +1,5 @@
 import scrapy
+import datetime
 from agg.items import JournalArticle
 
 class NatureSpider(scrapy.Spider):
@@ -25,12 +26,20 @@ class NatureSpider(scrapy.Spider):
 				continue
 
 			news_article = JournalArticle()
+			# Some pipeline methods do not take the spider as an argument, but nonetheless
+			# need to identify which spider created the item for organizational purposes
+			news_article["spider"] = self.name
 			news_article["title"] = a_tags[0]
 			news_article["authors"] = article.css("ul.authors").css("li::text").extract()
 			news_article["tags"] = a_tags[PDF_ind + 1]
 			pdf_url = article.css('a::attr(href)')[PDF_ind].extract()
 			news_article["file_urls"] = ["http://www.nature.com" +\
 									article.css('a::attr(href)')[PDF_ind].extract()]
+
+			# Continue to follow links backwards in time to the date specified
+			current_date = 
+
+
 #			news_article["pdf_url"] = 
 #			yield {
 #				'title' : a_tags[0],

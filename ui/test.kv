@@ -1,0 +1,57 @@
+#:kivy 1.9.0
+
+<TopRow>:
+    size_hint: (1, 0.1)
+    BoxLayout
+        size: root.size
+        pos: root.pos
+        id: boxlayout_h
+        orientation: 'horizontal'
+        Label:
+            text: "Ankit's Crawler Feed"
+        Button:
+            text: 'Sync'
+            group: 'test'
+
+<PlayerRecord>:
+    size_hint_y: None
+    height: '30dp'
+    width: '100dp'
+    text_size: self.width, None
+    padding: 10, 10
+    canvas.before:
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<TableHeader>
+    size_hint_y: None
+    height: '30dp'
+    width: '100dp'
+    text_size: self.width, None
+    padding: 10, 10
+    canvas.before:
+        Color:
+            rgb: 0.5, 0.5, 0.5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+<AnchorContainer>:
+    size_hint_x: 1
+    ScrollView:
+        bar_color: [1, 1, 1, 1]
+        MyGrid:
+            cols: 3
+            height:self.minimum_height
+            size_hint: (1, None)            
+            spacing: '1dp'
+
+
+<ContainerGrid>:
+    rows: 2
+    TopRow:
+    AnchorContainer:

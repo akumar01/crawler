@@ -8,6 +8,7 @@
 import scrapy
 
 class JournalArticle(scrapy.Item):
+	spider = scrapy.Field()
 	title = scrapy.Field()
 	authors = scrapy.Field()
 	tags = scrapy.Field()

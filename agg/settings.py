@@ -66,9 +66,9 @@ ROBOTSTXT_OBEY = True
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
 #    'agg.pipelines.AggPipeline': 300,
-	'scrapy.pipelines.files.FilesPipeline' : 0,
+	'agg.pipelines.DownloadPDFS' : 0,
 	'agg.pipelines.AggPipeline' : 1,
-
+	'agg.pipelines.JsonPipeline' : 2,
 }
 # File download location
 FILES_STORE = 'C:/Users/Ankit/Documents/crawler_project/crawler/agg/files'
