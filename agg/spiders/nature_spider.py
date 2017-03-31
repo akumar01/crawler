@@ -1,6 +1,6 @@
 import scrapy
 import datetime
-from agg.items import JournalArticle
+from ..items import JournalArticle
 
 class NatureSpider(scrapy.Spider):
 	name = "nature_news"
@@ -37,7 +37,7 @@ class NatureSpider(scrapy.Spider):
 									article.css('a::attr(href)')[PDF_ind].extract()]
 
 			# Continue to follow links backwards in time to the date specified
-			current_date = 
+			# current_date = 
 
 
 #			news_article["pdf_url"] = 

@@ -9,15 +9,33 @@ import os
 import hashlib
 import datetime
 import scrapy
+import logging
 from scrapy.pipelines.files import FilesPipeline
 from scrapy.exporters import JsonLinesItemExporter
 from agg.items import JournalArticle
 
 class AggPipeline(object):
     def process_item(self, item, spider):
+        # Strip item fields of leading and trailing blank space:
+        item = self.clean_spaces(item, spider)
         # Move downloaded files to appropriate directory and rename them:
-        self.move_files(item, spider)
+        item = self.move_files(item, spider)
+        
+        # Make sure if any of title, tags, or author is empty, set it to a blank string
+        if(not item["title"]):
+            item["title"] = ""
+        if(not item["authors"]):
+            item["authors"] = ""
+        if(not item["tags"]):
+            item["tags"] = ""
         return item
+
+    def clean_spaces(self, item, spider):
+        # use isinstance(..., basestring) to check if the value is a string
+        for key in item.keys():
+            if(isinstance(item[key], basestring)):
+                item[key] = item[key].strip()
+        return item 
 
     def move_files(self, item, spider):
         # First, make sure that the directory we wish to move the files to exists. 
@@ -38,6 +56,7 @@ class AggPipeline(object):
             # Set the item file path to the new location and name
             item["files"][f]["path"] = "%s/%s" % (spider.name, filename)
             f+=1
+        return item
 # Extend the filespipeline so that we do not re-download files that have been already
 # been downloaded.
 class DownloadPDFS(FilesPipeline):
@@ -48,7 +67,7 @@ class DownloadPDFS(FilesPipeline):
             if(not os.path.exists("files/%s/%s.pdf" % (item["spider"], filename))):
                 yield scrapy.Request(file_url)
             else: 
-                print("File already exists!\n")
+                logging.log(logging.INFO, 'File already exists!')
 
 # Used for exporting items to json
 class JsonPipeline(object):

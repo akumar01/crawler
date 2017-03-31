@@ -2,7 +2,8 @@
 
 <TopRow>:
     size_hint: (1, 0.1)
-    BoxLayout
+    BoxLayout:
+        id: top_box
         size: root.size
         pos: root.pos
         id: boxlayout_h
@@ -10,14 +11,21 @@
         Label:
             text: "Ankit's Crawler Feed"
         Button:
+            id: sync_button
             text: 'Sync'
             group: 'test'
-
-<PlayerRecord>:
+            on_press: root.schedule_sync()
+        Label:
+            text: 'Last updated:'
+            text_size: self.size
+            halign: 'left'
+            padding: 5, 18
+<TableItem>:
     size_hint_y: None
     height: '30dp'
     width: '100dp'
     text_size: self.width, None
+    height: self.texture_size[1]
     padding: 10, 10
     canvas.before:
         Color:
@@ -26,11 +34,12 @@
             pos: self.pos
             size: self.size
 
-<TableHeader>
+<TableHeader>:
     size_hint_y: None
     height: '30dp'
     width: '100dp'
     text_size: self.width, None
+    height: self.texture_size[1]
     padding: 10, 10
     canvas.before:
         Color:
@@ -39,19 +48,25 @@
             pos: self.pos
             size: self.size
 
-
 <AnchorContainer>:
+    scroll_view: scroll_view
     size_hint_x: 1
-    ScrollView:
+    ScrollContainer:
+        id: scroll_view
+        article_table: article_table
         bar_color: [1, 1, 1, 1]
-        MyGrid:
-            cols: 3
+        ArticleTable:
+            id: article_table
+            cols: 4
             height:self.minimum_height
             size_hint: (1, None)            
             spacing: '1dp'
+            
 
-
-<ContainerGrid>:
-    rows: 2
+RootGrid:
+    top_row: top_row
+    bottom_row: bottom_row
     TopRow:
+        id: top_row
     AnchorContainer:
+        id: bottom_row

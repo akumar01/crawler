@@ -14,13 +14,13 @@ BOT_NAME = 'agg'
 SPIDER_MODULES = ['agg.spiders']
 NEWSPIDER_MODULE = 'agg.spiders'
 
-
+LOG_FILE = 'log'
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'agg (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
-
+# LOG_ENABLED = 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
