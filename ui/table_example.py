@@ -9,6 +9,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.image import Image
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
 from scrapy.crawler import Crawler
@@ -36,6 +37,9 @@ class TableHeader(Label):
 class TableItem(Label):
     pass
 
+class HeaderLabel(Label):
+    pass
+
 class ScrollContainer(ScrollView):
     def __init__(self, **kwargs):
         super(ScrollContainer, self).__init__(**kwargs)
@@ -60,18 +64,22 @@ class ArticleTable(GridLayout):
     def display_data(self, data, create_header = 1):
         for i in xrange(len(data)):
             if i < 1 and create_header:
-                row = self.create_header(i)
+                row = self.create_header('Nature News and Views')
             else:
                 row = self.create_rows(data, i)
             for item in row:
                 self.add_widget(item)
 
-    def create_header(self, i):
-        first_column = TableHeader(text='Title')
-        second_column = TableHeader(text='Author(s)') 
-        third_column = TableHeader(text='Tags')
-        fourth_column = TableHeader(text='Link')
-        return [first_column, second_column, third_column, fourth_column]
+    # def create_header(self, i):
+    #     first_column = TableHeader(text='Title')
+    #     second_column = TableHeader(text='Author(s)') 
+    #     third_column = TableHeader(text='Tags')
+    #     fourth_column = TableHeader(text='Link')
+    #     return [first_column, second_column, third_column, fourth_column]
+
+    def create_header(self, src):
+        src_thumbnail = Image(source = 'crawler/agg/media/src_thumbnails/nature_news.png')
+        src_name = HeaderLabel(text = src)
 
     def create_rows(self, data, i):
         first_column = TableItem(text=data[i]['title'])

@@ -1,5 +1,6 @@
 #:kivy 1.9.0
 
+# Top bar of the app
 <TopRow>:
     size_hint: (1, 0.1)
     BoxLayout:
@@ -47,26 +48,35 @@
         Rectangle:
             pos: self.pos
             size: self.size
+# Header for each source. Contains the source thumbnail, title, and last synced
+<SourceHeader>:
+    size_hint_y: None
 
-<AnchorContainer>:
-    scroll_view: scroll_view
-    size_hint_x: 1
-    ScrollContainer:
-        id: scroll_view
-        article_table: article_table
-        bar_color: [1, 1, 1, 1]
-        ArticleTable:
-            id: article_table
-            cols: 4
-            height:self.minimum_height
-            size_hint: (1, None)            
-            spacing: '1dp'
-            
+# Box layout widget encompassing the header and article table
+<SourceContainer>:
+    height: self.minimum_height
+    size_hint: (1, None)
 
+# Article list for a given source
+<ArticleTable>:
+    cols: 2
+    height:self.minimum_height
+    size_hint: (1, None)            
+    spacing: '1dp'
+
+# Scroll View Widget for all the sources to sit in.
+<ScrollContainer>:
+    bar_color: [1, 1, 1, 1]
+    SourceBoxes:
+        id:src_boxes
+        size_hint: 1, None
+        height: self.minimum_height
+
+# 
 RootGrid:
     top_row: top_row
     bottom_row: bottom_row
     TopRow:
         id: top_row
-    AnchorContainer:
+    ScrollContainer:
         id: bottom_row
