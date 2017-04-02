@@ -12,6 +12,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.image import Image
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
+from kivy.properties import StringProperty
 from scrapy.crawler import Crawler
 from scrapy.crawler import CrawlerProcess
 from scrapy.crawler import CrawlerRunner
@@ -29,6 +30,10 @@ import time
 import os
 import sys
 from crawler.crawl_test import do_crawl
+from kivy.core.window import Window
+
+active_sources = ['nature_news']
+
 
 class TableHeader(Label):
     pass
@@ -37,19 +42,42 @@ class TableHeader(Label):
 class TableItem(Label):
     pass
 
-class HeaderLabel(Label):
-    pass
+class ArticleEntry(BoxLayout):
+    title = StringProperty()
+    authors = StringProperty()
+
+    def __init__(self, **kwargs):
+        super(ArticleEntry, self).__init__(**kwargs)
+        self.title = kwargs['title']
+        self.authors = kwargs['authors']
+
+class SourceHeader(Label):
+    def __init__(self, **kwargs):
+        super(SourceHeader, self).__init__(**kwargs)
+        self.text = kwargs['src']
+
+class SourceContainer(GridLayout):
+    def __init__(self, **kwargs):
+        super(SourceContainer, self).__init__(**kwargs)
+        self.add_widget(SourceHeader(src = kwargs['src']))
+        self.add_widget(ArticleTable(src = kwargs['src'], id = 'table'))
+
+class SourceBoxes(GridLayout):
+    def __init__(self, **kwargs):
+        super(SourceBoxes, self).__init__(**kwargs)
+        for src in active_sources:
+            self.add_widget(SourceContainer(src = src, id = src))
 
 class ScrollContainer(ScrollView):
     def __init__(self, **kwargs):
         super(ScrollContainer, self).__init__(**kwargs)
-        self.article_table = ObjectProperty(None)
 
 class ArticleTable(GridLayout):
     update_count = NumericProperty()
 
     def __init__(self, **kwargs):
         super(ArticleTable, self).__init__(**kwargs)
+        self.src = kwargs['src']
         self.fetch_data()
         self.display_data(self.data)
 
@@ -57,18 +85,19 @@ class ArticleTable(GridLayout):
         old_items = self.data
         self.fetch_data()
         new_items = [x for x in self.data if x not in old_items]
-        self.display_data(new_items, 0)
+        self.display_data(new_items)
 
     def fetch_data(self):
-        self.data = read_json.read_data('nature_news')
-    def display_data(self, data, create_header = 1):
-        for i in xrange(len(data)):
-            if i < 1 and create_header:
-                row = self.create_header('Nature News and Views')
-            else:
-                row = self.create_rows(data, i)
-            for item in row:
-                self.add_widget(item)
+        self.data = read_json.read_data(self.src)
+    def display_data(self, data):
+        if len(data) < 1:
+            row = self.empty_message()
+        else:
+            for i in xrange(len(data)):
+                self.add_widget(self.create_rows(data, i))
+
+    def empty_message(self):
+        return Label(text = 'Nothing to see here. Try syncing.')
 
     # def create_header(self, i):
     #     first_column = TableHeader(text='Title')
@@ -77,12 +106,25 @@ class ArticleTable(GridLayout):
     #     fourth_column = TableHeader(text='Link')
     #     return [first_column, second_column, third_column, fourth_column]
 
-    def create_header(self, src):
-        src_thumbnail = Image(source = 'crawler/agg/media/src_thumbnails/nature_news.png')
-        src_name = HeaderLabel(text = src)
+    # def create_header(self, src):
+    #     src_thumbnail = Image(source = 'crawler/agg/media/src_thumbnails/nature_news.png')
+    #     src_name = HeaderLabel(text = src)
+
+    # def create_rows(self, data, i):
+    #     first_column = TableItem(text=data[i]['title'])
+    #     authors = ''
+    #     if(len(data[i]["authors"]) > 1):
+    #         authors += data[i]["authors"][0]
+    #         for author in data[i]["authors"][1:]:
+    #             authors += ", %s" % author
+    #     elif(len(data[i]["authors"]) == 1):
+    #         authors = data[i]["authors"][0]
+    #     second_column = TableItem(text=authors)
+    #     third_column = TableItem(text=data[i]['tags'])
+    #     fourth_column = TableItem(text='PDF')
+    #     return [first_column, second_column, third_column, fourth_column]
 
     def create_rows(self, data, i):
-        first_column = TableItem(text=data[i]['title'])
         authors = ''
         if(len(data[i]["authors"]) > 1):
             authors += data[i]["authors"][0]
@@ -90,10 +132,7 @@ class ArticleTable(GridLayout):
                 authors += ", %s" % author
         elif(len(data[i]["authors"]) == 1):
             authors = data[i]["authors"][0]
-        second_column = TableItem(text=authors)
-        third_column = TableItem(text=data[i]['tags'])
-        fourth_column = TableItem(text='PDF')
-        return [first_column, second_column, third_column, fourth_column]
+        return ArticleEntry(title = data[i]['title'], authors = authors)        
 
 class TopRow(Widget):
     def __init__(self, **kwargs):
@@ -116,20 +155,16 @@ class TopRow(Widget):
 
     @mainthread
     def finish_sync(self, *args):
-        root.bottom_row.scroll_view.article_table.update_count += 1
+        for src_box in root.ids.bottom_row.ids.src_boxes.children:
+            src_box.children[0].update_count += 1
         self.ids.sync_button.disabled = False
         self.ids.sync_button.text = 'Sync'
 
-class AnchorContainer(BoxLayout):
-    def __init__(self, **kwargs):
-        super(AnchorContainer, self).__init__(**kwargs)
-        self.scroll_view = ObjectProperty(None)
 class RootGrid(GridLayout):
     def __init__(self, **kwargs):
         super(RootGrid, self).__init__(**kwargs)
         self.rows = 2
-        self.top_row = ObjectProperty(None)
-        self.bottom_row = ObjectProperty(None)
+
 class TestApp(App):
     def build(self):
         # Allow the root widget, RootGrid, to be globally accessible in python

@@ -21,45 +21,77 @@
             text_size: self.size
             halign: 'left'
             padding: 5, 18
-<TableItem>:
+<ArticleEntry>:
+    orientation: 'horizontal'
+    size: root.size
+    pos: root.pos
     size_hint_y: None
-    height: '30dp'
-    width: '100dp'
-    text_size: self.width, None
-    height: self.texture_size[1]
-    padding: 10, 10
-    canvas.before:
-        Color:
-            rgb: 0.2, 0.2, 0.2
-        Rectangle:
-            pos: self.pos
-            size: self.size
+    height: '60dp'
+    Label:
+        text: "Image Placeholder"
+        size_hint_x: 0.3
+#    width: '100dp'
+    GridLayout:
+        canvas.before:
+            Color:
+                rgb: 0.2, 0.2, 0.2
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
-<TableHeader>:
-    size_hint_y: None
-    height: '30dp'
-    width: '100dp'
-    text_size: self.width, None
-    height: self.texture_size[1]
-    padding: 10, 10
-    canvas.before:
-        Color:
-            rgb: 0.5, 0.5, 0.5
-        Rectangle:
-            pos: self.pos
-            size: self.size
+        rows: 3
+        padding: 5, 2
+        spacing: 1
+        Label:
+            text: root.title
+            text_size: self.size
+            halign: 'left'
+        Label:
+            text: root.authors
+            text_size: self.size
+            halign: 'left'
+        Label:
+            text: 'PDF'
+            text_size: self.size
+            halign: 'left'
+#    text_size: self.width, None
+#    height: self.texture_size[1]
+#    padding: 10, 10
+
+#<TableHeader>:
+#    size_hint_y: None
+#    height: '30dp'
+#    width: '100dp'
+#    text_size: self.width, None
+#    height: self.texture_size[1]
+#    padding: 10, 10
+#    canvas.before:
+#        Color:
+#            rgb: 0.5, 0.5, 0.5
+#        Rectangle:
+#            pos: self.pos
+#            size: self.size
+
+# BoxLayout for all sources:
+#<SourceBoxes>:
+#    height: self.minimum_height
+#    size_hint_y: None
+
 # Header for each source. Contains the source thumbnail, title, and last synced
 <SourceHeader>:
+    id: header
     size_hint_y: None
 
-# Box layout widget encompassing the header and article table
+# Grid layout widget encompassing the header and article table
 <SourceContainer>:
     height: self.minimum_height
-    size_hint: (1, None)
+    size_hint: (0.9, None)
+    rows: 2
 
 # Article list for a given source
 <ArticleTable>:
-    cols: 2
+    id: table
+    cols: 1
     height:self.minimum_height
     size_hint: (1, None)            
     spacing: '1dp'
@@ -67,15 +99,16 @@
 # Scroll View Widget for all the sources to sit in.
 <ScrollContainer>:
     bar_color: [1, 1, 1, 1]
+    do_scroll_y: 1
     SourceBoxes:
+        height: self.minimum_height
+        cols: 1
         id:src_boxes
         size_hint: 1, None
-        height: self.minimum_height
+        padding: 50, 10 
 
 # 
 RootGrid:
-    top_row: top_row
-    bottom_row: bottom_row
     TopRow:
         id: top_row
     ScrollContainer:
