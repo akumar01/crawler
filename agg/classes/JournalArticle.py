@@ -5,3 +5,4 @@ class JournalArticle(scrapy.Item):
 	authors = scrapy.Field()
 	tags = scrapy.Field()
 	pdf_url = scrapy.Field()
+	date_created = scrapy.Field()

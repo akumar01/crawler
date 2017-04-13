@@ -1,0 +1,1002 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0022)https://kivy.org/#home -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script async="" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/widgets.js.download"></script>
+        <title>Kivy: Cross-platform Python Framework for NUI Development</title>
+        
+        <meta name="robots" content="index, follow">
+        <meta name="description" content="Open source Python framework for rapid development of applications
+        that make use of innovative user interfaces, such as multi-touch apps.">
+        <meta name="twitter:site" content="@kivyframework">
+        <meta name="google-site-verification" content="MJm2FgAH_rkrbGvWnTntXs1_qfJPIn3t-6V-eVVj9JI">
+        <meta property="og:title" content="Kivy: Cross-platform Python Framework for NUI">
+        <meta property="og:description" content="Open source Python framework for rapid development of applications
+        that make use of innovative user interfaces, such as multi-touch apps.">
+        <meta property="og:url" content="http://kivy.org/">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:image" content="http://kivy.org/logos/kivy-logo-black-256.png">
+        <meta property="og:image" content="http://kivy.org/slides/kivy13-featured.jpg">
+        <meta property="og:image" content="http://kivy.org/slides/bargenius-featured.jpg">
+        <meta property="og:image" content="http://kivy.org/slides/kaleidoscope-featured.jpg">
+        <meta property="og:image" content="http://kivy.org/slides/planewhite-featured.jpg">
+        <meta property="og:image" content="http://kivy.org/slides/thenobooth-featured.jpg">
+        <meta property="og:image" content="http://kivy.org/slides/thenobooth-featured.jpg">
+        <meta property="og:image" content="http://kivy.org/slides/touchcontinuum-featured.jpg">
+        <meta property="og:image" content="http://kivy.org/slides/touchlive-featured.jpg">
+        <link rel="icon" href="https://kivy.org/images/favicon.png" type="image/png">
+        <link rel="shortcut icon" href="https://kivy.org/favicon.ico">
+        <link rel="stylesheet" href="./Kivy_ Cross-platform Python Framework for NUI Development_files/kivy.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="./Kivy_ Cross-platform Python Framework for NUI Development_files/sprites.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="./Kivy_ Cross-platform Python Framework for NUI Development_files/prettyPhoto.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link href="./Kivy_ Cross-platform Python Framework for NUI Development_files/css" rel="stylesheet" type="text/css">
+        <link href="https://plus.google.com/102482050431251779760/" rel="publisher">
+
+        <script type="text/javascript" async="" defer="" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/pw.js.download"></script><script type="text/javascript" async="" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/plusone.js.download"></script><script type="text/javascript" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/jquery-1.7.1.min.js.download"></script><style type="text/css">
+:root #content > #right > .dose > .dosesingle,
+:root #content > #center > .dose > .dosesingle
+{ display: none !important; }</style>
+        <script type="text/javascript" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/jquery.scrollTo-1.4.2-min.js.download"></script>
+        <script type="text/javascript" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/jquery.prettyPhoto.js.download"></script>
+        <script type="text/javascript" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/jquery.cycle.lite.js.download"></script>
+        <script type="text/javascript" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/jquery.client.js.download"></script>
+        <script type="text/javascript" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/jquery.socialbutton-1.8.0.js.download"></script>
+        <script type="text/javascript" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/kivy.js.download"></script>
+<style type="text/css">
+:root #header + #content > #left > #rlblock_left
+{ display: none !important; }</style><style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -100px !important;
+    width: 200px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+</style></head>
+<body>
+<div id="header" style="height: 440px;">
+        <div class="wrapper">
+		<div id="social-icons">
+			<a href="https://github.com/kivy" class="icon-github"></a>
+			<a href="https://www.youtube.com/user/kivyframework" class="icon-youtube"></a>
+			<a href="https://plus.google.com/+KivyOrg" class="icon-gplus"></a>
+			<a href="https://www.facebook.com/kivyframework" class="icon-facebook"></a>
+			<a href="https://twitter.com/kivyframework" class="icon-twitter"></a>
+		</div>
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" id="donate">
+            <input type="hidden" name="cmd" value="_s-xclick">
+            <input type="hidden" name="hosted_button_id" value="ZN5G75EG8PHNG">
+            <input type="image" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+            <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1" hidden="" style="display: none !important;">
+        </form>
+        <div id="logo">
+                <a href="https://kivy.org/">
+                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/kivy-logo-black-64.png" alt="Kivy logo" title="Kivy">
+                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/logo_kivy.png" alt="Kivy logo" title="Kivy">
+                </a>
+        </div>
+        <div id="menu">
+                <ul class="navigation">
+                        <li><a class="piwik_link selected" href="https://kivy.org/#home">Home</a></li>
+                        <li><a class="piwik_link" href="https://kivy.org/#download">Download</a></li>
+                        <li><a class="piwik_link" href="https://kivy.org/#gallery">Gallery</a></li>
+                        <li><a class="piwik_link" href="https://kivy.org/#support">Help</a></li>
+                        <li><a class="piwik_link" href="https://kivy.org/#organization">Organization</a></li>
+                        <li><a class="piwik_link" href="https://kivy.org/#aboutus">About</a></li>
+                        <li><a class="piwik_link" href="https://kivy.org/planet">Blog</a></li>
+                </ul>
+        </div>
+</div>
+</div>
+
+<div id="content">
+        <div class="slideshow-shadow"></div>
+
+        <!-- global wrapper -->
+        <div class="wrapper">
+
+                <!--
+
+                        Home panel
+
+                -->
+                <div class="panel" id="panel-home" style="display: block;">
+                        <div class="clear"></div>
+                        <div id="slides" class="slideshow">
+                        <div style="position: absolute; top: 0px; left: 0px; z-index: 17; opacity: 0; display: none;"><div class="caption"><h3>Kivy 1.9.1 released!</h3><p>New wheels for Windows<br>optional Python 3 embedded package for OS X<br>packaged using SDL 2.0.4<br>Python 3 embedded option for the Kivy SDK on OS X<br>981 commits<br>345 files changed, 7074 insertions(+), 13023 deletions(-).</p><a href="https://kivy.org/#download" rel="panelg">Download Now!</a></div><a href="./Kivy_ Cross-platform Python Framework for NUI Development_files/kivy13-featured.jpg" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/kivy13-featured.jpg" alt="Kivy 1.9.1 released!"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 16; display: none; opacity: 0;"><div class="caption"><h3>Winners announced for Kivy Contest 2014!</h3><p>Congratulations to all our great participants, <br>and thanks to our sponsors!</p><a href="https://kivy.org/#contest">Check out the results »</a></div><a href="./Kivy_ Cross-platform Python Framework for NUI Development_files/contest2014_winnermontage-featured.jpg" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/contest2014_winnermontage-featured.jpg" alt="Winners announced for Kivy Contest 2014!"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 15; display: block; opacity: 1;"><div class="caption"><h3>Kivy crash course</h3><p>Learn how to make Kivy apps<br>with Alexander's Taylor videos.</p><a href="https://www.youtube.com/playlist?list=SPdNh1e1kmiPP4YApJm8ENK2yMlwF1_edq">Watch the videos »</a></div><a href="https://www.youtube.com/watch?v=t8N_8WkALdE&amp;list=SPdNh1e1kmiPP4YApJm8ENK2yMlwF1_edq" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/kivycrashcourse-featured.jpg" alt="Kivy crash course"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 14; display: none;"><div class="caption"><h3>Particle Panda</h3><p>Create particle effect for particle systems<br>used in Starling, Kivy and Cocos2d<br>Working on Desktop and mobile.</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://www.youtube.com/watch?v=MOYxeLdQinA" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/particlepanda-featured.jpg" alt="Particle Panda"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 13; display: none;"><div class="caption"><h3>Yeco</h3><p>Yeco is a multi touch controller for Ableton Live<br>Working on Windows 32/64, Mac soon</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://www.youtube.com/watch?v=aa9LXpg_gd0" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/yeco-featured.jpg" alt="Yeco"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 12; display: none;"><div class="caption"><h3>ProcessCraft</h3><p>Commercial application for Business Process Modeling<br>Running on iOS, Android, and others desktop OS</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://www.youtube.com/watch?v=9rk9OQLSoJw" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/processcraft-featured.jpg" alt="ProcessCraft"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 11; display: none;"><div class="caption"><h3>Kivy Contest #1 - finished!</h3><p>Contest is over, and we have got awesome submissions!<br>Congratulations to all participants, <a href="https://notionink.com/">NotionInk</a> and <a href="https://github.com/">Github</a></p><a href="https://kivy.org/#contest" rel="panelg">See the contest result »</a></div><a href="./Kivy_ Cross-platform Python Framework for NUI Development_files/contest2012-end-featured.jpg" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/contest2012-end-featured.jpg" alt="Kivy Contest #1 - finished!"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 10; display: none;"><div class="caption"><h3>Deflectouch</h3><p>Multitouch game, first place of the Kivy Contest #1</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://youtube.com/watch?v=1Qa98oSPgi0" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/deflectouch-featured.jpg" alt="Deflectouch"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 9; display: none;"><div class="caption"><h3>FishLife</h3><p>Multitouch game, second place of the Kivy Contest #1</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://kivy.org/slides/fishlife.jpg" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/fishlife-featured.jpg" alt="FishLife"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 8; display: none;"><div class="caption"><h3>memoryKivy</h3><p>Multitouch game, third place of the Kivy Contest #1</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://kivy.org/slides/memorykivy.jpg" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/memorykivy-featured.jpg" alt="memoryKivy"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 7; display: none;"><div class="caption"><h3>TicTacTouch</h3><p>Multitouch screen used for control a PLC hardware machine.</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://www.youtube.com/watch?v=FhRXAD8-UkE" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/tictactouch-featured.jpg" alt="TicTacTouch"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 6; display: none;"><div class="caption"><h3>bargenius</h3><p>Interactive tablet menu with wine, beer, cocktail...<br>Clean design with cool touch interaction, on android !</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://vimeo.com/29348760" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/bargenius-featured.jpg" alt="bargenius"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 5; display: none;"><div class="caption"><h3>Kaleidoscope</h3><p>Educational project using 4 tablets and 1 table with projection.<br>Augmented knowledge table, that can be shared across tablet.</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://vimeo.com/29673059" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/kaleidoscope-featured.jpg" alt="Kaleidoscope"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 4; display: none;"><div class="caption"><h3>Touch Live</h3><p>Monome-like controller implemented in Kivy.<br>Graham is creating his own music on it.</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://www.youtube.com/watch?v=4a74AwaAheM" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/touchlive-featured.jpg" alt="Touch Live"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 3; display: none;"><div class="caption"><h3>Icarus Touch</h3><p>Continuous keyboard implemented in Kivy.<br>Cyril is improvising over some backing tracks.</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://www.youtube.com/watch?v=u4NRu7mBXtA" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/touchcontinuum-featured.jpg" alt="Icarus Touch"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 2; display: none;"><div class="caption"><h3>The noBOOTH</h3><p>Interactive touchscreen using Kivy for taking<br>pictures and customize the photo with some gadgets.</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://vimeo.com/25680681" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/thenobooth-featured.jpg" alt="The noBOOTH"></a></div><div style="position: absolute; top: 0px; left: 0px; z-index: 1; display: none;"><div class="caption"><h3>Plane White</h3><p>Interactive white surface for discovering art exhibition.</p><p><a href="https://kivy.org/#gallery" rel="panelg">View more projects in the Gallery »</a></p></div><a href="https://www.youtube.com/watch?v=pI635uAppoU" rel="prettyPhoto[featured]"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/planewhite-featured.jpg" alt="Plane White"></a></div></div>
+
+                        <h2 class="featured-description">
+                                Kivy - Open source Python library for rapid development of applications<br>
+                                that make use of innovative user interfaces, such as multi-touch apps.
+                        </h2>
+
+                        <div class="featured-space"></div>
+
+                        <div class="features">
+                                <div class="feature-item">
+                                        <h2 class="icon icon-platform">Cross platform</h2>
+                                        <p>
+                                                Kivy runs on Linux, Windows, OS X, Android and iOS. You can
+                                                run the same code on all supported platforms.
+                                        </p>
+                                        <p>
+                                                It can natively use most inputs, protocols and devices including
+                                                WM_Touch, WM_Pen, Mac OS X Trackpad and Magic Mouse, Mtdev, Linux
+                                                Kernel HID, TUIO. A multi-touch mouse simulator is included.
+                                        </p>
+                                </div>
+                                <div class="feature-item">
+                                        <h2 class="icon icon-buisness">Business Friendly</h2>
+                                        <p>
+                                                Kivy is 100% free to use, under an MIT license
+                                                (starting from 1.7.2) and LGPL 3 for the previous
+                                                versions. The toolkit is professionally developed,
+                                                backed and used.  You can use it in a commercial
+                                                product.
+                                        </p>
+                                        <p>
+                                                The framework is stable and has a well documented API, plus a
+                                                programming guide to help you get started.
+                                        </p>
+                                </div>
+                                <div class="feature-item last">
+                                        <h2 class="icon icon-gpu">GPU Accelerated</h2>
+                                        <p>
+                                                The graphics engine is built over OpenGL ES 2, using a modern and
+                                                fast graphics pipeline.
+                                        </p>
+                                        <p>
+                                                The toolkit comes with more than 20 widgets, all highly
+                                                extensible. Many parts are written in C using Cython, and tested with
+                                                regression tests.
+                                        </p>
+                                </div>
+                        </div>
+
+                        <div class="clear"></div>
+						<br><br>
+                        <h2>Be social !</h2>
+                        <div>
+                                <!--
+                                <div class="google_plusone"></div>
+                                -->
+                                <table class="social">
+                                        <tbody><tr>
+                                                <td>
+                                                        <div class="social facebook_like"><iframe src="./Kivy_ Cross-platform Python Framework for NUI Development_files/like.html" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:80px; height:70px;" allowtransparency="true"></iframe></div>
+                                                </td>
+                                                <td>
+                                                        <div class="social twitter"><a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical" data-url="http://kivy.org/" data-lang="en">Tweet</a></div>
+                                                </td>
+                                                <td>
+                                                        <link href="https://plus.google.com/102482050431251779760/" rel="publisher"><script type="text/javascript">
+                                                        (function()
+                                                        {var po = document.createElement("script");
+                                                        po.type = "text/javascript"; po.async = true;po.src = "https://apis.google.com/js/plusone.js";
+                                                        var s = document.getElementsByTagName("script")[0];
+                                                        s.parentNode.insertBefore(po, s);
+                                                        })();</script>
+
+                                                        <!-- Place this tag where you want the badge to render-->
+                                                        <g:plus href="https://plus.google.com/102482050431251779760/" size="badge"></g:plus>
+                                                </td>
+                                        </tr>
+                                </tbody></table>
+                        </div>
+
+                        <div class="clear"></div>
+                        <div class="features">
+                                <div class="feature-item item-2-col">
+                                        <h2>Usage example</h2>
+                                        <p>See how easy it is to create a simple <em>Hello World</em> application that shows an actionable button:<br><br></p>
+
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kivy.app</span> <span class="kn">import</span> <span class="n">App</span>
+<span class="kn">from</span> <span class="nn">kivy.uix.button</span> <span class="kn">import</span> <span class="n">Button</span>
+
+<span class="k">class</span> <span class="nc">TestApp</span><span class="p">(</span><span class="n">App</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Button</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s">'Hello World'</span><span class="p">)</span>
+
+<span class="n">TestApp</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div></div>
+                                </div>
+                                <div class="feature-item last">
+                                        <h2>Result</h2>
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/helloworld.png" alt="Result of the example: A window with the text &#39;hello world&#39; positioned in the middle.">
+                                </div>
+                        </div>
+
+                        <div style="clear: both;"></div>
+                </div>
+
+                <!--
+
+                        Download panel
+
+                -->
+                <div class="panel" id="panel-download" style="display: none;">
+                        <h2>Download</h2>
+                        <p>
+                        The current version is <span class="hl">1.9.1</span>, released on Jan 1st, 2016.
+                                <a href="https://kivy.org/#changelog" rel="panel">Read the Changelog</a>.
+                        </p>
+                        <p>
+                                Installation instructions can be found <a href="https://kivy.org/docs/gettingstarted/installation.html">here</a>.
+                        </p>
+
+                        <table class="downloads">
+                                <tbody><tr>
+                                        <th class="os">Operating System</th>
+                                        <th>File</th>
+                                        <th>Instructions</th>
+                                        <th>Size</th>
+                                </tr>
+                                <tr class="os-window selected">
+                                        <td>
+                                                <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/os_windows7.png" alt="Windows 7">
+                                                Windows 7, 8, 10 (32/64 bit)
+                                        </td>
+                                        <td>
+                                                Install using pip, follow the instructions <a href="https://kivy.org/docs/installation/installation-windows.html#install-win-dist">here</a>
+                                        </td>
+                                        <td>
+                                                <a href="https://kivy.org/docs/installation/installation-windows.html">Installation for Windows</a>
+                                        </td>
+                                        <td>
+                                                ...
+                                        </td>
+                                </tr>
+                                <tr class="os-macosx">
+                                        <td>
+                                                <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/os_macosx.png" alt="MacOSX">
+                                                OS X 10.9 or later
+                                        </td>
+                                        <td>
+                                                Install using pip, follow the instructions <a href="https://kivy.org/docs/installation/installation-osx.html#using-homebrew-with-pip">here</a>
+                                        </td>
+                                        <td>
+                                                <a href="https://kivy.org/docs/installation/installation-osx.html">Installation for macOS</a>
+                                        </td>
+                                        <td>
+                                                ...
+                                        </td>
+                                </tr>
+                                <tr class="os-linux">
+                                        <td>
+                                                <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/os_linux.png" alt="Linux">
+                                                Linux (Ubuntu, Mageia, Arch, ...)
+                                        </td>
+                                        <td>
+                                                <a href="https://pypi.python.org/packages/source/K/Kivy/kivy-1.9.1.tar.gz#md5=e1cb0f9bca49fdad05653df3fb6fec46">
+                                                        Kivy-1.9.1.tar.gz
+                                                </a>
+                                                (<a href="https://github.com/kivy/kivy/archive/1.9.1.tar.gz">Mirror</a>)
+                                        </td>
+                                        <td>
+                                                <a href="https://kivy.org/docs/installation/installation-linux.html#ubuntu-11-10-or-newer">Installation for Ubuntu</a>
+                                        </td>
+                                        <td>
+                                                27 Mb
+                                        </td>
+                                </tr>
+                                <tr class="os-ubuntu">
+                                        <td>
+                                                <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/os_ubuntu.png" alt="Ubuntu">
+                                                Ubuntu PPA
+                                        </td>
+                                        <td>
+                                                <p><a href="https://launchpad.net/~kivy-team/+archive/kivy">
+                                                        Stable PPA
+                                                </a>
+                                                <br>
+                                                <a href="https://launchpad.net/~kivy-team/+archive/kivy-daily">
+                                                        Daily PPA
+                                                </a></p>
+                                        </td>
+                                        <td>
+                                                <a href="https://launchpad.net/+help-soyuz/ppa-sources-list.html">
+                                                        How to use software from PPA
+                                                </a>
+                                        </td>
+                                        <td>
+                                                12 Mb
+                                        </td>
+                                </tr>
+                                <tr class="os-opensuse">
+                                        <td>
+                                                <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/os_opensuse.png" alt="Opensuse">
+                                                Opensuse
+                                        </td>
+                                        <td>
+                                                <p><a href="http://software.opensuse.org/ymp/devel:languages:python/openSUSE_Factory/python-Kivy.ymp?base=openSUSE%3AFactory&amp;query=python-Kivy">
+                                                        One-Click-Installation for Factory
+                                                </a>
+                                                <br>
+                                                <a href="http://software.opensuse.org/ymp/devel:languages:python/openSUSE_13.2/python-Kivy.ymp?base=openSUSE%3A13.1&amp;query=python-Kivy">
+                                                        One-Click-Installation for 13.2
+                                                </a>
+                                                <br>
+                                                <a href="http://software.opensuse.org/ymp/devel:languages:python/openSUSE_13.1/python-Kivy.ymp?base=openSUSE%3A13.1&amp;query=python-Kivy">
+                                                        One-Click-Installation for 13.1
+                                                </a>
+                                                <br>
+                                                <a href="http://software.opensuse.org/ymp/devel:languages:python/openSUSE_Factory/python-Kivy.ymp?base=openSUSE%3AFactory&amp;query=python-Kivy">
+                                                        One-Click-Installation for Tumbleweed
+                                                </a></p>
+                                        </td>
+                                        <td>
+                                                <p><a href="https://kivy.org/docs/installation/installation-linux.html#opensuse">
+                                                        Installation-guide for OpenSuSE
+                                                </a>
+                                                </p>
+                                        </td>
+                                        <td>
+                                                ...
+                                        </td>
+                                </tr>
+                                <tr class="os-fedora">
+                                        <td>
+                                                <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/os_fedora.png" alt="Fedora">
+                                                Fedora
+                                        </td>
+                                        <td>
+                                                <p>
+                                                <a href="http://download.opensuse.org/repositories/home:/thopiekar:/kivy/Fedora_21/">
+                                                        Repository for Fedora 21
+                                                </a>
+                                                <br>
+                                                <a href="http://download.opensuse.org/repositories/home:/thopiekar:/kivy/Fedora_20/">
+                                                        Repository for Fedora 20
+                                                </a>
+                                                </p>
+                                        </td>
+                                        <td>
+                                                <p><a href="https://kivy.org/docs/installation/installation-linux.html#fedora">
+                                                        Installation-guide for Fedora
+                                                </a>
+                                                </p>
+                                        </td>
+                                        <td>
+                                                ...
+                                        </td>
+                                </tr>
+                                <tr class="os-android">
+                                        <td>
+                                                <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/os_android.png" alt="Android">
+                                                Android (&gt;= 2.2, with OpenGL ES 2)
+                                        </td>
+                                        <td>
+                                                <a href="https://market.android.com/details?id=org.kivy.pygame">
+                                                        Kivy Laucher 1.9.0
+                                                </a> (
+                                                <a href="https://kivy.org/downloads/1.9.0/KivyLauncher-1.9.0.0.apk">
+                                                        APK
+                                                </a> )
+                                        </td>
+                                        <td>
+                                                <a href="https://kivy.org/docs/guide/packaging-android.html#packaging-your-application-for-kivy-launcher">Packaging for Kivy Launcher</a>
+                                        </td>
+                                        <td>
+                                                13 Mb
+                                        </td>
+                                </tr>
+                                <tr class="os-rpi">
+                                        <td>
+                                                <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/os_rpi.png" alt="Raspberry Pi">
+                                                Raspberry Pi
+                                        </td>
+                                        <td>
+                                                <a href="http://kivypie.mitako.eu/">
+                                                        KivyPie
+                                                </a> - Image for Raspberry Pi containing Kivy
+                                        </td>
+                                        <td>
+                                                <a href="https://kivy.org/docs/installation/installation-rpi.html">
+                                                        Installation for Raspberry Pi
+                                                </a>
+                                        </td>
+                                        <td>
+                                                532 Mb
+                                        </td>
+				</tr>
+                                <tr class="os-slackware">
+                                        <td>
+                                                <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/os_slackware.png" alt="Slackware">
+                                                Slackware
+                                        </td>
+                                        <td>
+                                                <a href="https://github.com/kivy/kivy/archive/1.9.1.tar.gz">
+                                                        SlackBuilds
+                                                </a> - Downloads for installing Kivy on Slackware
+                                        </td>
+                                        <td>
+                                                <a href="https://slackbuilds.org/repository/14.2/libraries/Kivy/">
+                                                        Installation for SlackWare
+                                                </a>
+                                        </td>
+                                        <td>
+                                        ...
+                                        </td>
+				</tr>
+                        </tbody></table>
+
+                        <h2>Android</h2>
+                        <p class="nomargin">
+                        Demo examples are published on Google Play:
+                        </p>
+                        <ul>
+                                <li><a class="piwik_download" href="https://market.android.com/details?id=org.kivy.touchtracer">Touchtracer</a></li>
+                                <li><a class="piwik_download" href="https://market.android.com/details?id=org.kivy.showcase">Showcase</a></li>
+                                <li><a class="piwik_download" href="https://market.android.com/details?id=org.kivy.pictures">Pictures</a></li>
+                        </ul>
+                        <p>
+                        Create your own APK by following the documentation on <a href="https://kivy.org/docs/guide/packaging-android.html">Packaging for Android</a>
+                        </p>
+
+                        <h2>IOS</h2>
+                        <p class="nomargin">
+                        We haven't published our demos, but the winner of the first Kivy game contest has been packaged for IOS: <a href="https://itunes.apple.com/us/app/deflectouch/id505729681">Deflectouch
+                                on iTunes</a>.
+                        </p>
+                        <p>Read the documentation on <a href="https://kivy.org/docs/guide/packaging-ios.html">Packaging for IOS</a></p>
+
+                        <h2>Virtual Machine</h2>
+                        <p class="nomargin">
+                        A Virtual Machine with Android SDK and NDK and all other pre-requisites pre installed to ease apk generation:
+                        </p>
+                        <ul>
+                               <li><a href="https://drive.google.com/open?id=0B112pXITp0hJU3dJb25hbWJ3RHM&amp;authuser=0">
+                                    Kivy Buildozer VM
+                                   </a>
+                               </li>
+                               <li>Or select the <a href="https://drive.google.com/open?id=0B112pXITp0hJaDlVTmw3Y1luTms&amp;authuser=0">Torrent</a></li>
+                        </ul>
+                               Please note that we can't keep the image updated
+                               all the time, so if you encounter issues, the
+                               first thing to do is to follow the instructions on
+                               the README file to update it.
+                        <p>
+
+                        </p><h2 style="clear: left;">Source code</h2>
+                        <pre style="padding: 10px; background-color: #E0E0E0;">git clone <a href="https://github.com/kivy/kivy">https://github.com/kivy/kivy</a></pre>
+                        <p>
+                        Take a look at our guide to<a href="https://kivy.org/docs/installation/installation.html#development-version">installation
+                                of the development version</a>.
+                        </p>
+                </div>
+
+                <!--
+
+                        Help panel
+
+                -->
+                <div class="panel" id="panel-support" style="display: none;">
+                        <h2>Documentation</h2>
+                        <ul>
+                            <li>
+                                <a href="https://kivy.org/docs/gettingstarted/intro.html">Getting started with Kivy</a>
+                            </li>
+                            <li>
+                                <a href="https://kivy.org/docs/api-kivy.html">API Reference</a>
+                            </li>
+                            <li>
+                                Or see the <a href="https://github.com/kivy/kivy/wiki">Wiki</a> for a list of projects, snippets and more
+                            </li>
+                        </ul>
+                        <h2>Community Support</h2>
+                        <ul>
+                                <li>
+                                        Report a bug or request a feature in our
+                                        <a href="https://github.com/kivy/kivy/issues" rel="external">
+                                                issue tracker
+                                        </a>
+                                </li>
+                                <li>
+                                        Ask your questions on the <a href="https://kivy.org/#forum" rel="panel">Kivy users forums</a>
+                                </li>
+                                <li>
+                                        Or send an email to <a href="mailto:kivy-users@googlegroups.com">kivy-users@googlegroups.com</a>
+                                </li>
+                        </ul>
+                        <p>
+                                You can also try to contact us on IRC (online chat), but make sure to
+                                <a href="https://kivy.org/docs/contact.html" rel="external">read the IRC rules</a> before connecting.
+                                <a href="https://webchat.freenode.net/?nick=kvuser.&amp;channels=kivy&amp;uio=d4" rel="external">Connect to Webchat</a>
+                        </p>
+                </div>
+
+                <div class="panel" id="panel-license" style="display: none;">
+                        <h2>Licenses</h2>
+                        <p>
+                                <a href="https://kivy.org/#logo" rel="panel">The Kivy logo</a> was made by
+                                Vincent Autin. The logo is placed under
+                                <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/">
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/88x31.png">
+                                </a>
+                        </p>
+                        <p>
+                                All the screenshots on the website that came from Kivy's
+                                examples are under the Public Domain.
+                        </p>
+                        <p>
+                                All the screenshots in the <a href="https://kivy.org/#gallery" rel="panel">Gallery</a> are from their respective owners.
+                                Contact them first if you want to use the content.
+                        </p>
+                </div>
+
+                <div class="panel" id="panel-aboutus" style="display: none;">
+                        <h2>About us</h2>
+                        <p>
+                                Kivy is a community project, led by professional software developers.
+                                We are responsible for developing and supporting Kivy, alongside of the
+                                community. We also work for companies that use Kivy for their
+                                professional products.
+                        </p>
+                        <div class="pageleft">
+                        <dl class="aboutus">
+                                <dt>Core developers</dt>
+                                <dd>
+                                        <ul class="devinfo">
+                                                <li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/mathieu.png" alt="Mathieu">
+                                                        <div class="devinfo">
+                                                        <a href="https://txzone.net/"><span class="name">Mathieu Virbel</span></a>
+                                                                <span class="social">
+                                                                        <a href="mailto:mat@kivy.org"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                        <a href="https://plus.google.com/105862019548406441587/posts"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-googleplus.png" alt="google Plus"></a>
+                                                                        <a href="https://facebook.com/mathieu.virbel"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-facebook.png" alt="facebook"></a>
+                                                                        <a href="https://twitter.com/mathieuvirbel"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-twitter.png" alt="twitter"></a>
+                                                                </span>
+                                                        </div>
+                                                        <div class="devdesc">
+                                                                He became a programming expert from working in IT for
+                                                                years before starting with Kivy. He's French, and founded <a href="http://meltingrocks.com/">Melting Rocks</a>. <br>
+                                                                On IRC, he's <span class="ircnick">tito</span>.
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/gabriel.png" alt="Gabriel">
+                                                        <div class="devinfo">
+                                                                <a href="http://blog.tshirtman.fr/"><span class="name">Gabriel Pettier</span></a>
+                                                                <span class="social">
+                                                                        <a href="mailto:gabriel@kivy.org"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                        <a href="https://plus.google.com/114549511678735020275/posts"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-googleplus.png" alt="google Plus"></a>
+                                                                        <a href="https://twitter.com/tshirtman"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-twitter.png" alt="twitter"></a>
+                                                                </span>
+                                                                <div class="devdesc">
+                                                                  He is an <em>Information Systems engineer</em> and working at <a href="http://tangibledisplay.com/">Tangible Display</a>, an NUI/innovative interactions company. He lives in France.<br>
+                                                                        On IRC, he's <span class="ircnick">tshirtman</span>.
+                                                                </div>
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/quanon.png" alt="Akshay">
+                                                        <div class="devinfo">
+                                                        <a href="https://plus.google.com/111271939129335069945"><span class="name">Akshay Arora</span></a>
+                                                                <span class="social">
+                                                                        <a href="mailto:akshay@kivy.org"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                        <a href="https://www.facebook.com/profile.php?id=100001515324302"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-facebook.png" alt="facebook"></a>
+                                                                </span>
+                                                        </div>
+                                                        <div class="devdesc">
+                                                                He is a freelance developer. He is from India.<br>
+                                                                On IRC, he's <span class="ircnick">qua-non</span>.
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/brousch.png" alt="Ben">
+                                                        <div class="devinfo">
+                                                                <a href="http://www.clusterbleep.net/"><span class="name">Ben Rousch</span></a>
+                                                                <span class="social">
+                                                                        <a href="mailto:brousch@gmail.com"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                        <a href="https://twitter.com/brousch"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-twitter.png" alt="twitter"></a>
+                                                                        <a href="https://plus.google.com/+BenRousch"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-googleplus.png" alt="Google Plus"></a>
+                                                                </span>
+                                                        </div>
+                                                        <div class="devdesc">
+                                 He is a Python, Android, and Linux lover who thinks tablets will be everyone's computer in the future.
+                                                                 He lives in Michigan.<br>
+                                                                 On IRC, he's <span class="ircnick">brousch</span>.
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/kovak.png" alt="kovak">
+                                                        <div class="devinfo">
+                                                                <a href="https://plus.google.com/u/0/+JacobKovac/"><span class="name">Jacob Kovac</span></a>
+                                                                <span class="social">
+                                                                        <a href="mailto:kovac1066@gmail.com"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                        <a href="https://plus.google.com/u/0/+JacobKovac/"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-googleplus.png" alt="Google Plus"></a>
+                                                                </span>
+                                                        </div>
+                                                        <div class="devdesc">
+                                 He is an independent game developer who is very interested in creating game development tools for Android. He lives in Utah.<br>
+                                                                 On IRC, he's <span class="ircnick">kovak</span>.
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/inclement.png" alt="Alexander">
+                                                        <div class="devinfo">
+                                                                <a href="http://inclem.net/"><span class="name">Alexander Taylor</span></a>
+                                                                <span class="social">
+                                                                        <a href="mailto:alexanderjohntaylor@gmail.com"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                        <a href="https://plus.google.com/115630516041737549521"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-googleplus.png" alt="Google Plus"></a>
+                                                                </span>
+                                                        </div>
+                                                        <div class="devdesc">
+                                 He is a postdoc in physics, with a little time to make fun graphical interfaces. He lives in the UK.<br>
+                                                                 On IRC, he's <span class="ircnick">inclement</span>.
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/matham.png" alt="Matt">
+                                                        <div class="devinfo">
+                                                                <span class="name">Matthew Einhorn</span>
+                                                                <span class="social">
+                                                                        <a href="mailto:moiein2000@gmail.com"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                </span>
+                                                        </div>
+                                                        <div class="devdesc">
+                                 He is a developer using Kivy with Python to automate scientific research. He lives in the eastern USA.<br>
+                                                                 On IRC, he's <span class="ircnick">matham</span>.
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/zencode.png" alt="Richard">
+                                                        <div class="devinfo">
+                                                                <span class="name">Richard Larkin</span>
+                                                                <span class="social">
+                                                                        <a href="mailto:zenkey.zencode@gmail.com"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                </span>
+                                                        </div>
+                                                        <div class="devdesc">
+                                 Richard is an educational software developer (B.Sc, Hons) from South Africa. He likes being silly, meditating, music and hugging fluffy things. On IRC, he's <span class="ircnick">ZenCODE</span>.<br>
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/kived.png" alt="kived">
+                                                        <div class="devinfo">
+                                                                <span class="name">Ryan Pessa</span>
+                                                                <span class="social">
+                                                                        <a href="mailto:dkived@gmail.com"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                </span>
+                                                        </div>
+                                                        <div class="devdesc">
+                                                                He is a software developer in Kansas City. He enjoys being well-bearded. He has a cat.<br>
+                                                                On IRC, he's <span class="ircnick">kived</span>.
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/dessant.png" alt="dessant">
+                                                        <div class="devinfo">
+                                                                <span class="name">Sebastian Armin</span>
+                                                                <span class="social">
+                                                                        <a href="mailto:dessant@kivy.org"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                </span>
+                                                        </div>
+                                                        <div class="devdesc">
+                                                                He is an independent developer from the Carpathian wilderness.<br>
+                                                                On IRC, he's <span class="ircnick">dessant</span>.
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/thopiekar.png" alt="thopiekar">
+                                                        <div class="devinfo">
+                                                                <span class="name">Thomas-Karl Pietrowski</span>
+                                                                <span class="social">
+                                                                        <a href="mailto:thopiekar@gmail.com"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                </span>
+                                                        </div>
+                                                        <div class="devdesc">
+                                                                Python developer and Debian/Ubuntu package creator, who publishes new, interessant projects or other software in his PPAs on launchpad.net<br>
+                                                                On IRC, he's <span class="ircnick">thopiekar</span>, but you should prefer contacting him by mail.
+                                                        </div>
+                                                </li>
+                                                <br><li>
+                                                        <img class="devpic" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/keyweeusr.png" alt="keyweeusr">
+                                                        <div class="devinfo">
+                                                                <span class="name">Peter Badida</span>
+                                                                <span class="social">
+                                                                        <a href="mailto:keyweeusr@gmail.com"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/icon-mail.png" alt="mail"></a>
+                                                                </span>
+                                                        </div>
+                                                        <div class="devdesc">
+                                                                He is a hobby coder, bookworm and pianist, who fancies portability and simplicity. He lives in Eastern Slovakia.<br>
+                                                                On IRC, he's <span class="ircnick">KeyWeeUsr</span>.
+                                                        </div>
+                                                </li>
+                                        </ul>
+                                </dd>
+                                <br>
+                                <dt>Contributors</dt>
+                                <dd>
+                                <ul>
+                                                <li>
+                                                        <div class="devinfo">
+                                                                <span class="name">Terje Skjaeveland (bionoid)</span>
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <div class="devinfo">
+                                                                <span class="name">George Sebastian (georgs)</span>
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <div class="devinfo">
+                                                                <span class="name">Gabriel Ortega</span>
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <div class="devinfo">
+                                                                <span class="name">Arnaud Waels (triselectif)</span>
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <div class="devinfo">
+                                                                <span class="name">Thomas Hirsch</span>
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <div class="devinfo">
+                                                                <span class="name">Joakim Gebart</span>
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <div class="devinfo">
+                                                                <span class="name">Rosemary Sebastian</span>
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <div class="devinfo">
+                                                                <span class="name">Jonathan Schemoul</span>
+                                                        </div>
+                                                </li>
+                                        </ul>
+                                </dd>
+                                <dt>Past core developers</dt>
+                                <dd>
+                                <ul>
+                                        <li>
+                                                Thomas Hansen was one of the initial authors of the framework.
+                                                Besides his tremendous work on shaping Kivy, including his
+                                                contributions to the graphics pipeline, he has also supported
+                                                our annual contests.
+                                        </li>
+                                        <li>
+                                                <a href="http://denter.org/">Christopher Denter</a> (dennda)
+                                                who was a core-developer in the first stage of the project.
+                                                He contributed a lot by improving the documentation,
+                                                implementing the Kivy extension system, pep8 hook and
+                                                fixes, spelling provider. He also did 1 GSOC on the
+                                                previous PyMT framework on implementing a virtual keyboard
+                                                with a better navigation.
+                                        </li>
+                                        <li>
+                                                Edwin Marshall (aspidites) helped with quality and
+                                                documentation, as well as adding a few features.
+                                        </li>
+                                        <li>
+                                                Jeff Pittman who helped with
+                                                documentation and features, and
+                                                have been a core-contributor
+                                                for a long time, before moving
+                                                to other adventures.
+                                        </li>
+                                        <li>
+                                                Brian Knapp was a core-developer who created Kivy's
+                                                interactive launcher and provided many valuable patches
+                                                for the framework.
+                                        </li>
+                                </ul>
+                                </dd>
+                                <dt>Special thanks</dt>
+                                <dd>
+                                <ul>
+                                        <li>
+                                                Mark Hembrow, who is one of our first sponsor, by
+                                                giving us a Mac Mini. Which is currently used for all the
+                                                build system: unit test on Windows / OS X and Ubuntu
+                                                + building the HTML and PDF documentation.
+                                        </li>
+                                        <li>
+                                                <a href="http://vincentautin.fr/">Vincent Autin</a> for
+                                                his work as a designer for the project, specially on
+                                                the logo.
+                                        </li>
+                                </ul>
+                                </dd>
+                        </dl>
+                        <div class="clear"></div>
+                        <p>
+                                Many people have contributed to Kivy and we're always interested in
+                                growing our community. If you want to help in terms of writing code,
+                                improving documentation, testing, etc. or simply making a donation,
+                                please do not hesitate to
+                                <a href="https://kivy.org/docs/contact.html">contact us</a>.
+                        </p>
+                        </div>
+                        <div class="pageright">
+                        <h2>Talks</h2>
+                        <p>
+                                Here is a list of talks about Kivy (if you have made a talk,
+                                don't hesitate to share it)
+                        </p>
+                        <ul class="talks">
+                                <li>
+                                        <img class="preview" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/talk-pyconfr13.png" alt="">
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/fr.png" title="en" alt="">
+                                        <a href="http://canalc2.u-strasbg.fr/video.asp?idVideo=12342&amp;voir=oui">Interfaces tactiles et mobiles avec Kivy.</a>
+                                        (<a href="http://www.slideshare.net/GabrielPettier/pres-27623747">slides</a>)
+                                        27 Octobre 2013 - Gabriel Pettier<br>
+                                        Pycon-fr, Strasbourg, France<br>
+                                </li>
+                                <li>
+                                        <img class="preview" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/talk-pyconza13.png" alt="">
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/us.png" title="en" alt="">
+                                        <a href="https://youtu.be/Nn5Mms4oyGM">Our journey to Kivy</a>
+                                        (<a href="https://github.com/Zen-CODE/kivybits/tree/master/PyCon/ZA%202013">slides</a>)
+                                        3 Octobler 2013 - Richard Larkin<br>
+                                        PyconZA 2013 in Cape Town, South Africa<br>
+                                </li>
+                                <li>
+                                        <img class="preview" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/talk-utha-august.png" alt="">
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/us.png" alt="">
+                                        <a href="https://youtu.be/3gzZbsKlFMs">Utah Python August 2013 meeting </a>
+                                        8 August 2013 - Jacob Kovac<br>
+                                        Utah Python August 2013 meeting<br>
+                                </li>
+                                <li>
+                                        <img class="preview" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/talk-grdevday13-br.png" title="">
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/us.png" title="en">
+                                        <a href="https://speakerdeck.com/brousch/kivy-intro-and-tutorial-grdevday-2013">Kivy Intro and Tutorial</a>
+                                        <br>
+                                        2 March 2013 - Ben Rousch<br>
+                                        GrDevDay 2013 in Grad Rapids, MI, USA.
+                                </li>
+                                <li>
+                                        <img class="preview" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/talk-ep2011-mv.png" title="">
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/us.png" title="en">
+                                        <a href="https://www.youtube.com/watch?v=UjdU77m1228">OpenGL and Python on computer and embed devices</a>
+                                        (<a href="https://speakerdeck.com/u/mathieuvirbel/p/kivy-opengl-and-python-on-embed-computer">slides</a>)
+                                        <br>
+                                        24 July 2012 - Mathieu Virbel<br>
+                                        EuroPython 2012 in Florence, Italia.
+                                </li>
+                                <li>
+                                        <img class="preview" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/talk-28apr12-ra.png" title="">
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/lt.png" title="lt">
+                                        <a href="https://www.youtube.com/watch?v=fc1GZXRWy_A">Kivy - Python UI Library for Any OS</a>
+                                        <br>
+                                        28 April 2012 - Rokas Aleksiūnas<br>
+                                        PyCon LT 2012 in Vilnius
+                                </li>
+                                <li>
+                                        <img class="preview" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/talk-28nov11-gp.png" title="">
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/fr.png" title="fr">
+                                        <a href="http://lacantine.ubicast.eu/videos/python-conf/">NIU en Python: Kivy</a><br>
+                                        (Starting at 2:28:00 in the video)
+                                        <br>
+                                        28 November 2011, Gabriel Pettier<br>
+                                        La Cantine in Paris, France
+                                </li>
+                                <li>
+                                        <img class="preview" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/talk-oct11-ers.png" title="">
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/de.png" title="de">
+                                        <a href="http://speakerdeck.com/u/nnrcschmdt/p/kivy-spass-mit-natural-user-interfaces-und-python">Spaß mit Natural User Interfaces und Python</a>
+                                        <br>
+                                        October 2011 - Ernesto Rico Schmidt<br>
+                                        PyCon DE 2011
+                                </li>
+                                <li>
+                                        <img class="preview" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/talk-sep11-kps.png" title="">
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/us.png" title="en">
+                                        <a href="http://in.pycon.org/2011/talks/68-quick-multitouch-apps-using-kivy-and-python">Quick Multitouch Apps using Kivy and Python</a>
+                                        <br>
+                                        September 2011 - KP Singh (kpsfoo), N Chadha<br>
+                                        PyCon India 2011
+                                </li>
+                                <li>
+                                        <img class="preview" src="./Kivy_ Cross-platform Python Framework for NUI Development_files/talk-19jul11-mv.png" title="">
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/fr.png" title="fr">
+                                        <a href="https://speakerdeck.com/u/mathieuvirbel/p/kivy-gles2-python-framework-for-nui-fr">GLES2 Python framework for NUI</a>
+                                        <br>
+                                        19 July 2011 - Mathieu Virbel<br>
+                                        RMLL 2011 in Strasbourg, France
+                                </li>
+                                <li>
+                                        <img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/us.png" title="en">
+                                        <a href="http://txzone.net/2011/06/kivy-at-europython-lightning-explanation/">Lightning talk about Kivy</a>
+                                        <br>
+                                        22 June 2011 - Mathieu Virbel<br>
+                                        Europython 2011 in Florence, Italia
+                                </li>
+                        </ul>
+                        </div>
+                        <div class="clear"></div>
+                        </div>
+
+
+        </div> <!-- end of wrapper -->
+</div> <!-- end of content -->
+
+<div id="footer">
+        <div class="wrapper">
+                <div class="col1">
+                        <p>
+                                Get the <a href="https://github.com/kivy/kivy-website/">kivy.org source code</a>
+                        </p>
+                        <p>
+                                <a href="https://kivy.org/docs/contact.html">Contact us</a>
+                        </p>
+                </div>
+                <div class="col2">
+                  <a href="https://www.digitalocean.com/" target="_blank"><img src="./Kivy_ Cross-platform Python Framework for NUI Development_files/DO_Badge.png"></a>
+                </div>
+        </div>
+        <div class="clear"></div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+        $.getJSON('projects.json', function(data) {
+
+                // format all projects
+                $(data).each(function (index, element) {
+                        var text_more = element['raw_link'];
+                        if ( element['featured'] != 1 )
+                                return;
+                        text_more = element['raw_link'];
+                        if ( text_more == undefined )
+                                text_more = '<p><a href="#gallery" rel="panelg">View more projects in the Gallery &raquo;</a></p>';
+                        var html = [
+                                '<div class="caption"><h3>', element['title'], '</h3>',
+                                '<p>', element['description'].join(''), '</p>',
+                                text_more,
+                                '</div>',
+                                '<a href="', element['media'], '" rel="prettyPhoto[featured]">',
+                                '<img src="slides/', element['id'], '-featured.jpg" alt="', element['title'], '"/>',
+                                '</a>'
+                        ].join('');
+                        var item = $('<div></div>').html(html);
+                        $('#slides').append(item);
+                });
+
+                $("a[rel^='panelg']").click(selectNav);
+
+                $("a[rel^='prettyPhoto']").prettyPhoto({
+                        overlay_gallery: false,
+                        deeplinking: false
+                });
+
+                $(".slideshow").cycle({
+                        timeout: 8000,
+                        speed: 1000
+                });
+
+        });
+});
+</script>
+
+<!-- Piwik -->
+<script>
+  var _paq = _paq || [];
+  _paq.push(['setDomains', '*.kivy.org']);
+  _paq.push(['setCookieDomain', '*.kivy.org']);
+  _paq.push(['enableHeartBeatTimer', 60]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//pw.kivy.org/";
+    _paq.push(['setTrackerUrl', u+'pw.php']);
+    _paq.push(['setSiteId', 3]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'pw.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript>&lt;p&gt;&lt;img src="//pw.kivy.org/pw.php?idsite=3&amp;rec=1" style="border:0;" alt="" /&gt;&lt;/p&gt;</noscript>
+<!-- End Piwik Tag -->
+
+
+</body></html>

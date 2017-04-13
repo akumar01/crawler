@@ -16,19 +16,25 @@
             text: 'Sync'
             group: 'test'
             on_press: root.schedule_sync()
+        Button: 
+            id: settings_button
+            text: 'Settings'
+            on_press: app.open_settings()
         Label:
             text: 'Last updated:'
             text_size: self.size
             halign: 'left'
             padding: 5, 18
+
 <ArticleEntry>:
     orientation: 'horizontal'
     size: root.size
     pos: root.pos
     size_hint_y: None
     height: '60dp'
-    Label:
-        text: "Image Placeholder"
+    Image:
+        source: root.thumbnail_path
+        halign:'right'
         size_hint_x: 0.3
 #    width: '100dp'
     GridLayout:
@@ -50,10 +56,11 @@
             text: root.authors
             text_size: self.size
             halign: 'left'
-        Label:
+        ArticleLink:
             text: 'PDF'
             text_size: self.size
             halign: 'left'
+            file_path: root.file_path
 #    text_size: self.width, None
 #    height: self.texture_size[1]
 #    padding: 10, 10
@@ -107,7 +114,6 @@
         size_hint: 1, None
         padding: 50, 10 
 
-# 
 RootGrid:
     TopRow:
         id: top_row

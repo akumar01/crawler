@@ -1,0 +1,251 @@
+cefpython: ------------------------------------------------------------
+cefpython: Initialize() called
+cefpython: CefExecuteProcess(): exitCode = -1
+cefpython: CefInitialize()
+cefpython: App_OnBeforeCommandLineProcessing_BrowserProcess()
+cefpython_app: Command line: python --browser-subprocess-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\subprocess.exe" --lang=en-US --log-file=debug.log --log-severity=info --enable-release-dcheck --resources-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2" --locales-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\locales" --no-sandbox cefex.py
+cefpython: CreateBrowserSync() called
+cefpython: navigateUrl: http://kivy.org
+cefpython: CefBrowser::CreateBrowserSync()
+cefpython: GetPyBrowser(): creating new PyBrowser, browserId=1
+cefpython: BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[0402/115828:ERROR_REPORT:render_widget_host_view_osr.cc(268)] Check failed: false. 
+cefpython: CefBrowser::CreateBrowserSync() succeeded
+cefpython: SendProcessMessage(): message=DoJavascriptBindings, arguments size=1
+cefpython_app: Command line: "C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\subprocess.exe" --type=renderer --no-sandbox --lang=en-US --lang=en-US --locales-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\locales" --log-file=debug.log --log-severity=info --enable-release-dcheck --resources-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2" --channel="7400.0.562332580\1227841338" /prefetch:673131151
+cefpython_app: Renderer: OnProcessMessageReceived(): DoJavascriptBindings
+cefpython_app: Renderer: OnContextCreated()
+cefpython_app: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+cefpython_app: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+cefpython_app: Browser: OnProcessMessageReceived(): OnContextCreated
+cefpython: V8ContextHandler_OnContextCreated()
+[0402/115828:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+[0402/115828:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+[0402/115831:INFO:CONSOLE(0)] "Unrecognized Content-Security-Policy directive 'frame-ancestors'.
+", source:  (0)
+[0402/115831:INFO:CONSOLE(0)] "Unrecognized Content-Security-Policy directive 'frame-ancestors'.
+", source:  (0)
+[0402/115831:INFO:CONSOLE(0)] "The page at https://kivy.org/#home displayed insecure content from http://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fkivysoftware&layout=box_count&show_faces=false&width=80&action=like&locale=en_US&colorscheme=light&height=70.
+", source: https://kivy.org/#home (0)
+[0402/115831:INFO:CONSOLE(0)] "[blocked] The page at https://kivy.org/#home ran insecure content from http://platform.twitter.com/widgets.js?_=1491159511756.
+", source: https://kivy.org/#home (0)
+[0402/115832:INFO:CONSOLE(0)] "Unrecognized Content-Security-Policy directive 'frame-ancestors'.
+", source:  (0)
+cefpython_app: Renderer: OnContextCreated()
+cefpython_app: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+[0402/115832:INFO:CONSOLE(0)] "Unrecognized Content-Security-Policy directive 'frame-ancestors'.
+", source:  (0)
+cefpython_app: Browser: OnProcessMessageReceived(): OnContextCreated
+cefpython_app: Renderer: OnContextCreated()
+cefpython_app: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+cefpython: V8ContextHandler_OnContextCreated()
+cefpython_app: Browser: OnProcessMessageReceived(): OnContextCreated
+cefpython: V8ContextHandler_OnContextCreated()
+cefpython_app: Renderer: OnContextCreated()
+cefpython_app: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+cefpython_app: Browser: OnProcessMessageReceived(): OnContextCreated
+cefpython: V8ContextHandler_OnContextCreated()
+cefpython_app: Renderer: OnContextReleased()
+cefpython_app: Renderer: OnContextCreated()
+cefpython_app: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+cefpython_app: Browser: OnProcessMessageReceived(): OnContextReleased
+cefpython: V8ContextHandler_OnContextReleased()
+cefpython: del g_pyFrames[4]
+cefpython_app: Browser: OnProcessMessageReceived(): RemovePythonCallbacksForFrame
+cefpython_app: Browser: OnProcessMessageReceived(): OnContextCreated
+cefpython: V8ContextHandler_OnContextCreated()
+cefpython_app: Renderer: OnContextReleased()
+cefpython_app: Renderer: OnContextCreated()
+cefpython_app: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+cefpython_app: Browser: OnProcessMessageReceived(): OnContextReleased
+cefpython: V8ContextHandler_OnContextReleased()
+cefpython: del g_pyFrames[3]
+cefpython_app: Browser: OnProcessMessageReceived(): RemovePythonCallbacksForFrame
+cefpython_app: Browser: OnProcessMessageReceived(): OnContextCreated
+cefpython: V8ContextHandler_OnContextCreated()
+[0402/115839:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+[0402/115839:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+cefpython: Shutdown()
+cefpython: del g_pyFrames[1]
+cefpython: del g_pyFrames[2]
+cefpython: del g_pyFrames[3]
+cefpython: del g_pyFrames[4]
+cefpython: del g_pyBrowsers[1]
+cefpython_app: Renderer: OnContextReleased()
+cefpython_app: Renderer: OnContextReleased()
+cefpython_app: Renderer: OnContextReleased()
+cefpython_app: Renderer: OnContextReleased()
+cefpython_app: Renderer: OnBrowserDestroyed()
+cefpython: ------------------------------------------------------------
+cefpython: Initialize() called
+cefpython: CefExecuteProcess(): exitCode = -1
+cefpython: CefInitialize()
+cefpython: App_OnBeforeCommandLineProcessing_BrowserProcess()
+cefpython_app: Command line: python --browser-subprocess-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\subprocess.exe" --lang=en-US --log-file=debug.log --log-severity=info --enable-release-dcheck --resources-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2" --locales-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\locales" --no-sandbox cefex.py
+cefpython: CreateBrowserSync() called
+cefpython: navigateUrl: https://ecee.colorado.edu/~ecen5345/Resources/Maznev14_Umklapp.pdf
+cefpython: CefBrowser::CreateBrowserSync()
+cefpython: GetPyBrowser(): creating new PyBrowser, browserId=1
+cefpython: BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[0402/160510:ERROR_REPORT:render_widget_host_view_osr.cc(268)] Check failed: false. 
+cefpython: CefBrowser::CreateBrowserSync() succeeded
+cefpython: SendProcessMessage(): message=DoJavascriptBindings, arguments size=1
+cefpython_app: Command line: "C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\subprocess.exe" --type=renderer --no-sandbox --lang=en-US --lang=en-US --locales-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\locales" --log-file=debug.log --log-severity=info --enable-release-dcheck --resources-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2" --channel="12556.0.1723443831\199247425" /prefetch:673131151
+cefpython_app: Renderer: OnProcessMessageReceived(): DoJavascriptBindings
+cefpython_app: Renderer: OnContextCreated()
+cefpython_app: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+cefpython_app: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+cefpython_app: Browser: OnProcessMessageReceived(): OnContextCreated
+cefpython: V8ContextHandler_OnContextCreated()
+[0402/160510:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+[0402/160510:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+cefpython: BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[0402/160512:INFO:CONSOLE(10426)] "Uncaught TypeError: Cannot call method 'appendChild' of undefined", source:  (10426)
+[0402/160520:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+[0402/160520:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+cefpython: Shutdown()
+cefpython: del g_pyFrames[1]
+cefpython: del g_pyBrowsers[1]
+cefpython_app: Renderer: OnContextReleased()
+cefpython_app: Renderer: OnBrowserDestroyed()
+[CEF Python] Initialize() called
+[CEF Python] CefExecuteProcess(): exitCode = -1
+[CEF Python] DEPRECATED: 'release_dcheck_enabled' setting
+[CEF Python] CefInitialize()
+[CEF Python] App_OnBeforeCommandLineProcessing_BrowserProcess()
+[CEF Python] App: Command line string for the browser process: python --browser-subprocess-path="C:\Python27\lib\site-packages\cefpython3\subprocess.exe" --no-sandbox --lang=en-US --log-file=debug.log --log-severity=info --resources-dir-path="C:\Python27\lib\site-packages\cefpython3" --locales-dir-path="C:\Python27\lib\site-packages\cefpython3\locales" --remote-debugging-port=50634 cefex.py
+[CEF Python] BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[CEF Python] BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[CEF Python] CreateBrowserSync() called
+[CEF Python] navigateUrl: ///C:/Users/Ankit/Documents/crawler_project/crawler/agg/nature-news-archive.html
+[CEF Python] CefBrowser::CreateBrowserSync()
+[CEF Python] GetPyBrowser(): create new PyBrowser, browserId=1
+[CEF Python] BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[CEF Python] CefBrowser::CreateBrowserSync() succeeded
+[CEF Python] SendProcessMessage(): message=DoJavascriptBindings, arguments size=1
+[CEF Python] App: Command line string for the renderer process: "C:\Python27\lib\site-packages\cefpython3\subprocess.exe" --type=renderer --no-sandbox --disable-databases --primordial-pipe-token=4FF0E7FCC21907327939261F8F62F964 --lang=en-US --lang=en-US --locales-dir-path="C:\Python27\lib\site-packages\cefpython3\locales" --log-file=debug.log --log-severity=info --resources-dir-path="C:\Python27\lib\site-packages\cefpython3" --enable-pinch --device-scale-factor=1 --num-raster-threads=2 --enable-main-frame-before-activation --content-image-texture-target=0,0,3553;0,1,3553;0,2,3553;0,3,3553;0,4,3553;0,5,3553;0,6,3553;0,7,3553;0,8,3553;0,9,3553;0,10,3553;0,11,3553;0,12,3553;0,13,3553;0,14,3553;0,15,3553;1,0,3553;1,1,3553;1,2,3553;1,3,3553;1,4,3553;1,5,3553;1,6,3553;1,7,3553;1,8,3553;1,9,3553;1,10,3553;1,11,3553;1,12,3553;1,13,3553;1,14,3553;1,15,3553;2,0,3553;2,1,3553;2,2,3553;2,3,3553;2,4,3553;2,5,3553;2,6,3553;2,7,3553;2,8,3553;2,9,3553;2,10,3553;2,11,3553;2,12,3553;2,13,3553;2,14,3553;2,15,3553;3,0,3553;3,1,3553;3,2,3553;3,3,3553;3,4,3553;3,5,3553;3,6,3553;3,7,3553;3,8,3553;3,9,3553;3,10,3553;3,11,3553;3,12,3553;3,13,3553;3,14,3553;3,15,3553 --service-request-channel-token=4FF0E7FCC21907327939261F8F62F964 --renderer-client-id=3 --mojo-platform-channel-handle=2264 /prefetch:1
+[CEF Python] App: Renderer: OnProcessMessageReceived(): DoJavascriptBindings
+[CEF Python] App: Renderer: OnContextCreated()
+[CEF Python] App: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+[CEF Python] App: Browser: OnProcessMessageReceived(): OnContextCreated
+[CEF Python] V8ContextHandler_OnContextCreated()
+[CEF Python] App: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+[CEF Python] App: Renderer: OnContextReleased()
+[CEF Python] App: Renderer: OnContextCreated()
+[CEF Python] App: Browser: OnProcessMessageReceived(): OnContextReleased
+[CEF Python] App: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+[CEF Python] V8ContextHandler_OnContextReleased()
+[CEF Python] del g_pyFrames[1#2]
+[CEF Python] App: Browser: OnProcessMessageReceived(): RemovePythonCallbacksForFrame
+[CEF Python] App: Browser: OnProcessMessageReceived(): OnContextCreated
+[CEF Python] V8ContextHandler_OnContextCreated()
+[CEF Python] Shutdown()
+[CEF Python] WARNING: Browser was not closed with CloseBrowser call. Will close it safely now, but this will delay CEF shutdown by 0.2 sec.
+[CEF Python] CefBrowser::CloseBrowser(True)
+[CEF Python] LifespanHandler_OnBeforeClose
+[CEF Python] del g_pyFrames[1#2]
+[CEF Python] del g_pyBrowsers[1]
+[CEF Python] App: Renderer: OnContextReleased()
+[CEF Python] RemovePyBrowser() FAILED: browser not found, id = 1
+[CEF Python] CefShutdown()
+[CEF Python] Initialize() called
+[CEF Python] CefExecuteProcess(): exitCode = -1
+[CEF Python] DEPRECATED: 'release_dcheck_enabled' setting
+[CEF Python] CefInitialize()
+[CEF Python] App_OnBeforeCommandLineProcessing_BrowserProcess()
+[CEF Python] App: Command line string for the browser process: python --browser-subprocess-path="C:\Python27\lib\site-packages\cefpython3\subprocess.exe" --no-sandbox --lang=en-US --log-file=debug.log --log-severity=info --resources-dir-path="C:\Python27\lib\site-packages\cefpython3" --locales-dir-path="C:\Python27\lib\site-packages\cefpython3\locales" --remote-debugging-port=65134 cefex.py
+[CEF Python] BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[CEF Python] BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[CEF Python] CreateBrowserSync() called
+[CEF Python] navigateUrl: ///C:/Users/Ankit/Documents/crawler_project/crawler/agg/nature-news-archive.html
+[CEF Python] CefBrowser::CreateBrowserSync()
+[CEF Python] GetPyBrowser(): create new PyBrowser, browserId=1
+[CEF Python] BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[CEF Python] CefBrowser::CreateBrowserSync() succeeded
+[CEF Python] SendProcessMessage(): message=DoJavascriptBindings, arguments size=1
+[CEF Python] App: Command line string for the renderer process: "C:\Python27\lib\site-packages\cefpython3\subprocess.exe" --type=renderer --no-sandbox --disable-databases --primordial-pipe-token=806B25E02EA117E80BD1223303BB5C75 --lang=en-US --lang=en-US --locales-dir-path="C:\Python27\lib\site-packages\cefpython3\locales" --log-file=debug.log --log-severity=info --resources-dir-path="C:\Python27\lib\site-packages\cefpython3" --enable-pinch --device-scale-factor=1 --num-raster-threads=2 --enable-main-frame-before-activation --content-image-texture-target=0,0,3553;0,1,3553;0,2,3553;0,3,3553;0,4,3553;0,5,3553;0,6,3553;0,7,3553;0,8,3553;0,9,3553;0,10,3553;0,11,3553;0,12,3553;0,13,3553;0,14,3553;0,15,3553;1,0,3553;1,1,3553;1,2,3553;1,3,3553;1,4,3553;1,5,3553;1,6,3553;1,7,3553;1,8,3553;1,9,3553;1,10,3553;1,11,3553;1,12,3553;1,13,3553;1,14,3553;1,15,3553;2,0,3553;2,1,3553;2,2,3553;2,3,3553;2,4,3553;2,5,3553;2,6,3553;2,7,3553;2,8,3553;2,9,3553;2,10,3553;2,11,3553;2,12,3553;2,13,3553;2,14,3553;2,15,3553;3,0,3553;3,1,3553;3,2,3553;3,3,3553;3,4,3553;3,5,3553;3,6,3553;3,7,3553;3,8,3553;3,9,3553;3,10,3553;3,11,3553;3,12,3553;3,13,3553;3,14,3553;3,15,3553 --service-request-channel-token=806B25E02EA117E80BD1223303BB5C75 --renderer-client-id=3 --mojo-platform-channel-handle=2256 /prefetch:1
+[CEF Python] App: Renderer: OnProcessMessageReceived(): DoJavascriptBindings
+[CEF Python] App: Renderer: OnContextCreated()
+[CEF Python] App: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+[CEF Python] App: Browser: OnProcessMessageReceived(): OnContextCreated
+[CEF Python] App: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+[CEF Python] V8ContextHandler_OnContextCreated()
+[CEF Python] App: Renderer: OnContextReleased()
+[CEF Python] App: Browser: OnProcessMessageReceived(): OnContextReleased
+[CEF Python] App: Renderer: OnContextCreated()
+[CEF Python] App: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+[CEF Python] V8ContextHandler_OnContextReleased()
+[CEF Python] del g_pyFrames[1#2]
+[CEF Python] App: Browser: OnProcessMessageReceived(): RemovePythonCallbacksForFrame
+[CEF Python] App: Browser: OnProcessMessageReceived(): OnContextCreated
+[CEF Python] V8ContextHandler_OnContextCreated()
+[CEF Python] Shutdown()
+[CEF Python] WARNING: Browser was not closed with CloseBrowser call. Will close it safely now, but this will delay CEF shutdown by 0.2 sec.
+[CEF Python] CefBrowser::CloseBrowser(True)
+[CEF Python] LifespanHandler_OnBeforeClose
+[CEF Python] del g_pyFrames[1#2]
+[CEF Python] del g_pyBrowsers[1]
+[CEF Python] RemovePyBrowser() FAILED: browser not found, id = 1
+[CEF Python] App: Renderer: OnContextReleased()
+[CEF Python] CefShutdown()
+[CEF Python] Initialize() called
+[CEF Python] CefExecuteProcess(): exitCode = -1
+[CEF Python] DEPRECATED: 'release_dcheck_enabled' setting
+[CEF Python] CefInitialize()
+[CEF Python] App_OnBeforeCommandLineProcessing_BrowserProcess()
+[CEF Python] App: Command line string for the browser process: python --browser-subprocess-path="C:\Python27\lib\site-packages\cefpython3\subprocess.exe" --no-sandbox --lang=en-US --log-file=debug.log --log-severity=info --resources-dir-path="C:\Python27\lib\site-packages\cefpython3" --locales-dir-path="C:\Python27\lib\site-packages\cefpython3\locales" --remote-debugging-port=57646 cefex.py
+[CEF Python] BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[CEF Python] BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[CEF Python] CreateBrowserSync() called
+[CEF Python] navigateUrl: http://www.google.com/
+[CEF Python] CefBrowser::CreateBrowserSync()
+[CEF Python] GetPyBrowser(): create new PyBrowser, browserId=1
+[CEF Python] BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[CEF Python] CefBrowser::CreateBrowserSync() succeeded
+[CEF Python] SendProcessMessage(): message=DoJavascriptBindings, arguments size=1
+[CEF Python] App: Command line string for the renderer process: "C:\Python27\lib\site-packages\cefpython3\subprocess.exe" --type=renderer --no-sandbox --disable-databases --primordial-pipe-token=BB278019709F3AB2E6E87F9DD2CD567A --lang=en-US --lang=en-US --locales-dir-path="C:\Python27\lib\site-packages\cefpython3\locales" --log-file=debug.log --log-severity=info --resources-dir-path="C:\Python27\lib\site-packages\cefpython3" --enable-pinch --device-scale-factor=1 --num-raster-threads=2 --enable-main-frame-before-activation --content-image-texture-target=0,0,3553;0,1,3553;0,2,3553;0,3,3553;0,4,3553;0,5,3553;0,6,3553;0,7,3553;0,8,3553;0,9,3553;0,10,3553;0,11,3553;0,12,3553;0,13,3553;0,14,3553;0,15,3553;1,0,3553;1,1,3553;1,2,3553;1,3,3553;1,4,3553;1,5,3553;1,6,3553;1,7,3553;1,8,3553;1,9,3553;1,10,3553;1,11,3553;1,12,3553;1,13,3553;1,14,3553;1,15,3553;2,0,3553;2,1,3553;2,2,3553;2,3,3553;2,4,3553;2,5,3553;2,6,3553;2,7,3553;2,8,3553;2,9,3553;2,10,3553;2,11,3553;2,12,3553;2,13,3553;2,14,3553;2,15,3553;3,0,3553;3,1,3553;3,2,3553;3,3,3553;3,4,3553;3,5,3553;3,6,3553;3,7,3553;3,8,3553;3,9,3553;3,10,3553;3,11,3553;3,12,3553;3,13,3553;3,14,3553;3,15,3553 --service-request-channel-token=BB278019709F3AB2E6E87F9DD2CD567A --renderer-client-id=3 --mojo-platform-channel-handle=2244 /prefetch:1
+[CEF Python] App: Renderer: OnProcessMessageReceived(): DoJavascriptBindings
+[CEF Python] App: Renderer: OnContextCreated()
+[CEF Python] App: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+[CEF Python] App: Browser: OnProcessMessageReceived(): OnContextCreated
+[CEF Python] V8ContextHandler_OnContextCreated()
+[CEF Python] App: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+[CEF Python] App: Renderer: OnContextReleased()
+[CEF Python] App: Browser: OnProcessMessageReceived(): OnContextReleased
+[CEF Python] App: Renderer: OnContextCreated()
+[CEF Python] App: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+[CEF Python] V8ContextHandler_OnContextReleased()
+[CEF Python] del g_pyFrames[1#2]
+[CEF Python] App: Browser: OnProcessMessageReceived(): RemovePythonCallbacksForFrame
+[CEF Python] App: Browser: OnProcessMessageReceived(): OnContextCreated
+[CEF Python] V8ContextHandler_OnContextCreated()
+cefpython: ------------------------------------------------------------
+cefpython: Initialize() called
+cefpython: CefExecuteProcess(): exitCode = -1
+cefpython: CefInitialize()
+cefpython: App_OnBeforeCommandLineProcessing_BrowserProcess()
+cefpython_app: Command line: python --browser-subprocess-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\subprocess.exe" --lang=en-US --log-file=debug.log --log-severity=info --enable-release-dcheck --resources-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2" --locales-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\locales" --no-sandbox cefex.py
+cefpython: CreateBrowserSync() called
+cefpython: navigateUrl: Kivy_%20Cross-platform%20Python%20Framework%20for%20NUI%20Development.html
+cefpython: CefBrowser::CreateBrowserSync()
+cefpython: GetPyBrowser(): creating new PyBrowser, browserId=1
+cefpython: BrowserProcessHandler_OnBeforeChildProcessLaunch()
+[0402/183543:ERROR_REPORT:render_widget_host_view_osr.cc(268)] Check failed: false. 
+cefpython: CefBrowser::CreateBrowserSync() succeeded
+cefpython: SendProcessMessage(): message=DoJavascriptBindings, arguments size=1
+cefpython_app: Command line: "C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\subprocess.exe" --type=renderer --no-sandbox --lang=en-US --lang=en-US --locales-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2\locales" --log-file=debug.log --log-severity=info --enable-release-dcheck --resources-dir-path="C:\Python27\lib\site-packages\kivy\garden\cefpython\libs\win32.py2" --channel="8376.0.722478735\410226936" /prefetch:673131151
+cefpython_app: Renderer: OnProcessMessageReceived(): DoJavascriptBindings
+cefpython_app: Renderer: OnContextCreated()
+cefpython_app: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+cefpython_app: Renderer: DoJavascriptBindingsForFrame(): bindings are set
+cefpython_app: Browser: OnProcessMessageReceived(): OnContextCreated
+cefpython: V8ContextHandler_OnContextCreated()
+[0402/183543:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+[0402/183543:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+[0402/183554:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+[0402/183554:INFO:dhcp_proxy_script_adapter_fetcher_win.cc(262)] Error fetching PAC URL from DHCP: 2
+cefpython: Shutdown()
+cefpython: del g_pyFrames[1]
+cefpython: del g_pyBrowsers[1]
+cefpython_app: Renderer: OnContextReleased()
+cefpython_app: Renderer: OnBrowserDestroyed()

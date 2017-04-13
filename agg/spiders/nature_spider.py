@@ -1,5 +1,6 @@
 import scrapy
 import datetime
+import pdb
 from ..items import JournalArticle
 
 class NatureSpider(scrapy.Spider):
@@ -35,7 +36,7 @@ class NatureSpider(scrapy.Spider):
 			pdf_url = article.css('a::attr(href)')[PDF_ind].extract()
 			news_article["file_urls"] = ["http://www.nature.com" +\
 									article.css('a::attr(href)')[PDF_ind].extract()]
-
+			news_article["date_created"] = datetime.datetime.utcnow().ctime()
 			# Continue to follow links backwards in time to the date specified
 			# current_date = 
 
