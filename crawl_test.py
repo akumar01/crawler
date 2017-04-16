@@ -11,7 +11,7 @@ from ui.custom_crawler import CustomCrawler
 import threading
 from subprocess import Popen
 import subprocess
-from __init__ import Paths
+from __init__ import Paths, Spiders
 import pdb
 
 
@@ -40,6 +40,7 @@ def read_sync_settings(file = 'test.ini', section='Sync Settings'):
 			continue
 	f.close()
 	return settings
+
 
 def do_crawl():
 
@@ -75,17 +76,20 @@ def do_crawl():
 	settings = read_sync_settings()
 
 
+	for spider in Spiders.spiders:
+		if settings[spider]:
+			script = ["scrapy", "crawl", spider, "-a", "sync_length=%s" 
+			                % settings["sync_length"]]
 
-	script = ["scrapy", "crawl", "nature_news"]
+			try:
+				p = Popen(script, cwd = '%s/crawler/agg' % os.getcwd())
+				p.wait()
+				print('Crawl Finished!')
+			except subprocess.CalledProcessError:
+				pass
+			except OSError:
+				pass
 
-	try:
-		p = Popen(script, cwd = '%s/crawler/agg' % os.getcwd())
-		p.wait()
-		print('Crawl Finished!')
-	except subprocess.CalledProcessError:
-		pass
-	except OSError:
-		pass
 if __name__ == "__main__":
     #do_crawl()
     read_sync_settings()

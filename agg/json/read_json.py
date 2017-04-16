@@ -24,7 +24,13 @@ def read_data(spider_name):
 
 	return item_list
 
-# 
-def get_update_log():
-	with open('last_update.json') as f:
-		return json.load(f)
+# Get date modified of latest json file
+def date_last_synced():
+	json_files = []
+	json_files += [each for each in os.listdir('crawler/agg/json')
+						if each.endswith('.json')]
+	time_mod = []
+	for file in json_files:
+	 	time_mod.append(os.path.getmtime('crawler/agg/json/%s/%s' % (folder, file)))
+	pdb.set_trace()
+	return None

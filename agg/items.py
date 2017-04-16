@@ -16,3 +16,4 @@ class JournalArticle(scrapy.Item):
 	files = scrapy.Field()
 	source_name = scrapy.Field()
 	date_created = scrapy.Field()
+	date = scrapy.Field()

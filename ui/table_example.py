@@ -166,9 +166,7 @@ class ArticleTable(GridLayout):
                 authors += ", %s" % author
         elif(len(data[i]["authors"]) == 1):
             authors = data[i]["authors"][0]
-
         file_path = Paths.files_path + data[i]["files"][0]["path"]
-
         return ArticleEntry(title = data[i]['title'], authors = authors,\
                             file_path = file_path)        
 
@@ -237,7 +235,6 @@ class TestApp(App):
                 default_settings[setting] = settings[setting]
             else:
                 default_settings[setting] = settings_master[setting][1]
-
         config.setdefaults('Sync Settings', default_settings)
 
     def build_settings(self, settings):

@@ -78,7 +78,6 @@ class DownloadPDFS(FilesPipeline):
                 logging.log(logging.INFO, 'File already exists!')
 
     def item_completed(self, results, item, info):
-
         for result in results:
             if results[0]:
                 if not result[1]['path']:
@@ -111,7 +110,7 @@ class JsonPipeline(object):
         if(not os.path.exists('json')):
             os.makedirs('json')
 
-        self.file = open('json/%s.json' % spider.name, 'wb')
+        self.file = open('json/%s.json' % spider.name, 'ab')
         self.exporter = JsonLinesItemExporter(self.file, encoding='utf-8', ensure_ascii=False)
         self.exporter.start_exporting()
 
@@ -136,5 +135,11 @@ class JsonPipeline(object):
  
     def process_item(self, item, spider):
         assert isinstance(item, JournalArticle)
-        self.exporter.export_item(item)
+        # This is kind of a hack to deal with instances where
+        # the file was likely unable to be downlaoded
+        try:
+            if(item["files"]):
+                self.exporter.export_item(item)
+        except:
+            pass
         return item
