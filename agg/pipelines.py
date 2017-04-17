@@ -26,7 +26,8 @@ class AggPipeline(object):
         item = self.clean_spaces(item, spider)
 
         
-        # Make sure if any of title, tags, or author is empty, set it to a blank string
+        # Make sure if any of title, tags,
+        # or author is empty, set it to a blank string
         if(not item["title"]):
             item["title"] = ""
         if(not item["authors"]):
@@ -73,6 +74,7 @@ class DownloadPDFS(FilesPipeline):
             # Downloaded files are stored with hash filenames by default
             filename = hashlib.sha1(file_url).hexdigest()
             if(not os.path.exists("files/%s/%s.pdf" % (item["spider"], filename))):
+                pdb.set_trace()
                 yield scrapy.Request(file_url)
             else: 
                 logging.log(logging.INFO, 'File already exists!')

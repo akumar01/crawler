@@ -36,19 +36,26 @@ class APSNewsSpider(scrapy.Spider):
 	
 		article_dates = []
 
-
+		pdb.set_trace()
+		
 		for article in articles:
 			news_article = JournalArticle()
 			news_article["spider"] = self.name
 			news_article["date_created"] = datetime.datetime.utcnow().ctime()
 			for field in article.keys():
 				news_article[field] = article[field]
+			news_article["file_urls"] = [response.urljoin(news_article["file_urls"])]
 			article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
 			article_dates.append(article_date)
 			if article_date < datetime.datetime.utcnow()\
 							 - datetime.timedelta(self.sync_length):
 				continue
 			else:
+
+				# We need to follow the link to the actual article and retrieve and 
+				# parse its contents
+#				scrapy.Request(url = link, callback = )
+
 				yield news_article
 
 
@@ -85,8 +92,8 @@ class APSNewsSpider(scrapy.Spider):
 			# require some post-processing
 			article["file_urls"] = link
 		except:
-			article["file_urls"] = []	
 
+			article["file_urls"] = []	
 
 		try:
 			authors = article_string.split('"authors":"')[1]
@@ -142,6 +149,13 @@ class APSNewsSpider(scrapy.Spider):
 			articles.append(self.parse_aps_article(raw_string[article_start_inds[i]:
 															article_end_inds[i]]))
 		return articles
+
+	# Callback to retrieve the actual article content. The current approach is to 
+	# just download the html page, and later on in the pipeline convert the html to 
+	# pdf. 
+	def retrieve_article(self, response):
+		# change the file_urls field of t
+		item = response.meta["item"]
 
 	def get_older_url(self, response, article_date):
 		# Currently, we use the kludge solution of explicitly navigating to the
