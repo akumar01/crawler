@@ -4,7 +4,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 import json_lines
 from crawler.agg.json import read_json
-from crawler.__init__ import Paths, Spiders, settings_master_list
+from crawler.project_vars import Paths, Spiders, settings_master_list
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout

@@ -11,7 +11,7 @@ from ui.custom_crawler import CustomCrawler
 import threading
 from subprocess import Popen
 import subprocess
-from __init__ import Paths, Spiders
+from project_vars import Paths, Spiders
 import pdb
 
 

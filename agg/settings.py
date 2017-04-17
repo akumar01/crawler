@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+import sys, os, pdb
+#sys.path.append(os.path.join(os.path.dirname(sys.path[0]), '..'))
+from project_vars import Paths
 # Scrapy settings for agg project
 #
 # For simplicity, this file contains only settings considered important or
@@ -71,7 +73,7 @@ ITEM_PIPELINES = {
 	'agg.pipelines.JsonPipeline' : 2,
 }
 # File download location
-FILES_STORE = 'C:/Users/Ankit/Documents/crawler_project/crawler/agg/files'
+FILES_STORE = Paths.files_path
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
