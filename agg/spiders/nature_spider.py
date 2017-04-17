@@ -66,7 +66,6 @@ class NatureSpider(scrapy.Spider):
 		if min(article_dates) > datetime.datetime.utcnow()\
 					- datetime.timedelta(self.sync_length):
 			link = response.urljoin(self.get_older_url(response, article_date))
-			pdb.set_trace()
 			yield scrapy.Request(url = link, callback=self.parse)
 
 

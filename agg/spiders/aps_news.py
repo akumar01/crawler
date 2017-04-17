@@ -18,31 +18,32 @@ class APSNewsSpider(scrapy.Spider):
 		]
 
 		for url in urls:
-			yield scrapy.Request(url=url, callback = self.parse)
+			yield scrapy.Request(url=url, callback = self.parse, meta = {'pageno' : 1})
 
 	def parse(self, response):
-
 
 		# Keep track of article dates so we can determine whether we must navigate to
 		# the next page to get older articles
 
+
+		# Cannot directly parse the html for this one, instead parse some javascript
+		# result at the end of the html body
 		article_string = response.css('body').css('script').extract()[-1]
 		article_string = article_string.split('window.results', 1)[1]
 		article_string = article_string.split(':',1)[1]
 		article_string = article_string.split(',"facets":{')[0]
 		articles = self.parse_aps(article_string)
-		
+	
 		article_dates = []
 
 
-		for article in article_dates:
+		for article in articles:
 			news_article = JournalArticle()
 			news_article["spider"] = self.name
-			news_artiicle["date_created"] = datetime.datetime.utcnow().ctime()
+			news_article["date_created"] = datetime.datetime.utcnow().ctime()
 			for field in article.keys():
 				news_article[field] = article[field]
-
-			article_date = datetime.datetime.striptime(article["date"], '%Y-%m-%d')
+			article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
 			article_dates.append(article_date)
 			if article_date < datetime.datetime.utcnow()\
 							 - datetime.timedelta(self.sync_length):
@@ -55,7 +56,8 @@ class APSNewsSpider(scrapy.Spider):
 								- datetime.timedelta(self.sync_length):
 			link = self.response.urljoin(self.get_older_url(response, article_date))
 			pdb.set_trace()
-
+			yield scrapy.Request(url = link, callback = self.parse, 
+								 meta = {'pageno':response.meta['pageno'] + 1})
 		
 	def parse_aps_article(self, article_string):
 		# Get the necessary information for an article:
@@ -139,7 +141,9 @@ class APSNewsSpider(scrapy.Spider):
 		for i in range(len(article_start_inds)):
 			articles.append(self.parse_aps_article(raw_string[article_start_inds[i]:
 															article_end_inds[i]]))
-		pdb.set_trace()
 		return articles
 
-	def get_older_url(self, response, article_date)
+	def get_older_url(self, response, article_date):
+		# Currently, we use the kludge solution of explicitly navigating to the
+		# url of the next page. Currently do not have a better way to do this.
+		return '?page=%d' % (response.meta['pageno'] + 1)
