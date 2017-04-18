@@ -80,6 +80,7 @@ class DownloadPDFS(FilesPipeline):
                 logging.log(logging.INFO, 'File already exists!')
 
     def item_completed(self, results, item, info):
+        pdb.set_trace()
         for result in results:
             if results[0]:
                 if not result[1]['path']:

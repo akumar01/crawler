@@ -1,6 +1,8 @@
 import scrapy
 import datetime
 import pdb
+from lxml import etree
+from io import StringIO
 from ..items import JournalArticle
 
 class APSNewsSpider(scrapy.Spider):
@@ -35,8 +37,6 @@ class APSNewsSpider(scrapy.Spider):
 		articles = self.parse_aps(article_string)
 	
 		article_dates = []
-
-		pdb.set_trace()
 		
 		for article in articles:
 			news_article = JournalArticle()
@@ -55,8 +55,9 @@ class APSNewsSpider(scrapy.Spider):
 				# We need to follow the link to the actual article and retrieve and 
 				# parse its contents
 #				scrapy.Request(url = link, callback = )
-
-				yield news_article
+				yield scrapy.Request(url = news_article["file_urls"][0], 
+										callback = self.retrieve_article, meta = {"item":news_article})
+#				yield news_article
 
 
 		if min(article_dates) > datetime.datetime.utcnow()\
@@ -150,12 +151,44 @@ class APSNewsSpider(scrapy.Spider):
 															article_end_inds[i]]))
 		return articles
 
-	# Callback to retrieve the actual article content. The current approach is to 
-	# just download the html page, and later on in the pipeline convert the html to 
-	# pdf. 
+	# Callback to rertrieve the actual article. Current approach is to just grab the 
+	# html of the article body, try to parse it to make online assets addressable, and then 
+	# pass it along. Later in the pipeline, we use pdfkit to convert the html to a pdf
 	def retrieve_article(self, response):
-		# change the file_urls field of t
+		# Retrieve the html of the article body. Subsequently we will convert it to a pdf:
 		item = response.meta["item"]
+		article_body = response.css('article.main-content').extract_first()
+		# Parse the article body and prepend the full url to any sources or hrefs
+		# Have to use lxml's HTML parser so that we can ignore errors associated with
+		# "broken" HTML
+		html_parser = etree.HTMLParser()
+		html_tree = etree.parse(StringIO(article_body), html_parser)
+
+		links = html_tree.findall('//*[@src]')
+		links +=html_tree.findall('//a[@href]')
+		base_url = 'https://physics.aps.org'		
+		for link in links:
+			attr = 'src' if 'src' in link.keys() else 'href'
+			url = link.get(attr)
+			# There are a few known cases. If the URL starts with \\,
+			# then we must prepend https:\\
+			# If it only starts with a single backslash, then it is
+			# necessary to prepend the physics.aps
+			if(url.startswith(r'//')):
+				url = 'https:' + url				
+			elif(url.startswith(r'/')):
+				url = base_url + url
+
+			link.set(attr, url)
+
+		root = etree.tostring(html_tree.getroot(), pretty_print=True, method="html")
+
+		pdb.set_trace()
+
+
+		item["article_html"] = root
+		return item
+
 
 	def get_older_url(self, response, article_date):
 		# Currently, we use the kludge solution of explicitly navigating to the

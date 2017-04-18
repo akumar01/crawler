@@ -10749,3 +10749,221 @@ WindowsError: [Error 3] The system cannot find the path specified
  'scheduler/enqueued/memory': 1,
  'start_time': datetime.datetime(2017, 3, 30, 22, 28, 58, 403000)}
 2017-03-30 15:28:59 [scrapy.core.engine] INFO: Spider closed (finished)
+2017-04-17 01:06:16 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: agg)
+2017-04-17 01:06:16 [scrapy.utils.log] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'agg.spiders', 'ROBOTSTXT_OBEY': True, 'SPIDER_MODULES': ['agg.spiders'], 'LOG_FILE': 'log', 'BOT_NAME': 'agg'}
+2017-04-17 01:06:16 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2017-04-17 01:06:16 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2017-04-17 01:06:16 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2017-04-17 01:06:16 [scrapy.middleware] INFO: Enabled item pipelines:
+['agg.pipelines.DownloadPDFS',
+ 'agg.pipelines.AggPipeline',
+ 'agg.pipelines.JsonPipeline']
+2017-04-17 01:06:16 [scrapy.core.engine] INFO: Spider opened
+2017-04-17 01:06:16 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2017-04-17 01:06:16 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6023
+2017-04-17 01:06:16 [scrapy.core.engine] DEBUG: Crawled (404) <GET https://physics.aps.org/robots.txt> (referer: None)
+2017-04-17 01:06:17 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://physics.aps.org/browse> (referer: None)
+2017-04-17 01:06:35 [scrapy.core.scraper] ERROR: Spider error processing <GET https://physics.aps.org/browse> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/aps_news.py", line 35, in parse
+    articles = self.parse_aps(article_string)
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/aps_news.py", line 146, in parse_aps
+    
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/aps_news.py", line 146, in parse_aps
+    
+  File "/usr/lib/python2.7/bdb.py", line 49, in trace_dispatch
+    return self.dispatch_line(frame)
+  File "/usr/lib/python2.7/bdb.py", line 68, in dispatch_line
+    if self.quitting: raise BdbQuit
+BdbQuit
+2017-04-17 01:06:35 [scrapy.core.engine] INFO: Closing spider (finished)
+2017-04-17 01:06:35 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 762,
+ 'downloader/request_count': 2,
+ 'downloader/request_method_count/GET': 2,
+ 'downloader/response_bytes': 18243,
+ 'downloader/response_count': 2,
+ 'downloader/response_status_count/200': 1,
+ 'downloader/response_status_count/404': 1,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2017, 4, 17, 8, 6, 35, 605956),
+ 'log_count/DEBUG': 3,
+ 'log_count/ERROR': 1,
+ 'log_count/INFO': 7,
+ 'response_received_count': 2,
+ 'scheduler/dequeued': 1,
+ 'scheduler/dequeued/memory': 1,
+ 'scheduler/enqueued': 1,
+ 'scheduler/enqueued/memory': 1,
+ 'spider_exceptions/BdbQuit': 1,
+ 'start_time': datetime.datetime(2017, 4, 17, 8, 6, 16, 238294)}
+2017-04-17 01:06:35 [scrapy.core.engine] INFO: Spider closed (finished)
+2017-04-17 01:06:37 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: agg)
+2017-04-17 01:06:37 [scrapy.utils.log] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'agg.spiders', 'ROBOTSTXT_OBEY': True, 'SPIDER_MODULES': ['agg.spiders'], 'LOG_FILE': 'log', 'BOT_NAME': 'agg'}
+2017-04-17 01:06:37 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2017-04-17 01:06:37 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2017-04-17 01:06:37 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2017-04-17 01:06:37 [scrapy.middleware] INFO: Enabled item pipelines:
+['agg.pipelines.DownloadPDFS',
+ 'agg.pipelines.AggPipeline',
+ 'agg.pipelines.JsonPipeline']
+2017-04-17 01:06:37 [scrapy.core.engine] INFO: Spider opened
+2017-04-17 01:06:37 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2017-04-17 01:06:37 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6023
+2017-04-17 01:06:37 [scrapy.core.engine] DEBUG: Crawled (404) <GET https://physics.aps.org/robots.txt> (referer: None)
+2017-04-17 01:06:38 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://physics.aps.org/browse> (referer: None)
+2017-04-17 01:06:38 [scrapy.core.scraper] ERROR: Spider error processing <GET https://physics.aps.org/browse> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/aps_news.py", line 56, in parse
+    if min(article_dates) > datetime.datetime.utcnow()\
+ValueError: min() arg is an empty sequence
+2017-04-17 01:06:38 [scrapy.core.engine] INFO: Closing spider (finished)
+2017-04-17 01:06:38 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 762,
+ 'downloader/request_count': 2,
+ 'downloader/request_method_count/GET': 2,
+ 'downloader/response_bytes': 18248,
+ 'downloader/response_count': 2,
+ 'downloader/response_status_count/200': 1,
+ 'downloader/response_status_count/404': 1,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2017, 4, 17, 8, 6, 38, 255380),
+ 'log_count/DEBUG': 3,
+ 'log_count/ERROR': 1,
+ 'log_count/INFO': 7,
+ 'response_received_count': 2,
+ 'scheduler/dequeued': 1,
+ 'scheduler/dequeued/memory': 1,
+ 'scheduler/enqueued': 1,
+ 'scheduler/enqueued/memory': 1,
+ 'spider_exceptions/ValueError': 1,
+ 'start_time': datetime.datetime(2017, 4, 17, 8, 6, 37, 128936)}
+2017-04-17 01:06:38 [scrapy.core.engine] INFO: Spider closed (finished)
+2017-04-17 01:07:54 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: agg)
+2017-04-17 01:07:54 [scrapy.utils.log] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'agg.spiders', 'ROBOTSTXT_OBEY': True, 'SPIDER_MODULES': ['agg.spiders'], 'LOG_FILE': 'log', 'BOT_NAME': 'agg'}
+2017-04-17 01:07:54 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2017-04-17 01:07:54 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2017-04-17 01:07:54 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2017-04-17 01:07:54 [scrapy.middleware] INFO: Enabled item pipelines:
+['agg.pipelines.DownloadPDFS',
+ 'agg.pipelines.AggPipeline',
+ 'agg.pipelines.JsonPipeline']
+2017-04-17 01:07:54 [scrapy.core.engine] INFO: Spider opened
+2017-04-17 01:07:54 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2017-04-17 01:07:54 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6023
+2017-04-17 01:07:54 [scrapy.core.engine] DEBUG: Crawled (404) <GET https://physics.aps.org/robots.txt> (referer: None)
+2017-04-17 01:07:55 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://physics.aps.org/browse> (referer: None)
+2017-04-17 01:07:55 [scrapy.core.scraper] ERROR: Spider error processing <GET https://physics.aps.org/browse> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/aps_news.py", line 56, in parse
+    if min(article_dates) > datetime.datetime.utcnow()\
+ValueError: min() arg is an empty sequence
+2017-04-17 01:07:55 [scrapy.core.engine] INFO: Closing spider (finished)
+2017-04-17 01:07:55 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 762,
+ 'downloader/request_count': 2,
+ 'downloader/request_method_count/GET': 2,
+ 'downloader/response_bytes': 18247,
+ 'downloader/response_count': 2,
+ 'downloader/response_status_count/200': 1,
+ 'downloader/response_status_count/404': 1,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2017, 4, 17, 8, 7, 55, 330753),
+ 'log_count/DEBUG': 3,
+ 'log_count/ERROR': 1,
+ 'log_count/INFO': 7,
+ 'response_received_count': 2,
+ 'scheduler/dequeued': 1,
+ 'scheduler/dequeued/memory': 1,
+ 'scheduler/enqueued': 1,
+ 'scheduler/enqueued/memory': 1,
+ 'spider_exceptions/ValueError': 1,
+ 'start_time': datetime.datetime(2017, 4, 17, 8, 7, 54, 148025)}
+2017-04-17 01:07:55 [scrapy.core.engine] INFO: Spider closed (finished)
