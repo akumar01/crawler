@@ -17,3 +17,7 @@ class JournalArticle(scrapy.Item):
 	source_name = scrapy.Field()
 	date_created = scrapy.Field()
 	date = scrapy.Field()
+
+class JournalArticleHTML(JournalArticle):
+	article_html = scrapy.Field()
+	html_src = scrapy.Field()

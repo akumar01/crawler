@@ -3,7 +3,7 @@ from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 import json_lines
-from crawler.agg.json import read_json
+from crawler.agg.json_out import read_json
 from crawler.project_vars import Paths, Spiders, settings_master_list
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.widget import Widget
@@ -24,7 +24,6 @@ from scrapy.utils.project import get_project_settings
 from scrapy.settings import Settings
 from scrapy import signals
 from crawler.agg.spiders.nature_spider import NatureSpider
-from kivy.garden.cefpython import CefBrowser, cefpython
 from kivy.clock import Clock, mainthread
 import threading
 import logging
@@ -36,7 +35,7 @@ from crawler.crawl_test import do_crawl, read_sync_settings
 from kivy.core.window import Window
 from kivy.uix.settings import SettingsWithTabbedPanel, SettingTitle, SettingsPanel, SettingBoolean, SettingNumeric
 
-active_sources = ['nature_news', 'nature_news']
+active_sources = ['nature_news', 'aps_news']
 
 # This JSON defines entries we want to appear in our App configuration screen
 json = '''
@@ -286,4 +285,3 @@ class TestApp(App):
 
 if __name__  == "__main__":
     TestApp().run()
-    cefpython.Shutdown()

@@ -3,7 +3,7 @@ import datetime
 import pdb
 from lxml import etree
 from io import StringIO
-from ..items import JournalArticle
+from ..items import JournalArticle, JournalArticleHTML
 
 class APSNewsSpider(scrapy.Spider):
 	name = 'aps_news'
@@ -39,12 +39,13 @@ class APSNewsSpider(scrapy.Spider):
 		article_dates = []
 		
 		for article in articles:
-			news_article = JournalArticle()
+			news_article = JournalArticleHTML()
 			news_article["spider"] = self.name
 			news_article["date_created"] = datetime.datetime.utcnow().ctime()
 			for field in article.keys():
 				news_article[field] = article[field]
-			news_article["file_urls"] = [response.urljoin(news_article["file_urls"])]
+			news_article["file_urls"] = []
+
 			article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
 			article_dates.append(article_date)
 			if article_date < datetime.datetime.utcnow()\
@@ -55,14 +56,17 @@ class APSNewsSpider(scrapy.Spider):
 				# We need to follow the link to the actual article and retrieve and 
 				# parse its contents
 #				scrapy.Request(url = link, callback = )
-				yield scrapy.Request(url = news_article["file_urls"][0], 
+				if news_article["html_src"]:
+					news_article["html_src"] = response.urljoin(news_article["html_src"])
+					yield scrapy.Request(url = news_article["html_src"], 
 										callback = self.retrieve_article, meta = {"item":news_article})
+				else:
+					continue
 #				yield news_article
-
 
 		if min(article_dates) > datetime.datetime.utcnow()\
 								- datetime.timedelta(self.sync_length):
-			link = self.response.urljoin(self.get_older_url(response, article_date))
+			link = response.urljoin(self.get_older_url(response, article_date))
 			pdb.set_trace()
 			yield scrapy.Request(url = link, callback = self.parse, 
 								 meta = {'pageno':response.meta['pageno'] + 1})
@@ -71,8 +75,8 @@ class APSNewsSpider(scrapy.Spider):
 		# Get the necessary information for an article:
 		article = {}
 
-		# Use the same keys as fields in JournalArticle to 
-		# allow for easy transfer later on in the pipeline
+		# Use the same keys as JournalArticleHTML
+
 		
 		# In the case that a given field cannot be parsed, 
 		# set the field to empty
@@ -89,12 +93,12 @@ class APSNewsSpider(scrapy.Spider):
 			# follows the tile entry
 			link = title.split('"link":"')[1]
 			link = link.split('"')[0]
-			# We cannot just download a pdf of this guy, so this will
-			# require some post-processing
-			article["file_urls"] = link
+			# Since we will not be downloading anything, can safely use the
+			# file field
+			article["html_src"] = link
 		except:
 
-			article["file_urls"] = []	
+			article["html_src"] = []	
 
 		try:
 			authors = article_string.split('"authors":"')[1]
@@ -115,7 +119,7 @@ class APSNewsSpider(scrapy.Spider):
 			date = date.split('"', 1)[0]
 			article["date"] = date
 		except:
-			article["data"] = []
+			article["date"] = []
 			
 		return article
 
@@ -183,10 +187,8 @@ class APSNewsSpider(scrapy.Spider):
 
 		root = etree.tostring(html_tree.getroot(), pretty_print=True, method="html")
 
-		pdb.set_trace()
-
-
 		item["article_html"] = root
+
 		return item
 
 
