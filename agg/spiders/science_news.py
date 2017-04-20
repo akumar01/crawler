@@ -11,7 +11,7 @@ class ScienceNewsSpider(scrapy.Spider):
 	def __init__(self, *args, **kwargs):
 		try:
 			self.sync_length = int(kwargs['sync_length'])
-		except Exception as e:
+		except:
 			self.sync_length = 10
 		self.base_url = 'https://www.sciencemag.org'
 
@@ -26,8 +26,6 @@ class ScienceNewsSpider(scrapy.Spider):
 		# Strongly mimic the structure of aps_news because the page is
 		# formatted similarly
 
-		pdb.set_trace()
-
 		# Keep track of article dates so we know whether or not we have 
 		# to go further back in time
 
@@ -41,17 +39,15 @@ class ScienceNewsSpider(scrapy.Spider):
 			news_article["spider"] = self.name
 			news_article["date_created"] = datetime.datetime.utcnow().ctime()
 
-			news_article = parse_science_article(article, news_article)
+			news_article = self.parse_science_article(article, news_article)
 
 			# The date format is particular to the source
 			# Consult the bottom of the datetime module documentation 
-			article_date = datetime.datetime.strptime(article["date"], '%b %d, %Y')
+			article_date = datetime.datetime.strptime(news_article["date"], '%b %d %Y')
 			article_dates.append(article_date)
 
 			# If the article is older than the time period we are interested in, 
 			# ignore it. 
-
-			article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
 			article_dates.append(article_date)
 			if article_date < datetime.datetime.utcnow()\
 							 - datetime.timedelta(self.sync_length):
@@ -69,12 +65,11 @@ class ScienceNewsSpider(scrapy.Spider):
 					continue
 #				yield news_article
 
+		# Navigate to the next page if we have to
 		if min(article_dates) > datetime.datetime.utcnow()\
 								- datetime.timedelta(self.sync_length):
 			link = self.base_url + self.get_older_url(response)
-			pdb.set_trace()
-			yield scrapy.Request(url = link, callback = self.parse, 
-								 meta = {'pageno':response.meta['pageno'] + 1})
+			yield scrapy.Request(url = link, callback = self.parse)
 
 	def parse_science_article(self, article, news_article):
 		# Get the title
@@ -106,7 +101,10 @@ class ScienceNewsSpider(scrapy.Spider):
 		# tags are retrieved from the article itself
 		
 		# This is a relative url that needs to be modified subsequently
-		news_article["html_src"] = article.css('h2.media_headline').css('a::attr(href)').extract_first()
+		news_article["html_src"] = article.css('h2.media__headline').css('a::attr(href)').extract_first()
+
+		# Nothing to download:
+		news_article["file_urls"] = []
 
 		return news_article
 
@@ -114,13 +112,24 @@ class ScienceNewsSpider(scrapy.Spider):
 		# Retrieve the html of the article body. Subsequently we will convert it to a pdf:
 		# We need to parse this body and replace relative links with their full forms
 		item = response.meta["item"]
+
+
+		# Need to get tags from the article page as well
+		tag_line = response.css('div.meta-line')
+		tags = ''
+		for tag in tag_line.css('li'):
+			if len(tags) > 0:
+				tags += ', '
+			tags += tag.css('a::text').extract_first()
+			
+		item["tags"] = tags
 		article_body = response.css('div.article__body').extract_first()
 
 		html_parser = etree.HTMLParser()
 		html_tree = etree.parse(StringIO(article_body), html_parser)
 
 		links = html_tree.findall('//a[@href]')
-		link += html_tree.findall('//*[@src]')
+		links += html_tree.findall('//*[@src]')
 		for link in links:
 			attr = 'src' if 'src'in link.keys() else 'href'
 			url = link.get(attr)
@@ -131,6 +140,9 @@ class ScienceNewsSpider(scrapy.Spider):
 			link.set(attr, url)
 
 		item["article_html"] = etree.tostring(html_tree.getroot(), pretty_print = True, method='html')
+		# Need to get tags from article body
+
+
 
 		return item
 

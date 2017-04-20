@@ -22,7 +22,7 @@ class AggPipeline(object):
 
         # Need to do special processing for sources that do not directly
         # yield PDFs
-        if spider.name in ['aps_news']:
+        if spider.name in ['aps_news', 'science_news']:
             item = self.html_to_pdf(item, spider)
             item = self.standardize(item, spider)
         elif spider.name in ["nature_news"]:

@@ -1,4 +1,7 @@
 To do: 
 
-1) Search more than just the first page (keep navigating next until some threshold)
-2) Handle file duplicates well (files have checksums)
+1) Fix APS_News authors appearance
+2) Thumbnail images 
+3) Source Headers
+4) Clean sync button
+5) Last updated timestamps on each source

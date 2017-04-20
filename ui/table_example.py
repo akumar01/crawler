@@ -35,7 +35,7 @@ from crawler.crawl_test import do_crawl, read_sync_settings
 from kivy.core.window import Window
 from kivy.uix.settings import SettingsWithTabbedPanel, SettingTitle, SettingsPanel, SettingBoolean, SettingNumeric
 
-active_sources = ['nature_news', 'aps_news']
+active_sources = ['nature_news', 'aps_news', 'science_news']
 
 # This JSON defines entries we want to appear in our App configuration screen
 json = '''
