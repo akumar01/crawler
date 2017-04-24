@@ -7,6 +7,7 @@ from crawler.agg.json_out import read_json
 from crawler.project_vars import Paths, Spiders, settings_master_list
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.widget import Widget
+from kivy.uix.carousel import Carousel
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.scrollview import ScrollView
@@ -92,18 +93,26 @@ class SourceHeader(Label):
 class SourceContainer(GridLayout):
     def __init__(self, **kwargs):
         super(SourceContainer, self).__init__(**kwargs)
-        self.add_widget(SourceHeader(src = kwargs['src']))
-        self.add_widget(ArticleTable(src = kwargs['src'], id = 'table'))
+        self.add_widget(SourceHeader(src = self.src))
+        self.add_widget(ArticleTable(src = self.src, id = 'table'))
 
-class SourceBoxes(GridLayout):
-    def __init__(self, **kwargs):
-        super(SourceBoxes, self).__init__(**kwargs)
-        for src in active_sources:
-            self.add_widget(SourceContainer(src = src, id = src))
+# class SourceBoxes(GridLayout):
+#     def __init__(self, **kwargs):
+#         super(SourceBoxes, self).__init__(**kwargs)
+#         for src in active_sources:
+#             self.add_widget(SourceContainer(src = src, id = src))
 
 class ScrollContainer(ScrollView):
+
     def __init__(self, **kwargs):
         super(ScrollContainer, self).__init__(**kwargs)
+        self.src = kwargs["src"]
+
+class ArticleCarousel(Carousel):
+    def __init__(self, **kwargs):
+        super(ArticleCarousel, self).__init__(**kwargs)
+        for src in active_sources:
+            self.add_widget(ScrollContainer(src = src))
 
 class ArticleTable(GridLayout):
     update_count = NumericProperty()
@@ -190,7 +199,7 @@ class TopRow(Widget):
 
     @mainthread
     def finish_sync(self, *args):
-        for src_box in root.ids.bottom_row.ids.src_boxes.children:
+        for src_box in root.ids.bottom_row.ids.src_box.children:
             src_box.children[0].update_count += 1
         self.ids.sync_button.disabled = False
         self.ids.sync_button.text = 'Sync'

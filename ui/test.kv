@@ -107,15 +107,19 @@
 <ScrollContainer>:
     bar_color: [1, 1, 1, 1]
     do_scroll_y: 1
-    SourceBoxes:
+    SourceContainer:
         height: self.minimum_height
-        cols: 1
-        id:src_boxes
+        id:src_box
         size_hint: 1, None
         padding: 50, 10 
+        src: root.src
+
+<ArticleCarousel>:
+    direction: 'right'
+
 
 RootGrid:
     TopRow:
         id: top_row
-    ScrollContainer:
+    ArticleCarousel:
         id: bottom_row
