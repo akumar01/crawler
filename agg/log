@@ -835,3 +835,498 @@ Traceback (most recent call last):
     if self.quitting: raise BdbQuit
 BdbQuit
 2017-04-29 22:19:19 [scrapy.extensions.logstats] INFO: Crawled 5 pages (at 5 pages/min), scraped 0 items (at 0 items/min)
+2017-04-29 22:25:59 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: agg)
+2017-04-29 22:25:59 [scrapy.utils.log] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'agg.spiders', 'ROBOTSTXT_OBEY': True, 'SPIDER_MODULES': ['agg.spiders'], 'LOG_FILE': 'log', 'BOT_NAME': 'agg'}
+2017-04-29 22:25:59 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2017-04-29 22:25:59 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2017-04-29 22:25:59 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2017-04-29 22:25:59 [scrapy.middleware] INFO: Enabled item pipelines:
+['agg.pipelines.DownloadPDFS',
+ 'agg.pipelines.AggPipeline',
+ 'agg.pipelines.JsonPipeline']
+2017-04-29 22:25:59 [scrapy.core.engine] INFO: Spider opened
+2017-04-29 22:25:59 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2017-04-29 22:25:59 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6023
+2017-04-29 22:26:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/robots.txt> (referer: None)
+2017-04-29 22:26:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+2017-04-29 22:26:00 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 60, in parse
+    article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
+TypeError: 'Selector' object has no attribute '__getitem__'
+2017-04-29 22:26:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/after-a-tumultous-start-trump-hopes-for-a-smoother-agenda-on-jobs-and-taxes/2017/04/29/2df4c05e-2c45-11e7-b605-33413c691853_story.html> (referer: https://www.washingtonpost.com/politics/?nid=top_nav_politics)
+2017-04-29 22:29:05 [scrapy.crawler] INFO: Received SIGINT, shutting down gracefully. Send again to force 
+2017-04-29 22:29:06 [scrapy.crawler] INFO: Received SIGINT twice, forcing unclean shutdown
+2017-04-29 22:29:13 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: agg)
+2017-04-29 22:29:13 [scrapy.utils.log] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'agg.spiders', 'ROBOTSTXT_OBEY': True, 'SPIDER_MODULES': ['agg.spiders'], 'LOG_FILE': 'log', 'BOT_NAME': 'agg'}
+2017-04-29 22:29:13 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2017-04-29 22:29:13 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2017-04-29 22:29:13 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2017-04-29 22:29:13 [scrapy.middleware] INFO: Enabled item pipelines:
+['agg.pipelines.DownloadPDFS',
+ 'agg.pipelines.AggPipeline',
+ 'agg.pipelines.JsonPipeline']
+2017-04-29 22:29:13 [scrapy.core.engine] INFO: Spider opened
+2017-04-29 22:29:13 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2017-04-29 22:29:13 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6024
+2017-04-29 22:29:13 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/robots.txt> (referer: None)
+2017-04-29 22:29:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+2017-04-29 22:29:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/world/?nid=menu_nav_world> (referer: None)
+2017-04-29 22:29:14 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 60, in parse
+    article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
+TypeError: 'Selector' object has no attribute '__getitem__'
+2017-04-29 22:29:14 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/world/?nid=menu_nav_world> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 60, in parse
+    article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
+TypeError: 'Selector' object has no attribute '__getitem__'
+2017-04-29 22:29:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/after-a-tumultous-start-trump-hopes-for-a-smoother-agenda-on-jobs-and-taxes/2017/04/29/2df4c05e-2c45-11e7-b605-33413c691853_story.html> (referer: https://www.washingtonpost.com/politics/?nid=top_nav_politics)
+2017-04-29 22:29:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/world/africa/the-anc-is-mandelas-legacy-now-his-granddaughter-has-renounced-south-africas-ruling-party/2017/04/29/17663916-23ae-11e7-928e-3624539060e8_story.html> (referer: https://www.washingtonpost.com/world/?nid=menu_nav_world)
+2017-04-29 22:40:12 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: agg)
+2017-04-29 22:40:12 [scrapy.utils.log] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'agg.spiders', 'ROBOTSTXT_OBEY': True, 'SPIDER_MODULES': ['agg.spiders'], 'LOG_FILE': 'log', 'BOT_NAME': 'agg'}
+2017-04-29 22:40:12 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2017-04-29 22:40:12 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2017-04-29 22:40:12 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2017-04-29 22:40:12 [scrapy.middleware] INFO: Enabled item pipelines:
+['agg.pipelines.DownloadPDFS',
+ 'agg.pipelines.AggPipeline',
+ 'agg.pipelines.JsonPipeline']
+2017-04-29 22:40:12 [scrapy.core.engine] INFO: Spider opened
+2017-04-29 22:40:12 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2017-04-29 22:40:12 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6025
+2017-04-29 22:40:12 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/robots.txt> (referer: None)
+2017-04-29 22:40:12 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+2017-04-29 22:40:12 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 60, in parse
+    article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
+TypeError: 'Selector' object has no attribute '__getitem__'
+2017-04-29 22:40:12 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/after-a-tumultous-start-trump-hopes-for-a-smoother-agenda-on-jobs-and-taxes/2017/04/29/2df4c05e-2c45-11e7-b605-33413c691853_story.html> (referer: https://www.washingtonpost.com/politics/?nid=top_nav_politics)
+2017-04-29 22:40:12 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/politics/after-a-tumultous-start-trump-hopes-for-a-smoother-agenda-on-jobs-and-taxes/2017/04/29/2df4c05e-2c45-11e7-b605-33413c691853_story.html> (referer: https://www.washingtonpost.com/politics/?nid=top_nav_politics)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/twisted/internet/defer.py", line 653, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 111, in retrieve_article
+    article_datetime = datetime.datetime.striptime(article_date, '%b %d')
+AttributeError: type object 'datetime.datetime' has no attribute 'striptime'
+2017-04-29 22:40:13 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/world/?nid=menu_nav_world> (referer: None)
+2017-04-29 22:40:13 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/world/?nid=menu_nav_world> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 60, in parse
+    article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
+TypeError: 'Selector' object has no attribute '__getitem__'
+2017-04-29 22:40:13 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/world/africa/the-anc-is-mandelas-legacy-now-his-granddaughter-has-renounced-south-africas-ruling-party/2017/04/29/17663916-23ae-11e7-928e-3624539060e8_story.html> (referer: https://www.washingtonpost.com/world/?nid=menu_nav_world)
+2017-04-29 22:40:13 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/world/africa/the-anc-is-mandelas-legacy-now-his-granddaughter-has-renounced-south-africas-ruling-party/2017/04/29/17663916-23ae-11e7-928e-3624539060e8_story.html> (referer: https://www.washingtonpost.com/world/?nid=menu_nav_world)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/twisted/internet/defer.py", line 653, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 111, in retrieve_article
+    article_datetime = datetime.datetime.striptime(article_date, '%b %d')
+AttributeError: type object 'datetime.datetime' has no attribute 'striptime'
+2017-04-29 22:40:13 [scrapy.core.engine] INFO: Closing spider (finished)
+2017-04-29 22:40:13 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 2216,
+ 'downloader/request_count': 5,
+ 'downloader/request_method_count/GET': 5,
+ 'downloader/response_bytes': 175380,
+ 'downloader/response_count': 5,
+ 'downloader/response_status_count/200': 5,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2017, 4, 30, 5, 40, 13, 970177),
+ 'log_count/DEBUG': 6,
+ 'log_count/ERROR': 4,
+ 'log_count/INFO': 7,
+ 'request_depth_max': 1,
+ 'response_received_count': 5,
+ 'scheduler/dequeued': 4,
+ 'scheduler/dequeued/memory': 4,
+ 'scheduler/enqueued': 4,
+ 'scheduler/enqueued/memory': 4,
+ 'spider_exceptions/AttributeError': 2,
+ 'spider_exceptions/TypeError': 2,
+ 'start_time': datetime.datetime(2017, 4, 30, 5, 40, 12, 120127)}
+2017-04-29 22:40:13 [scrapy.core.engine] INFO: Spider closed (finished)
+2017-04-29 22:40:44 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: agg)
+2017-04-29 22:40:44 [scrapy.utils.log] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'agg.spiders', 'ROBOTSTXT_OBEY': True, 'SPIDER_MODULES': ['agg.spiders'], 'LOG_FILE': 'log', 'BOT_NAME': 'agg'}
+2017-04-29 22:40:44 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2017-04-29 22:40:44 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2017-04-29 22:40:44 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2017-04-29 22:40:44 [scrapy.middleware] INFO: Enabled item pipelines:
+['agg.pipelines.DownloadPDFS',
+ 'agg.pipelines.AggPipeline',
+ 'agg.pipelines.JsonPipeline']
+2017-04-29 22:40:44 [scrapy.core.engine] INFO: Spider opened
+2017-04-29 22:40:44 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2017-04-29 22:40:44 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6025
+2017-04-29 22:40:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/robots.txt> (referer: None)
+2017-04-29 22:40:45 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/world/?nid=menu_nav_world> (referer: None)
+2017-04-29 22:40:45 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/world/?nid=menu_nav_world> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 60, in parse
+    article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
+TypeError: 'Selector' object has no attribute '__getitem__'
+2017-04-29 22:40:45 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/world/africa/the-anc-is-mandelas-legacy-now-his-granddaughter-has-renounced-south-africas-ruling-party/2017/04/29/17663916-23ae-11e7-928e-3624539060e8_story.html> (referer: https://www.washingtonpost.com/world/?nid=menu_nav_world)
+2017-04-29 22:40:45 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/world/africa/the-anc-is-mandelas-legacy-now-his-granddaughter-has-renounced-south-africas-ruling-party/2017/04/29/17663916-23ae-11e7-928e-3624539060e8_story.html> (referer: https://www.washingtonpost.com/world/?nid=menu_nav_world)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/twisted/internet/defer.py", line 653, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 111, in retrieve_article
+    article_datetime = datetime.datetime.strptime(article_date, '%b %d')
+  File "/usr/lib/python2.7/_strptime.py", line 332, in _strptime
+    (data_string, format))
+ValueError: time data 'April 29' does not match format '%b %d'
+2017-04-29 22:40:46 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+2017-04-29 22:40:46 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 60, in parse
+    article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
+TypeError: 'Selector' object has no attribute '__getitem__'
+2017-04-29 22:40:46 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/after-a-tumultous-start-trump-hopes-for-a-smoother-agenda-on-jobs-and-taxes/2017/04/29/2df4c05e-2c45-11e7-b605-33413c691853_story.html> (referer: https://www.washingtonpost.com/politics/?nid=top_nav_politics)
+2017-04-29 22:40:46 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/politics/after-a-tumultous-start-trump-hopes-for-a-smoother-agenda-on-jobs-and-taxes/2017/04/29/2df4c05e-2c45-11e7-b605-33413c691853_story.html> (referer: https://www.washingtonpost.com/politics/?nid=top_nav_politics)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/twisted/internet/defer.py", line 653, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 111, in retrieve_article
+    article_datetime = datetime.datetime.strptime(article_date, '%b %d')
+  File "/usr/lib/python2.7/_strptime.py", line 332, in _strptime
+    (data_string, format))
+ValueError: time data 'April 29' does not match format '%b %d'
+2017-04-29 22:40:46 [scrapy.core.engine] INFO: Closing spider (finished)
+2017-04-29 22:40:46 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 2216,
+ 'downloader/request_count': 5,
+ 'downloader/request_method_count/GET': 5,
+ 'downloader/response_bytes': 175383,
+ 'downloader/response_count': 5,
+ 'downloader/response_status_count/200': 5,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2017, 4, 30, 5, 40, 46, 669042),
+ 'log_count/DEBUG': 6,
+ 'log_count/ERROR': 4,
+ 'log_count/INFO': 7,
+ 'request_depth_max': 1,
+ 'response_received_count': 5,
+ 'scheduler/dequeued': 4,
+ 'scheduler/dequeued/memory': 4,
+ 'scheduler/enqueued': 4,
+ 'scheduler/enqueued/memory': 4,
+ 'spider_exceptions/TypeError': 2,
+ 'spider_exceptions/ValueError': 2,
+ 'start_time': datetime.datetime(2017, 4, 30, 5, 40, 44, 601036)}
+2017-04-29 22:40:46 [scrapy.core.engine] INFO: Spider closed (finished)
+2017-04-29 22:41:03 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: agg)
+2017-04-29 22:41:03 [scrapy.utils.log] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'agg.spiders', 'ROBOTSTXT_OBEY': True, 'SPIDER_MODULES': ['agg.spiders'], 'LOG_FILE': 'log', 'BOT_NAME': 'agg'}
+2017-04-29 22:41:03 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2017-04-29 22:41:03 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2017-04-29 22:41:03 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2017-04-29 22:41:03 [scrapy.middleware] INFO: Enabled item pipelines:
+['agg.pipelines.DownloadPDFS',
+ 'agg.pipelines.AggPipeline',
+ 'agg.pipelines.JsonPipeline']
+2017-04-29 22:41:03 [scrapy.core.engine] INFO: Spider opened
+2017-04-29 22:41:03 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2017-04-29 22:41:03 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6025
+2017-04-29 22:41:04 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/robots.txt> (referer: None)
+2017-04-29 22:41:04 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+2017-04-29 22:41:04 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/world/?nid=menu_nav_world> (referer: None)
+2017-04-29 22:41:04 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 60, in parse
+    article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
+TypeError: 'Selector' object has no attribute '__getitem__'
+2017-04-29 22:41:04 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/world/?nid=menu_nav_world> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 60, in parse
+    article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
+TypeError: 'Selector' object has no attribute '__getitem__'
+2017-04-29 22:41:04 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/after-a-tumultous-start-trump-hopes-for-a-smoother-agenda-on-jobs-and-taxes/2017/04/29/2df4c05e-2c45-11e7-b605-33413c691853_story.html> (referer: https://www.washingtonpost.com/politics/?nid=top_nav_politics)
+2017-04-29 22:41:04 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/world/africa/the-anc-is-mandelas-legacy-now-his-granddaughter-has-renounced-south-africas-ruling-party/2017/04/29/17663916-23ae-11e7-928e-3624539060e8_story.html> (referer: https://www.washingtonpost.com/world/?nid=menu_nav_world)
+2017-04-29 23:14:32 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: agg)
+2017-04-29 23:14:32 [scrapy.utils.log] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'agg.spiders', 'ROBOTSTXT_OBEY': True, 'SPIDER_MODULES': ['agg.spiders'], 'LOG_FILE': 'log', 'BOT_NAME': 'agg'}
+2017-04-29 23:14:32 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2017-04-29 23:14:32 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2017-04-29 23:14:32 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2017-04-29 23:14:32 [scrapy.middleware] INFO: Enabled item pipelines:
+['agg.pipelines.DownloadPDFS',
+ 'agg.pipelines.AggPipeline',
+ 'agg.pipelines.JsonPipeline']
+2017-04-29 23:14:32 [scrapy.core.engine] INFO: Spider opened
+2017-04-29 23:14:32 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2017-04-29 23:14:32 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6026
+2017-04-29 23:14:32 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/robots.txt> (referer: None)
+2017-04-29 23:14:34 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/world/?nid=menu_nav_world> (referer: None)
+2017-04-29 23:14:34 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+2017-04-29 23:14:34 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/world/?nid=menu_nav_world> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 60, in parse
+    article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
+TypeError: 'Selector' object has no attribute '__getitem__'
+2017-04-29 23:14:34 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/politics/?nid=top_nav_politics> (referer: None)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/utils/defer.py", line 102, in iter_errback
+    yield next(it)
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/offsite.py", line 29, in process_spider_output
+    for x in result:
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/referer.py", line 22, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/usr/local/lib/python2.7/dist-packages/scrapy/spidermiddlewares/depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 60, in parse
+    article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
+TypeError: 'Selector' object has no attribute '__getitem__'
+2017-04-29 23:14:34 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/world/africa/the-anc-is-mandelas-legacy-now-his-granddaughter-has-renounced-south-africas-ruling-party/2017/04/29/17663916-23ae-11e7-928e-3624539060e8_story.html> (referer: https://www.washingtonpost.com/world/?nid=menu_nav_world)
+2017-04-29 23:14:34 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.washingtonpost.com/politics/after-a-tumultous-start-trump-hopes-for-a-smoother-agenda-on-jobs-and-taxes/2017/04/29/2df4c05e-2c45-11e7-b605-33413c691853_story.html> (referer: https://www.washingtonpost.com/politics/?nid=top_nav_politics)
+2017-04-29 23:14:34 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/world/africa/the-anc-is-mandelas-legacy-now-his-granddaughter-has-renounced-south-africas-ruling-party/2017/04/29/17663916-23ae-11e7-928e-3624539060e8_story.html> (referer: https://www.washingtonpost.com/world/?nid=menu_nav_world)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/twisted/internet/defer.py", line 653, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 94, in retrieve_article
+    article_date = article_date.strip('T', 1)[0]
+TypeError: strip() takes at most 1 argument (2 given)
+2017-04-29 23:14:34 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.washingtonpost.com/politics/after-a-tumultous-start-trump-hopes-for-a-smoother-agenda-on-jobs-and-taxes/2017/04/29/2df4c05e-2c45-11e7-b605-33413c691853_story.html> (referer: https://www.washingtonpost.com/politics/?nid=top_nav_politics)
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/twisted/internet/defer.py", line 653, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/media/sf_Shared/crawler_project/crawler/agg/spiders/washpos.py", line 94, in retrieve_article
+    article_date = article_date.strip('T', 1)[0]
+TypeError: strip() takes at most 1 argument (2 given)
+2017-04-29 23:14:34 [scrapy.core.engine] INFO: Closing spider (finished)
+2017-04-29 23:14:34 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 2216,
+ 'downloader/request_count': 5,
+ 'downloader/request_method_count/GET': 5,
+ 'downloader/response_bytes': 175516,
+ 'downloader/response_count': 5,
+ 'downloader/response_status_count/200': 5,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2017, 4, 30, 6, 14, 34, 751361),
+ 'log_count/DEBUG': 6,
+ 'log_count/ERROR': 4,
+ 'log_count/INFO': 7,
+ 'request_depth_max': 1,
+ 'response_received_count': 5,
+ 'scheduler/dequeued': 4,
+ 'scheduler/dequeued/memory': 4,
+ 'scheduler/enqueued': 4,
+ 'scheduler/enqueued/memory': 4,
+ 'spider_exceptions/TypeError': 4,
+ 'start_time': datetime.datetime(2017, 4, 30, 6, 14, 32, 691641)}
+2017-04-29 23:14:34 [scrapy.core.engine] INFO: Spider closed (finished)

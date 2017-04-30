@@ -47,7 +47,8 @@ class WashPostSpider(scrapy.Spider):
 			# Unlike the usual structure, we have to parse the article html first before we decide to 
 			# discard it if it is too old 
 			if news_article["html_src"]:
-				news_article = scrapy.Request(url = news_article["html_src"], callback = self.retrieve_article)
+				news_article = scrapy.Request(url = news_article["html_src"], callback = self.retrieve_article,
+												meta = {'item': news_article})
 
 				if not news_article:
 					continue
@@ -88,14 +89,29 @@ class WashPostSpider(scrapy.Spider):
 	# pass it along. Later in the pipeline, we use pdfkit to convert the html to a pdf
 	def retrieve_article(self, response):
 
-		# Get the article date and decide if we want to continue:
-		article_date = response.xpath('//span[@itemprop=datePublished]')
-		pdb.set_trace()
+		news_article = response.meta["item"]
 
+		# Get the article date and decide if we want to continue:
+#		article_date = response.xpath('//span[@itemprop=datePublished]')
+		article_date = response.css('span.pb-timestamp::attr(content)').extract_first()
+		article_date = article_date.split('T', 1)[0]
+
+		article_datetime = datetime.datetime.strptime(article_date, '%Y-%m-%d')
+
+		# If the article is older than the time we have requested, return None
+		if article_datetime < datetime.datetime.utcnow()\
+							 - datetime.timedelta(self.sync_length):
+				return None
+
+		news_article["date"] = article_date
+
+		# Get the author
+		author = response.xpath('//span[@itemprop="author"]').xpath('//span[@itemprop="name"]//text()').extract_first()
 
 		# Retrieve the html of the article body. Subsequently we will convert it to a pdf:
-		item = response.meta["item"]
-		article_body = response.css('article.main-content').extract_first()
+		article_body = response.xpath('//article[@itemprop="articleBody"]').extract_first()
+
+
 		# Parse the article body and prepend the full url to any sources or hrefs
 		# Have to use lxml's HTML parser so that we can ignore errors associated with
 		# "broken" HTML
@@ -104,7 +120,7 @@ class WashPostSpider(scrapy.Spider):
 
 		links = html_tree.findall('//*[@src]')
 		links +=html_tree.findall('//a[@href]')
-		base_url = 'https://physics.aps.org'		
+		base_url = 'https://www.washingtonpost.com'		
 		for link in links:
 			attr = 'src' if 'src' in link.keys() else 'href'
 			url = link.get(attr)
