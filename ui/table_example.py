@@ -9,6 +9,7 @@ from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.widget import Widget
 from kivy.uix.carousel import Carousel
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.modalview import ModalView
@@ -86,11 +87,14 @@ class ArticleEntry(BoxLayout):
 #        self.thumbnail_path = 'C:\\Users\\Ankit\\Documents\\crawler_project\\crawler\\agg\\thumbnail.jpg'
 
 class SourceHeader(Label):
+
     def __init__(self, **kwargs):
         super(SourceHeader, self).__init__(**kwargs)
         self.text = kwargs['src']
 
 class SourceContainer(GridLayout):
+    src = StringProperty()
+
     def __init__(self, **kwargs):
         super(SourceContainer, self).__init__(**kwargs)
         self.add_widget(SourceHeader(src = self.src))
@@ -107,12 +111,20 @@ class ScrollContainer(ScrollView):
     def __init__(self, **kwargs):
         super(ScrollContainer, self).__init__(**kwargs)
         self.src = kwargs["src"]
+        self.add_widget(SourceContainer(src = self.src))
 
 class ArticleCarousel(Carousel):
     def __init__(self, **kwargs):
         super(ArticleCarousel, self).__init__(**kwargs)
         for src in active_sources:
             self.add_widget(ScrollContainer(src = src))
+        # b1 = Button(text = 'next source')
+        # b1.bind(on_press= b1.load_next())
+        # self.add_widget(b1)
+        # b2 = Button(text = 'previous source')
+        # b2.bind(on_press = b12load_previous())
+        # self.add_widget(b2)
+
 
 class ArticleTable(GridLayout):
     update_count = NumericProperty()

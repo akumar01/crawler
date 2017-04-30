@@ -107,15 +107,15 @@
 <ScrollContainer>:
     bar_color: [1, 1, 1, 1]
     do_scroll_y: 1
-    SourceContainer:
-        height: self.minimum_height
-        id:src_box
-        size_hint: 1, None
-        padding: 50, 10 
-        src: root.src
 
 <ArticleCarousel>:
     direction: 'right'
+    Button:
+        text: 'next source'
+        on_press: root.load_next
+    Button:
+        text: 'previous source'
+        on_press: root.load_previous
 
 
 RootGrid:
