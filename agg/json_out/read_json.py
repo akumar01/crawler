@@ -4,6 +4,7 @@ import os
 import pdb
 
 def read_data(spider_name):
+	
 	item_list = []
 	# Select the last modified record
 	# json_files = os.listdir('crawler/agg/json/%s' % folder)

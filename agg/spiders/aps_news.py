@@ -21,6 +21,7 @@ class APSNewsSpider(scrapy.Spider):
 
 		for url in urls:
 			yield scrapy.Request(url=url, callback = self.parse, meta = {'pageno' : 1})
+			time.sleep(randint(10, 20))
 
 	def parse(self, response):
 
@@ -67,7 +68,6 @@ class APSNewsSpider(scrapy.Spider):
 		if min(article_dates) > datetime.datetime.utcnow()\
 								- datetime.timedelta(self.sync_length):
 			link = response.urljoin(self.get_older_url(response, article_date))
-			pdb.set_trace()
 			yield scrapy.Request(url = link, callback = self.parse, 
 								 meta = {'pageno':response.meta['pageno'] + 1})
 		

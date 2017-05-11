@@ -13,8 +13,13 @@ class WashPostSpider(scrapy.Spider):
 			self.sync_length = int(kwargs['sync_length'])
 		except:
 			# Volume of article generated is so great that
-			# we only sync back to 1 day by default
-			self.sync_length = 1
+			# we only sync back to 2 days by default. Currently
+			# disabled search for older articles anyways (see below)
+			self.sync_length = 2
+
+		# Make article dates an attribute so that it can be modified in
+		# the retrieve article method
+		self.article_dates = []
 
 	def start_requests(self):
 		# Place which sections to grab here. Currently Politics and World
@@ -28,13 +33,13 @@ class WashPostSpider(scrapy.Spider):
 
 	def parse(self, response):
 
-		# Keep track of article dates so we can determine whether we must navigate to
-		# the next page to get older articles
-
 		articles =	response.css('section.main-content').css('div.story-headline')
 
 		
 		for article in articles:
+			# If the article is actually a link to a video, ignore it:
+			full_class = article.xpath('@class')
+
 			news_article = JournalArticleHTML()
 			news_article["spider"] = self.name
 			news_article["tags"] = response.meta["section"]
@@ -44,69 +49,58 @@ class WashPostSpider(scrapy.Spider):
 			# Full url is already included
 			news_article["html_src"] = article.css('h3').css('a::attr(href)').extract_first()
 
+			# Set file_urls to blank:
+			news_article["file_urls"] = []
+
 			# Unlike the usual structure, we have to parse the article html first before we decide to 
 			# discard it if it is too old 
 			if news_article["html_src"]:
-				news_article = scrapy.Request(url = news_article["html_src"], callback = self.retrieve_article,
+				yield scrapy.Request(url = news_article["html_src"], callback = self.retrieve_article,
 												meta = {'item': news_article})
-
-				if not news_article:
-					continue
-				else:
-					yield news_article
 			else:
 				continue
-
-
-			article_date = datetime.datetime.strptime(article["date"], '%Y-%m-%d')
-			article_dates.append(article_date)
-			if article_date < datetime.datetime.utcnow()\
-							 - datetime.timedelta(self.sync_length):
-				continue
-			else:
-
-				# We need to follow the link to the actual article and retrieve and 
-				# parse its contents
-#				scrapy.Request(url = link, callback = )
-				if news_article["html_src"]:
-					news_article["html_src"] = response.urljoin(news_article["html_src"])
-					yield scrapy.Request(url = news_article["html_src"], 
-										callback = self.retrieve_article, meta = {"item":news_article})
-				else:
-					continue
-#				yield news_article
-
-		if min(article_dates) > datetime.datetime.utcnow()\
+		
+		''' Given how many articles Washington Post generates, decided that going back
+		to retrive more isn't worth it.
+		if min(self.article_dates) > datetime.datetime.utcnow()\
 								- datetime.timedelta(self.sync_length):
 			link = response.urljoin(self.get_older_url(response, article_date))
 			pdb.set_trace()
 			yield scrapy.Request(url = link, callback = self.parse, 
 								 meta = {'pageno':response.meta['pageno'] + 1})
-		
+		'''
 	
 	# Callback to rertrieve the actual article. Current approach is to just grab the 
 	# html of the article body, try to parse it to make online assets addressable, and then 
 	# pass it along. Later in the pipeline, we use pdfkit to convert the html to a pdf
 	def retrieve_article(self, response):
 
-		news_article = response.meta["item"]
+		item = response.meta["item"]
 
 		# Get the article date and decide if we want to continue:
 #		article_date = response.xpath('//span[@itemprop=datePublished]')
 		article_date = response.css('span.pb-timestamp::attr(content)').extract_first()
-		article_date = article_date.split('T', 1)[0]
+		try:
+			article_date = article_date.split('T', 1)[0]
+		except:
+			pdb.set_trace()
 
 		article_datetime = datetime.datetime.strptime(article_date, '%Y-%m-%d')
 
 		# If the article is older than the time we have requested, return None
 		if article_datetime < datetime.datetime.utcnow()\
 							 - datetime.timedelta(self.sync_length):
-				return None
+			# Set article_html to blank so that it is dropped in the pipeline
+			item["article_html"] = []
+			return item 
 
-		news_article["date"] = article_date
+		self.article_dates.append(article_datetime)
+
+		item["date"] = article_date
 
 		# Get the author
-		author = response.xpath('//span[@itemprop="author"]').xpath('//span[@itemprop="name"]//text()').extract_first()
+		item["authors"] = \
+					response.xpath('//span[@itemprop="author"]').xpath('//span[@itemprop="name"]//text()').extract_first()
 
 		# Retrieve the html of the article body. Subsequently we will convert it to a pdf:
 		article_body = response.xpath('//article[@itemprop="articleBody"]').extract_first()
@@ -143,6 +137,17 @@ class WashPostSpider(scrapy.Spider):
 
 
 	def get_older_url(self, response, article_date):
-		# Currently, we use the kludge solution of explicitly navigating to the
-		# url of the next page. Currently do not have a better way to do this.
-		return '?page=%d' % (response.meta['pageno'] + 1)
+		# Getting more stories requires that we send the same request that the 
+		# "Load more" button seems to do. The response should then be the html 
+		# of the additional stories. 
+
+		# Construct the request string
+#		pdb.set_trace()
+#		request = 'https:'
+#		request += response.xpath('//div[@class="button pb-loadmore clear"]//@data-path')
+#		request += '?id='
+#		request += response.xpath('//div[@="button pb-loadmore clear"]//@')
+#		request += '&contentUri=%2F'
+#		request += 
+		pass
+#		return request

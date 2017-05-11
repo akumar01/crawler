@@ -9,6 +9,7 @@ from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.widget import Widget
 from kivy.uix.carousel import Carousel
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.stacklayout import StackLayout
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.scrollview import ScrollView
@@ -26,6 +27,7 @@ from scrapy.utils.project import get_project_settings
 from scrapy.settings import Settings
 from scrapy import signals
 from crawler.agg.spiders.nature_spider import NatureSpider
+from kivy.graphics.instructions import InstructionsGroup
 from kivy.clock import Clock, mainthread
 import threading
 import logging
@@ -33,11 +35,14 @@ import pdb
 import time 
 import os
 import sys
+from math import ceil
 from crawler.crawl_test import do_crawl, read_sync_settings
 from kivy.core.window import Window
 from kivy.uix.settings import SettingsWithTabbedPanel, SettingTitle, SettingsPanel, SettingBoolean, SettingNumeric
+from dynamicboxlayout import DynamicBoxLayout
+from tilelayout import TileLayout
 
-active_sources = ['nature_news', 'aps_news', 'science_news']
+active_sources = Spiders.spiders
 
 # This JSON defines entries we want to appear in our App configuration screen
 json = '''
@@ -67,12 +72,9 @@ class TableItem(Label):
     pass
 
 class ArticleLink(Label):
-    def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):
-            os.startfile(self.file_path)
-            #m = ArticleView()
-            #m.view()
-class ArticleEntry(BoxLayout):
+    pass
+
+class ArticleEntry(DynamicBoxLayout):
     title = StringProperty()
     authors = StringProperty()
     file_path = StringProperty()
@@ -85,6 +87,26 @@ class ArticleEntry(BoxLayout):
         self.file_path = kwargs['file_path']
         self.thumbnail_path = Paths.root_path + '/agg/thumbnail.jpg'
 #        self.thumbnail_path = 'C:\\Users\\Ankit\\Documents\\crawler_project\\crawler\\agg\\thumbnail.jpg'
+        self.add_shadow()
+
+    # Add a shadow to the box to make it pop out.
+    def add_shadow(self):
+        # Wait until the widget is properly initiated in the widget
+        # tree
+        if(list(self.walk_reverse())):
+            shadow = InstructionsGroup()
+            # Need to tie dimensions of 
+            spacing = list(self.walk_reverse())[0].spacing
+            # vertical shadow
+            shadow.add()
+
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            os.startfile(self.file_path)
+            #m = ArticleView()
+            #m.view()
+
 
 class SourceHeader(Label):
 
@@ -113,20 +135,26 @@ class ScrollContainer(ScrollView):
         self.src = kwargs["src"]
         self.add_widget(SourceContainer(src = self.src))
 
-class ArticleCarousel(Carousel):
+class ArticleCarouselContainer(GridLayout):
     def __init__(self, **kwargs):
-        super(ArticleCarousel, self).__init__(**kwargs)
+        super(ArticleCarouselContainer, self).__init__(**kwargs)
+        c = Carousel(direction="right")
         for src in active_sources:
-            self.add_widget(ScrollContainer(src = src))
-        # b1 = Button(text = 'next source')
-        # b1.bind(on_press= b1.load_next())
-        # self.add_widget(b1)
-        # b2 = Button(text = 'previous source')
-        # b2.bind(on_press = b12load_previous())
-        # self.add_widget(b2)
+            c.add_widget(ScrollContainer(src = src))
+        f = BoxLayout(size_hint = (1, 0.1))
+        b1 = Button(text = 'previous source')
+        f.add_widget(b1)
+        b2 = Button(text = 'next source')
+        f.add_widget(b2)
+        self.add_widget(f)
+        self.add_widget(c)
+
+        b1.bind(on_press= lambda x: c.load_previous())
+        b2.bind(on_press = lambda x: c.load_next())
 
 
-class ArticleTable(GridLayout):
+
+class ArticleTable(TileLayout):
     update_count = NumericProperty()
 
     def __init__(self, **kwargs):
@@ -144,11 +172,29 @@ class ArticleTable(GridLayout):
     def fetch_data(self):
         self.data = read_json.read_data(self.src)
     def display_data(self, data):
-        if len(data) < 1:
-            row = self.empty_message()
-        else:
-            for i in xrange(len(data)):
-                self.add_widget(self.create_rows(data, i))
+
+        # Data is always displayed in two columns. Divide the data in
+        # half, rounding up for the first column
+        # data_1 = data[:int(ceil(float(len(data))/2))]
+        # data_2 = data[int(ceil(float(len(data))/2)):]
+
+        # c1 = DynamicBoxLayout(orientation = 'vertical', size_hint_y = None,
+        #                       height = self.minimum_height)
+        # c2 = DynamicBoxLayout(orientation = 'vertical', size_hint_y = None,
+        #                       height = self.minimum_height)
+
+        # for entry in data_1:
+        #     c1.add_widget(self.create_rows(entry))
+        # for entry in data_2:
+        #     c2.add_widget(self.create_rows(entry))
+
+
+        # self.add_widget(c1)
+        # self.add_widget(c2)
+
+
+        for entry in data:
+            self.add_widget(self.create_rows(entry))
 
     def empty_message(self):
         return Label(text = 'Nothing to see here. Try syncing.')
@@ -178,17 +224,17 @@ class ArticleTable(GridLayout):
     #     fourth_column = TableItem(text='PDF')
     #     return [first_column, second_column, third_column, fourth_column]
 
-    def create_rows(self, data, i):
+    def create_rows(self, data_entry):
         authors = ''
-        if(len(data[i]["authors"]) > 1):
-            authors += data[i]["authors"][0]
-            for author in data[i]["authors"][1:]:
+        if(len(data_entry["authors"]) > 1):
+            authors += data_entry["authors"][0]
+            for author in data_entry["authors"][1:]:
                 authors += ", %s" % author
-        elif(len(data[i]["authors"]) == 1):
-            authors = data[i]["authors"][0]
-        file_path = Paths.files_path + data[i]["files"][0]["path"]
-        return ArticleEntry(title = data[i]['title'], authors = authors,\
-                            file_path = file_path)        
+        elif(len(data_entry["authors"]) == 1):
+            authors = data_entry["authors"][0]
+        file_path = Paths.files_path + data_entry["files"][0]["path"]
+        return ArticleEntry(title = data_entry['title'], authors = authors,\
+                            file_path = file_path, size_hint_y= None)        
 
 class TopRow(Widget):
     def __init__(self, **kwargs):
@@ -211,6 +257,7 @@ class TopRow(Widget):
 
     @mainthread
     def finish_sync(self, *args):
+        pdb.set_trace()
         for src_box in root.ids.bottom_row.ids.src_box.children:
             src_box.children[0].update_count += 1
         self.ids.sync_button.disabled = False

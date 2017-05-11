@@ -9,8 +9,9 @@ class Paths(object):
 
 # Add currently functioning spiders definitions here
 class Spiders(object):
-	spiders = ['nature_news', 'aps_news', 'science_news']
+	spiders = ['nature_news', 'aps_news', 'science_news', 'washpost']
 
+# Master list for use in the settings panel of the UI
 def settings_master_list():
 	settings = {}
 	for spider in Spiders.spiders:
