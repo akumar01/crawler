@@ -27,7 +27,7 @@ from scrapy.utils.project import get_project_settings
 from scrapy.settings import Settings
 from scrapy import signals
 from crawler.agg.spiders.nature_spider import NatureSpider
-from kivy.graphics.instructions import InstructionsGroup
+from kivy.graphics.instructions import InstructionGroup
 from kivy.clock import Clock, mainthread
 import threading
 import logging
@@ -94,11 +94,17 @@ class ArticleEntry(DynamicBoxLayout):
         # Wait until the widget is properly initiated in the widget
         # tree
         if(list(self.walk_reverse())):
-            shadow = InstructionsGroup()
+            shadow = InstructionGroup()
             # Need to tie dimensions of 
             spacing = list(self.walk_reverse())[0].spacing
             # vertical shadow
-            shadow.add()
+            shadow.add(Color(0.25, 0.25, 0.25, 0.25))
+            shadow.add(Rectangle(size=(0.1 * spacing[0], self.height), 
+                pos=(self.x + self.width, self.y - 0.1 * spacing[1])))
+            shadow.add(Rectangle(size=(0.98 * self.width, 0.1 * spacing[1]),
+                                 pos=(self.x + 0.1 * spacing[0], self.y - 0.1 * spacing[1])))
+            self.canvas.add(shadow)
+
 
 
     def on_touch_down(self, touch):
