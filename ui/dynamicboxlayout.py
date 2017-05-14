@@ -1,8 +1,9 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import nmax
 from kivy.properties import (NumericProperty, ReferenceListProperty,
-                             VariableListProperty)
+							 VariableListProperty)
 import pdb
+from time import time
 
 # Create a box layout that supports the minimum_size
 
@@ -65,9 +66,11 @@ class DynamicBoxLayout(BoxLayout):
 
 	# Override do_layout so that we update the minimum_size first
 	def do_layout(self, *largs):
+		start_time = time()
 		self.update_minimum_size()
 
 		# Continue as usual otherwise. Remember, if there are size_hints 
 		# then they will be taken into account by BoxLayout and the desired
 		# effect will not occur
 		super(DynamicBoxLayout, self).do_layout(*largs)
+		print("--- DynamicBoxLayout _get_vbar: %s sec ---" % (time() - start_time))        

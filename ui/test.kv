@@ -38,21 +38,6 @@
 #    padding: 10, 10
     spacing: 0, 1
 
-    canvas:
-        Color:
-            rgba: 0.38, 0.47, 0.8, 0.5
-        Rectangle:
-            pos: self.pos
-            size: self.size
-        Color:
-            rgba: 0.25, 0.25, 0.25, 0.2
-        Rectangle:
-            size: 0.1 * 4, self.height
-            pos: self.x + self.width, self.y - 0.1 * 4 
-        Rectangle:
-            size: 0.98 * self.width, 0.1 * 40
-            pos: self.x + 0.1 * 4, self.y - 0.1 * 4
-
     Image:
         source: root.thumbnail_path
         height: '150dp'
@@ -151,14 +136,16 @@
     height: self.minimum_height
     size_hint: (1, None)            
     spacing: 10, 10
+    padding: 10, 0, 10, 0
     target_dim: 300
-
 
 
 # Scroll View Widget for all the sources to sit in.
 <ScrollContainer>:
     bar_color: [0.2, 0.2, 0.2, 0.5]
     do_scroll_y: 1
+    scroll_type: ['bars', 'content']
+    scroll_speed:
 
 # Grid Layout container for the article source carousel
 # and the buttons that are used to navigate it
