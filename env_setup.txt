@@ -1,0 +1,11 @@
+Environment Setup:
+
+scrapy_env: 2.7.13
+packages installed:
+scrapy -> Microsoft C++ 9.0 for 2.7
+pypiwin32
+pdfkit
+
+ui_env: 3.6
+packages installed:
+pyqt5

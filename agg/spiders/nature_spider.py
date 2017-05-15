@@ -7,7 +7,10 @@ class NatureSpider(scrapy.Spider):
 	name = "nature_news"
 
 	def __init__(self, *args, **kwargs):
-		self.sync_length = int(kwargs['sync_length'])
+		try:
+			self.sync_length = int(kwargs['sync_length'])
+		except:
+			self.sync_length = 15
 
 	def start_requests(self):
 		urls = [
