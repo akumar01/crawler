@@ -9,3 +9,5 @@ pdfkit
 ui_env: 3.6
 packages installed:
 pyqt5
+pypiwin32
+json_lines
