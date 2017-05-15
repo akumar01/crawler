@@ -26,9 +26,8 @@ class SourceEntry(QVBoxLayout):
 		secondary_text += self.tags
 		self.addWidget(QLabel(secondary_text))
 		PDF_link = QPushButton("PDF")
-		PDF_link.clicked.connect(self.open_pdf())
+		PDF_link.clicked.connect(self.open_pdf)
 		self.addWidget(PDF_link)
-		pdb.set_trace()
 		desc = QLabel(self.desc)
 		desc.setWordWrap(True)
 		self.addWidget(desc)
