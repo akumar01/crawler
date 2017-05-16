@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QHBoxLayout, QWidget,
 							 QGroupBox, QStackedLayout)
 from crawler.agg.json_out import read_json
 from crawler.project_vars import Paths, Spiders
+from PyQt5.QtCore import Qt
 import pdb
 
 active_sources = Spiders.spiders
@@ -16,23 +17,36 @@ lorem_ipsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed inte
 
 class SourceSelector(QLabel):
 
-	def __init__(self, **kwargs):
-		super().__init__()
+	def __init__(self, text, **kwargs):
+		super(SourceSelector, self).__init__(text)
+		self.app = kwargs["app"]
+		self.source = kwargs["source"]
 
-	def mouse_proess(self):
-		pass
+	def mousePressEvent(self, event):
+		self.app.switch_to_source(self.source)
 
+class BackButton(QPushButton):
+
+	def __init__(self, text, **kwargs):
+		super(BackButton, self).__init__(text)
+		self.app = kwargs["app"]
+
+	def mousePressEvent(self, event):
+		self.app.return_home()
 
 class SourceEntry(QVBoxLayout):
 
 	def __init__(self, **kwargs):
 		super().__init__()
 
-		self.title = kwargs["title"]
-		self.authors = kwargs["authors"]
-		self.tags = kwargs["tags"]
-		self.desc = kwargs["desc"]
-		self.path = kwargs["file_url"]
+		article = kwargs["article"]
+
+		self.title = article["title"]
+		self.authors = article["authors"]
+		self.tags = article["tags"]
+#		self.desc = article["desc"]
+		self.desc = lorem_ipsum
+		self.path = article["files"][0]["path"]
 
 		self.addWidget(QLabel(self.title))
 		secondary_text = "By %s" % self.authors
@@ -66,7 +80,7 @@ class App(QWidget):
 	def load_data(self):
 		self.data = {}
 		for src in active_sources:
-			self.data["src"] = read_json.read_data(src)
+			self.data[src] = read_json.read_data(src)
 
 	def init_window(self):
 		
@@ -74,24 +88,27 @@ class App(QWidget):
 		self.setWindowTitle("Helloz")
 		self.show()
 
+	# Set certain widgets as attributes so that they can 
+	# be easily referenced when needed
 	def init_root_layout(self):
-		root_layout = QVBoxLayout()
-		topmenu = self.init_topmenu()
+		self.root_layout = QVBoxLayout()
+		self.topmenu = self.init_topmenu()
+		self.topmenu.setMaximumHeight(50)
+		self.content_area = QVBoxLayout()
 
-		content_area = QVBoxLayout()
+		self.sources = self.init_sources()
 
-		sources = self.init_sources()
+		self.new_articles = self.init_new_articles()
 
-		new_articles = self.init_new_articles()
+		self.content_area.addWidget(self.sources)
+		self.content_area.addWidget(self.new_articles)
 
-		content_area.addWidget(sources)
-		content_area.addWidget(scroll_area)
-
-		root_layout.addLayout(topmenu)
-		root_layout.addLayout(content_area)
-		self.setLayout(root_layout)
+		self.root_layout.addWidget(self.topmenu)
+		self.root_layout.addLayout(self.content_area)
+		self.setLayout(self.root_layout)
 
 	def init_topmenu(self):
+		topmenu_widget = QWidget()
 		topmenu = QHBoxLayout()
 		Title = QLabel("Ankit's Crawler")
 		Sync_Button = QPushButton("Sync")
@@ -99,7 +116,8 @@ class App(QWidget):
 		topmenu.addWidget(Title)
 		topmenu.addWidget(Sync_Button)
 		topmenu.addWidget(Last_Updated)
-		return topmenu
+		topmenu_widget.setLayout(topmenu)
+		return topmenu_widget
 
 	# List of sources
 	def init_sources(self):
@@ -107,15 +125,16 @@ class App(QWidget):
 		sources_layout = QGridLayout()
 
 		n_columns = 3
-		n_rows = int(ceil(len(active_sources)/n_columns.))
+		n_rows = int(ceil(len(active_sources)/n_columns))
 
 		for i in range(n_rows):
 			for j in range(n_columns):
 				ind = i * n_columns + j
 				if ind >= len(active_sources):
 					break
-				label = QLabel(active_sources[ind])
-				sources_layout.addWidge(label)
+				label = SourceSelector(active_sources[ind], app=self,
+															source=active_sources[ind])
+				sources_layout.addWidget(label, i, j)
 
 		sources.setLayout(sources_layout)
 		return sources
@@ -126,34 +145,84 @@ class App(QWidget):
 		new_articles_layout = QGridLayout()
 
 		# Take the newest article from each source:
-		new_articles = []
+		new_articles_list = []
 		for src in active_sources:
-			news_articles.append(self.data["src"][0])
+			if len(src) > 0:
+				new_articles_list.append(self.data[src][0])
 
 		n_columns = 3
-		n_rows
+		n_rows = int(ceil(len(new_articles_list)/n_columns))
+
+		for i in range(n_rows):
+			for j in range(n_columns):
+				ind = i * n_columns + j
+				if ind >= len(active_sources):
+					break
+				article_entry = SourceEntry(article=new_articles_list[ind])
+				new_articles_layout.addLayout(article_entry, i, j)
+		new_articles.setLayout(new_articles_layout)
+		return new_articles
+    
 
 
-	def init_scrollarea(self):
-		source_stack = QStackedLayout()
+	def init_scrollarea(self, source):
+		scroll_area = QScrollArea()
 
-		for source in active_sources:
+		# Enable touch screen functionality:
+		scroll_area.setAttribute(Qt.WA_AcceptTouchEvents, on=True)
+		source_grid_container = QWidget()
 
-			scroll_area = QScrollArea()
+		source_grid = QGridLayout()
 
-			source_grid = QGridLayout()
+		for i in range(len(self.data[source])):
+			source_grid.addLayout(SourceEntry(article=self.data[source][i]), i, 0)
 
-			for i in range(len(data)):
-				source_grid.addLayout(SourceEntry(title=data[i]["title"],
-												  authors=data[i]["authors"],
-												  tags=data[i]["tags"],
-												  desc=lorem_ipsum, 
-												  file_url=data[i]["files"][0]["path"]), i, 0)
+		source_grid_container.setLayout(source_grid)
+		scroll_area.setWidget(source_grid_container)
 
-
-			scroll_area.setLayout(source_grid)
-			source_stack.addWidget(scroll_area)
 		return scroll_area
+
+	# Set up a layout with a pressable button that will bring us back to the home page:
+	def init_navigationbar(self):
+		back_button = BackButton("Back",app=self)
+		return back_button
+
+
+	# Switch to source page
+	def switch_to_source(self, source):
+		# Remove the home page widgets
+		self.content_area.removeWidget(self.new_articles)
+		self.new_articles.setParent(None)
+		self.content_area.removeWidget(self.sources)
+		self.sources.setParent(None)
+		# Add the article view scroll area
+		try:
+			self.content_area.addWidget(self.navigation_bar)
+			self.content_area.addWidget(self.scroll_area)
+		except:
+			self.scroll_area = self.init_scrollarea(source)
+			self.navigation_bar = self.init_navigationbar()
+			self.content_area.addWidget(self.navigation_bar)
+			self.content_area.addWidget(self.scroll_area)
+
+	# Return to home page
+	def return_home(self):
+		# Remove the source page widgets
+		self.content_area.removeWidget(self.navigation_bar)
+		self.navigation_bar.setParent(None)
+		self.content_area.removeWidget(self.scroll_area)
+		self.scroll_area.setParent(None)
+		try:
+			self.content_area.addWidget(self.sources)
+			self.content_area.addWidget(self.new_articles)
+		except:
+			pdb.set_trace()
+			self.sources = self.init_sourcs()
+			self.new_articles = self.new_articles()
+			self.content_area.addWidget(self.sources)
+			self.content_area.addWidget(self.new_articles)
+
+
 
 
 if __name__ == "__main__":
