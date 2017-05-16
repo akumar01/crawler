@@ -4,7 +4,7 @@ from math import ceil
 from win32api import GetSystemMetrics
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QHBoxLayout, QWidget,
 							 QLabel, QPushButton, QScrollArea, QGridLayout,
-							 QGroupBox, QStackedLayout)
+							 QGroupBox, QStackedLayout, QMainWindow, QToolBar)
 from crawler.agg.json_out import read_json
 from crawler.project_vars import Paths, Spiders
 from PyQt5.QtCore import Qt
@@ -34,7 +34,7 @@ class BackButton(QPushButton):
 	def mousePressEvent(self, event):
 		self.app.return_home()
 
-class SourceEntry(QVBoxLayout):
+class SourceTile(QVBoxLayout):
 
 	def __init__(self, **kwargs):
 		super().__init__()
@@ -65,7 +65,39 @@ class SourceEntry(QVBoxLayout):
 		os.startfile(file_path)
 
 
-class App(QWidget):
+class App(QMainWindow):
+
+	# The application has two states - "home" or "source"
+	state = "home"
+
+	# Sets the spacing between tile columns in source view
+	tile_spacing_x = 10
+	# Sets the vertical spacing between tiles in source view
+	tile_spacing_y = 10
+	# Sets the margins within the scroll area in the source view
+	tile_area_margin_x = 40
+	tile_area_margin_y = 0
+
+	# Ideally, how wide should the article tiles be?
+	targt_dim = 400
+
+
+	# Sets the spacing between tile columns in new_articles
+	na_spacing_x = 10
+	# Sets the vertical spacing between tiles in new_articles
+	na_spacing_y = 10
+	# Sets the margins within the new_articles area in home view
+	na_area_margin_x = 40
+	na_area_margin_y = 0
+
+	# Sets the spacing between tile columns in new_articles
+	source_spacing_x = 10
+	# Sets the vertical spacing between tiles in new_articles
+	source_spacing_y = 10
+	# Sets the margins within the new_articles area in home view
+	source_area_margin_x = 40
+	source_area_margin_y = 0
+
 
 	def __init__(self):
 		super().__init__()
@@ -74,7 +106,32 @@ class App(QWidget):
 
 		self.init_window()
 
-		self.init_root_layout()
+		self.init_startup_layout()
+
+	# When the user resizes the window, we check to see if
+	# the content_area layout needs to be adjusted to 
+	# fill space. 
+	def resizeEvent(self, event):
+
+		content_area_width = self.centralWidget().width()
+
+		# At the moment, we only check for adjustment in the 
+		# source view
+		if self.state == "home":
+			return
+		else:
+			if content_area_width > self.max_width or\
+				content_area_width < self.min_width:
+				self.redraw_source()
+
+	def redraw_source(self):
+		# Remove exisiting scroll area widget
+		self.content_area.removeWidget(self.scroll_area)
+		self.scroll_area.setParent(None)
+		# Redraw with the new window size:
+		self.scroll_area = self.init_scrollarea()
+		# Add the scroll area back
+		self.content_area.addWidget(scroll_area)
 
 
 	def load_data(self):
@@ -85,39 +142,39 @@ class App(QWidget):
 	def init_window(self):
 		
 		self.setGeometry(100, 100,  800, 800)
-		self.setWindowTitle("Helloz")
+		self.setWindowTitle("Ankit's Crawler")
 		self.show()
 
 	# Set certain widgets as attributes so that they can 
 	# be easily referenced when needed
-	def init_root_layout(self):
+	def init_startup_layout(self):
 		self.root_layout = QVBoxLayout()
 		self.topmenu = self.init_topmenu()
-		self.topmenu.setMaximumHeight(50)
+		self.addToolBar(self.topmenu)
+
+		self.content_area_widget = QWidget()
 		self.content_area = QVBoxLayout()
 
 		self.sources = self.init_sources()
-
 		self.new_articles = self.init_new_articles()
 
 		self.content_area.addWidget(self.sources)
 		self.content_area.addWidget(self.new_articles)
 
-		self.root_layout.addWidget(self.topmenu)
-		self.root_layout.addLayout(self.content_area)
-		self.setLayout(self.root_layout)
+		self.content_area_widget.setLayout(self.content_area)
+		self.setCentralWidget(self.content_area_widget)
 
 	def init_topmenu(self):
-		topmenu_widget = QWidget()
-		topmenu = QHBoxLayout()
-		Title = QLabel("Ankit's Crawler")
+		topmenu = QToolBar()
 		Sync_Button = QPushButton("Sync")
 		Last_Updated = QLabel("Last Updated:")
-		topmenu.addWidget(Title)
 		topmenu.addWidget(Sync_Button)
+		topmenu.addSeparator()
 		topmenu.addWidget(Last_Updated)
-		topmenu_widget.setLayout(topmenu)
-		return topmenu_widget
+
+		# Do not let the user drag the toolbar around
+		topmenu.setMovable(False)
+		return topmenu
 
 	# List of sources
 	def init_sources(self):
@@ -158,7 +215,7 @@ class App(QWidget):
 				ind = i * n_columns + j
 				if ind >= len(active_sources):
 					break
-				article_entry = SourceEntry(article=new_articles_list[ind])
+				article_entry = SourceTile(article=new_articles_list[ind])
 				new_articles_layout.addLayout(article_entry, i, j)
 		new_articles.setLayout(new_articles_layout)
 		return new_articles
@@ -167,15 +224,56 @@ class App(QWidget):
 
 	def init_scrollarea(self, source):
 		scroll_area = QScrollArea()
-
 		# Enable touch screen functionality:
 		scroll_area.setAttribute(Qt.WA_AcceptTouchEvents, on=True)
+
 		source_grid_container = QWidget()
+
+		# To achive a tile layout like functionality, we arrange vertical
+		# box layouts in a horizontal box layout
+
+		source_columns = QHBoxLayout()
+
+		# Calculate the available width from the width and the margins.
+		# This calculation is ported over from kivy TileLayout
+
+		spacing_x = self.tile_spacing_x
+		padding_x = self.tile_area_margin_x
+
+		available_width = self.centralWidget().width() - 2 * padding_x
+
+
+		n_tiles_across = max(1, int(floor((available_width + spacing_x)/
+										self.target_dim + spacing_x)))
+
+		available_width -= spacing_x * (n_tiles_across - 1)
+
+		# Tile width is always at least the target dim, but will overshoot
+		# to maximally fill the space
+		tile_width = avaialble_width/n_tiles_across
+
+		# Assign a maximum and minimum width. If the window is resized outside
+		# these bounds, then this method will be triggered and the layout will
+		# be recalculated:
+
+		# If the window is made wider than the width of an additional tile
+		# plus the spacing, then redraw:
+		self.max_width = available_width + target_dim + spacing_x
+
+		# If the window is made smaller to the point that the tile_width would 
+		# have to be reduced to below the target_dim, then redraw: 
+		self.min_width = available_width - 
+						(n_tiles_across * (tile_width - self.target_dim)) 
+
+
+
+		# Divide the children into stacks of equal height
+
 
 		source_grid = QGridLayout()
 
 		for i in range(len(self.data[source])):
-			source_grid.addLayout(SourceEntry(article=self.data[source][i]), i, 0)
+			source_grid.addLayout(SourceTile(article=self.data[source][i]), i, 0)
 
 		source_grid_container.setLayout(source_grid)
 		scroll_area.setWidget(source_grid_container)
@@ -204,6 +302,7 @@ class App(QWidget):
 			self.navigation_bar = self.init_navigationbar()
 			self.content_area.addWidget(self.navigation_bar)
 			self.content_area.addWidget(self.scroll_area)
+		self.state = "source"
 
 	# Return to home page
 	def return_home(self):
@@ -222,6 +321,7 @@ class App(QWidget):
 			self.content_area.addWidget(self.sources)
 			self.content_area.addWidget(self.new_articles)
 
+		self.state = "home"
 
 
 
