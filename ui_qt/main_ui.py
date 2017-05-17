@@ -4,7 +4,10 @@ from math import ceil, floor
 from win32api import GetSystemMetrics
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QHBoxLayout, QWidget,
 							 QLabel, QPushButton, QScrollArea, QGridLayout,
-							 QGroupBox, QStackedLayout, QMainWindow, QToolBar)
+							 QGroupBox, QStackedLayout, QMainWindow, QToolBar,
+							 QSizePolicy)
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QFont
 from crawler.agg.json_out import read_json
 from crawler.project_vars import Paths, Spiders
 from PyQt5.QtCore import Qt
@@ -34,7 +37,7 @@ class BackButton(QPushButton):
 	def mousePressEvent(self, event):
 		self.app.return_home()
 
-class SourceTile2(QWidget):
+class SourceTile(QWidget):
 
 	def __init__(self, **kwargs):
 		super().__init__()
@@ -54,45 +57,60 @@ class SourceTile2(QWidget):
 		title = QLabel(self.title)
 
 		# Set Font size to 18pt for article title.
-		tile_layout.setFont("Helvetica", 18)
+		title.setFont(QFont("Helvetica", 18))
+
 
 		# Wrap if title is too long
-		tile_layout.setWordWrap(True)
+		title.setWordWrap(True)
 
-		# Get the 
+		# This function sets the size hint to its contents
+		title.adjustSize()
 
+		# Set the title sizepolicy. The horizontal size is left
+		# unconstrained, and handled instead by the layout
+		title.sizePolicy().setHorizontalPolicy(5)
 
-		# Set the title sizepolicy and size_hint. The horizontal dimension
-		# is unconstrained, so we allow for the widget so shrink below
-		# size hint if needed (value 2) but otherwise be given as much
-		# room as possible (value 4)
-		title.sizePolicy().setHorizontalPolicy(6)
-
-		# The vertical direction must follow size_hint
-		title.sizePolicy().setVerticalPolicy(0)
-
+		# In the veritcal direction, we do not let the height change
+		# from that needed to display
+		title.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
 
 
-
-
-		tile_layout.addWidget(QLabel(self.title))
+		tile_layout.addWidget(title)
 
 
 		secondary_text = "By %s" % self.authors
 		secondary_text += "| "
 		secondary_text += self.tags
 
+		secondary_text = QLabel(secondary_text)
 
+		secondary_text.setWordWrap(True)
+		secondary_text.adjustSize()
+		secondary_text.sizePolicy().setHorizontalPolicy(QSizePolicy.Preferred)
+		secondary_text.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
 
-
-		tile_layout.addWidget(QLabel(secondary_text))
+		tile_layout.addWidget(secondary_text)
 		PDF_link = QPushButton("PDF")
 		PDF_link.clicked.connect(self.open_pdf)
 		tile_layout.addWidget(PDF_link)
+	
 		desc = QLabel(self.desc)
 		desc.setWordWrap(True)
+		desc.adjustSize()
+		desc.sizePolicy().setHorizontalPolicy(QSizePolicy.Preferred)
+		desc.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
 		tile_layout.addWidget(desc)
+
 		self.setLayout(tile_layout)
+
+		# Resize to fit children
+		self.adjustSize()
+
+		# Mirror size policy of children
+		self.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
+		self.sizePolicy().setHorizontalPolicy(QSizePolicy.Preferred)
+
+
 
 	def open_pdf(self):
 		file_path = Paths.files_path + self.path
@@ -101,8 +119,8 @@ class SourceTile2(QWidget):
 
 class App(QMainWindow):
 
-	# The application has two states - "home" or "source"
-	state = "home"
+	# Since we begin at home, the active_source is None
+	active_source = None
 
 	# Sets the spacing between tile columns in source view
 	tile_spacing_x = 10
@@ -152,7 +170,7 @@ class App(QMainWindow):
 
 			# At the moment, we only check for adjustment in the 
 			# source view
-			if self.state == "home":
+			if self.active_source is None:
 				return
 			else:
 				if content_area_width > self.max_width or\
@@ -164,9 +182,9 @@ class App(QMainWindow):
 		self.content_area.removeWidget(self.scroll_area)
 		self.scroll_area.setParent(None)
 		# Redraw with the new window size:
-		self.scroll_area = self.init_scrollarea()
+		self.scroll_area = self.init_scrollarea(self.active_source)
 		# Add the scroll area back
-		self.content_area.addWidget(scroll_area)
+		self.content_area.addWidget(self.scroll_area)
 
 
 	def load_data(self):
@@ -233,6 +251,9 @@ class App(QMainWindow):
 
 	# Newest stories
 	def init_new_articles(self):
+		scroll_area = QScrollArea()
+		scroll_area.setAttribute(Qt.WA_AcceptTouchEvents, on=True)
+
 		new_articles = QGroupBox("At a Glance")
 		new_articles_layout = QGridLayout()
 
@@ -251,9 +272,12 @@ class App(QMainWindow):
 				if ind >= len(active_sources):
 					break
 				article_entry = SourceTile(article=new_articles_list[ind])
-				new_articles_layout.addLayout(article_entry, i, j)
+				new_articles_layout.addWidget(article_entry, i, j)
+
 		new_articles.setLayout(new_articles_layout)
-		return new_articles
+		new_articles.sizePolicy().setHorizontalPolicy(4)
+		scroll_area.setWidget(new_articles)
+		return scroll_area
     
 
 
@@ -267,7 +291,6 @@ class App(QMainWindow):
 		scroll_area.setAttribute(Qt.WA_AcceptTouchEvents, on=True)
 
 		source_grid_container = QWidget()
-
 		# To achive a tile layout like functionality, we arrange vertical
 		# box layouts in a horizontal box layout
 
@@ -283,8 +306,7 @@ class App(QMainWindow):
 
 
 		n_tiles_across = max(1, int(floor((available_width + spacing_x)/
-										self.target_dim + spacing_x)))
-
+										(self.target_dim + spacing_x))))
 		available_width -= spacing_x * (n_tiles_across - 1)
 
 		# Tile width is always at least the target dim, but will overshoot
@@ -301,21 +323,24 @@ class App(QMainWindow):
 
 		# If the window is made smaller to the point that the tile_width would 
 		# have to be reduced to below the target_dim, then redraw: 
-		self.min_width = available_width -\
-						(n_tiles_across * (tile_width - self.target_dim)) 
-
+		self.min_width = max(0, available_width -\
+						(n_tiles_across * (tile_width - self.target_dim))) 
 
 		# Assemble the children so that we can determine their heights:
 		tiles = []
 		total_height_needed = 0
 		for article in self.data[source]:
 			tile = SourceTile(article=article)
+			tile.setFixedWidth(tile_width)
 			total_height_needed += tile.heightForWidth(tile_width)
 			tiles.append(tile)
 
 		avg_height = float(total_height_needed)/n_tiles_across
-
 		# Divide the children into stacks of equal height
+
+		# Which stack should the child be added to?
+		stack = [0] * len(tiles)
+
 		# stack_ind goes from 0 to n_tiles_across - 1
 		stack_ind = 0
 
@@ -334,24 +359,21 @@ class App(QMainWindow):
 		# over until we find the first available stack.
 
 		for i in range(len(tiles)):
-			try:
-				if stack_heights[stack_ind] <= avg_height:
-					stack[i] = stack_ind
-					stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
-					stack_occupancy[stack_ind] += 1
-				else:
-				# If the stack is full, proceed to the next one.
+			if stack_heights[stack_ind] <= avg_height:
+				stack[i] = stack_ind
+				stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
+				stack_occupancy[stack_ind] += 1
+			else:
+			# If the stack is full, proceed to the next one.
+				stack_ind += 1
+				stack_ind = stack_ind % n_tiles_across
+				# Keep moving over stacks until we find a free one:
+				while stack_heights[stack_ind] > avg_height:
 					stack_ind += 1
-					stack_ind = stack_ind % n_tiles_across
-					# Keep moving over stacks until we find a free one:
-					while stack_heights[stack_ind] > avg_height:
-						stack_ind += 1
-					# Assign this child to that 
-					stack[i] = stack_ind % n_tiles_across
-					stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
-					stack_occupancy[stack_ind] += 1
-			except:
-				pdb.set_trace()
+				# Assign this child to that 
+				stack[i] = stack_ind % n_tiles_across
+				stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
+				stack_occupancy[stack_ind] += 1
 
 			stack_ind += 1
 			stack_ind = stack_ind % n_tiles_across
@@ -360,13 +382,13 @@ class App(QMainWindow):
 
 		for i in range(n_tiles_across):
 			vboxlayout = QVBoxLayout()
-			vboxlayouts.append(voxlayout)
+			vboxlayouts.append(vboxlayout)
 
-		for tile, i in enumerate(tiles):
-			vboxlayout[stack[i]].addWidget(tile)
+		for i, tile in enumerate(tiles):
+			vboxlayouts[stack[i]].addWidget(tile)
 
 		for i in range(n_tiles_across):
-			source_columns.addLayout(vboxlayout[i])
+			source_columns.addLayout(vboxlayouts[i])
 
 		source_grid_container.setLayout(source_columns)
 		scroll_area.setWidget(source_grid_container)
@@ -395,7 +417,7 @@ class App(QMainWindow):
 			self.navigation_bar = self.init_navigationbar()
 			self.content_area.addWidget(self.navigation_bar)
 			self.content_area.addWidget(self.scroll_area)
-		self.state = "source"
+		self.active_source = source
 
 	# Return to home page
 	def return_home(self):
@@ -414,7 +436,7 @@ class App(QMainWindow):
 			self.content_area.addWidget(self.sources)
 			self.content_area.addWidget(self.new_articles)
 
-		self.state = "home"
+		self.active_source = None
 
 
 
