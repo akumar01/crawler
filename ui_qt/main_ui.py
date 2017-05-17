@@ -52,12 +52,30 @@ class SourceTile2(QWidget):
 
 
 		title = QLabel(self.title)
-		# Set the title sizepolicy and size_hint. The horizontal size
-		# policy is to allow the widget to expand or contract, but not
-		# 
+
+		# Set Font size to 18pt for article title.
+		tile_layout.setFont("Helvetica", 18)
+
+		# Wrap if title is too long
+		tile_layout.setWordWrap(True)
+
+		# Get the 
+
+
+		# Set the title sizepolicy and size_hint. The horizontal dimension
+		# is unconstrained, so we allow for the widget so shrink below
+		# size hint if needed (value 2) but otherwise be given as much
+		# room as possible (value 4)
+		title.sizePolicy().setHorizontalPolicy(6)
+
+		# The vertical direction must follow size_hint
+		title.sizePolicy().setVerticalPolicy(0)
+
+
+
+
 
 		tile_layout.addWidget(QLabel(self.title))
-
 
 
 		secondary_text = "By %s" % self.authors
