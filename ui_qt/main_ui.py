@@ -107,7 +107,7 @@ class SourceTile(QWidget):
 		self.adjustSize()
 
 		# Mirror size policy of children
-		self.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
+		self.sizePolicy().setVerticalPolicy(QSizePolicy.Minimum)
 		self.sizePolicy().setHorizontalPolicy(QSizePolicy.Preferred)
 
 
@@ -176,6 +176,28 @@ class App(QMainWindow):
 				if content_area_width > self.max_width or\
 					content_area_width < self.min_width:
 					self.redraw_source()
+				else:
+					self.adjust_source()
+	def adjust_source(self):
+		spacing_x = self.tile_spacing_x
+		padding_x = self.tile_area_margin_x
+
+		available_width = self.centralWidget().width() - 2 * padding_x
+		# Don't have to calculate n_tiles_across as it should not have changed
+		columns = self.scroll_area.findChildren(QHBoxLayout)[0].findChildren(QVBoxLayout)
+
+		n_tiles_across = len(columns)
+		available_width -= spacing_x * (n_tiles_across - 1)
+		tile_width = available_width/n_tiles_across
+
+		for i in range(n_tiles_across):
+			for j in range(columns[i].count()):
+				try:
+					columns[i].itemAt(j).widget().setFixedWidth(tile_width)
+				except:
+					continue
+
+
 
 	def redraw_source(self):
 		# Remove exisiting scroll area widget
@@ -185,7 +207,6 @@ class App(QMainWindow):
 		self.scroll_area = self.init_scrollarea(self.active_source)
 		# Add the scroll area back
 		self.content_area.addWidget(self.scroll_area)
-
 
 	def load_data(self):
 		self.data = {}
@@ -280,7 +301,6 @@ class App(QMainWindow):
 		return scroll_area
     
 
-
 	def init_scrollarea(self, source):
 		# We can only proceed if the central widget has been initialized
 		if self.centralWidget() is None:
@@ -309,9 +329,10 @@ class App(QMainWindow):
 										(self.target_dim + spacing_x))))
 		available_width -= spacing_x * (n_tiles_across - 1)
 
-		# Tile width is always at least the target dim, but will overshoot
-		# to maximally fill the space
-		tile_width = available_width/n_tiles_across
+		# Tile width is always the target dim
+		tile_width = self.target_dim
+		# Add extra space to the margins
+		padding_x  += (available_width/n_tiles_across - tile_width)/2
 
 		# Assign a maximum and minimum width. If the window is resized outside
 		# these bounds, then this method will be triggered and the layout will
@@ -378,6 +399,10 @@ class App(QMainWindow):
 			stack_ind += 1
 			stack_ind = stack_ind % n_tiles_across
 
+
+		# Equalize the stack heights with spacer elements:
+		max_height = max(stack_heights)
+
 		vboxlayouts = []
 
 		for i in range(n_tiles_across):
@@ -388,8 +413,10 @@ class App(QMainWindow):
 			vboxlayouts[stack[i]].addWidget(tile)
 
 		for i in range(n_tiles_across):
+			vboxlayouts[i].addSpacing(max_height - stack_heights[i])
 			source_columns.addLayout(vboxlayouts[i])
 
+		source_columns.setContentsMargins(padding_x, 11, padding_x, 11)
 		source_grid_container.setLayout(source_columns)
 		scroll_area.setWidget(source_grid_container)
 
