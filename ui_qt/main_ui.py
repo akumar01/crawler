@@ -1,6 +1,6 @@
 import sys
 import os
-from math import ceil
+from math import ceil, floor
 from win32api import GetSystemMetrics
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QHBoxLayout, QWidget,
 							 QLabel, QPushButton, QScrollArea, QGridLayout,
@@ -34,10 +34,12 @@ class BackButton(QPushButton):
 	def mousePressEvent(self, event):
 		self.app.return_home()
 
-class SourceTile(QVBoxLayout):
+class SourceTile2(QWidget):
 
 	def __init__(self, **kwargs):
 		super().__init__()
+
+		tile_layout = QVBoxLayout()
 
 		article = kwargs["article"]
 
@@ -48,17 +50,31 @@ class SourceTile(QVBoxLayout):
 		self.desc = lorem_ipsum
 		self.path = article["files"][0]["path"]
 
-		self.addWidget(QLabel(self.title))
+
+		title = QLabel(self.title)
+		# Set the title sizepolicy and size_hint. The horizontal size
+		# policy is to allow the widget to expand or contract, but not
+		# 
+
+		tile_layout.addWidget(QLabel(self.title))
+
+
+
 		secondary_text = "By %s" % self.authors
 		secondary_text += "| "
 		secondary_text += self.tags
-		self.addWidget(QLabel(secondary_text))
+
+
+
+
+		tile_layout.addWidget(QLabel(secondary_text))
 		PDF_link = QPushButton("PDF")
 		PDF_link.clicked.connect(self.open_pdf)
-		self.addWidget(PDF_link)
+		tile_layout.addWidget(PDF_link)
 		desc = QLabel(self.desc)
 		desc.setWordWrap(True)
-		self.addWidget(desc)
+		tile_layout.addWidget(desc)
+		self.setLayout(tile_layout)
 
 	def open_pdf(self):
 		file_path = Paths.files_path + self.path
@@ -79,8 +95,7 @@ class App(QMainWindow):
 	tile_area_margin_y = 0
 
 	# Ideally, how wide should the article tiles be?
-	targt_dim = 400
-
+	target_dim = 400
 
 	# Sets the spacing between tile columns in new_articles
 	na_spacing_x = 10
@@ -112,17 +127,19 @@ class App(QMainWindow):
 	# the content_area layout needs to be adjusted to 
 	# fill space. 
 	def resizeEvent(self, event):
+		# If there is no central widget yet, then we do not need
+		# to keep track fo resize
+		if self.centralWidget():
+			content_area_width = self.centralWidget().width()
 
-		content_area_width = self.centralWidget().width()
-
-		# At the moment, we only check for adjustment in the 
-		# source view
-		if self.state == "home":
-			return
-		else:
-			if content_area_width > self.max_width or\
-				content_area_width < self.min_width:
-				self.redraw_source()
+			# At the moment, we only check for adjustment in the 
+			# source view
+			if self.state == "home":
+				return
+			else:
+				if content_area_width > self.max_width or\
+					content_area_width < self.min_width:
+					self.redraw_source()
 
 	def redraw_source(self):
 		# Remove exisiting scroll area widget
@@ -223,6 +240,10 @@ class App(QMainWindow):
 
 
 	def init_scrollarea(self, source):
+		# We can only proceed if the central widget has been initialized
+		if self.centralWidget() is None:
+			self.init_startup_layout()
+
 		scroll_area = QScrollArea()
 		# Enable touch screen functionality:
 		scroll_area.setAttribute(Qt.WA_AcceptTouchEvents, on=True)
@@ -250,7 +271,7 @@ class App(QMainWindow):
 
 		# Tile width is always at least the target dim, but will overshoot
 		# to maximally fill the space
-		tile_width = avaialble_width/n_tiles_across
+		tile_width = available_width/n_tiles_across
 
 		# Assign a maximum and minimum width. If the window is resized outside
 		# these bounds, then this method will be triggered and the layout will
@@ -258,24 +279,78 @@ class App(QMainWindow):
 
 		# If the window is made wider than the width of an additional tile
 		# plus the spacing, then redraw:
-		self.max_width = available_width + target_dim + spacing_x
+		self.max_width = available_width + self.target_dim + spacing_x
 
 		# If the window is made smaller to the point that the tile_width would 
 		# have to be reduced to below the target_dim, then redraw: 
-		self.min_width = available_width - 
+		self.min_width = available_width -\
 						(n_tiles_across * (tile_width - self.target_dim)) 
 
 
+		# Assemble the children so that we can determine their heights:
+		tiles = []
+		total_height_needed = 0
+		for article in self.data[source]:
+			tile = SourceTile(article=article)
+			total_height_needed += tile.heightForWidth(tile_width)
+			tiles.append(tile)
+
+		avg_height = float(total_height_needed)/n_tiles_across
 
 		# Divide the children into stacks of equal height
+		# stack_ind goes from 0 to n_tiles_across - 1
+		stack_ind = 0
 
+		# How high is each stack?
+		stack_heights = [0] * n_tiles_across
 
-		source_grid = QGridLayout()
+		# How many tiles are in each stack? 
+		stack_occupancy = [0] * n_tiles_across
 
-		for i in range(len(self.data[source])):
-			source_grid.addLayout(SourceTile(article=self.data[source][i]), i, 0)
+		# We want to assign each child to a stack. The reason this is
+		# not so straightforward is that we want to add entries left 
+		# to right, but it is the vertical height we want to take care of.
+		# Thus, do the following: iterate through children left to right and
+		# as long as the the current stack height does not exceed the average 
+		# height, add it. If the current stack is filled up, then shift one 
+		# over until we find the first available stack.
 
-		source_grid_container.setLayout(source_grid)
+		for i in range(len(tiles)):
+			try:
+				if stack_heights[stack_ind] <= avg_height:
+					stack[i] = stack_ind
+					stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
+					stack_occupancy[stack_ind] += 1
+				else:
+				# If the stack is full, proceed to the next one.
+					stack_ind += 1
+					stack_ind = stack_ind % n_tiles_across
+					# Keep moving over stacks until we find a free one:
+					while stack_heights[stack_ind] > avg_height:
+						stack_ind += 1
+					# Assign this child to that 
+					stack[i] = stack_ind % n_tiles_across
+					stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
+					stack_occupancy[stack_ind] += 1
+			except:
+				pdb.set_trace()
+
+			stack_ind += 1
+			stack_ind = stack_ind % n_tiles_across
+
+		vboxlayouts = []
+
+		for i in range(n_tiles_across):
+			vboxlayout = QVBoxLayout()
+			vboxlayouts.append(voxlayout)
+
+		for tile, i in enumerate(tiles):
+			vboxlayout[stack[i]].addWidget(tile)
+
+		for i in range(n_tiles_across):
+			source_columns.addLayout(vboxlayout[i])
+
+		source_grid_container.setLayout(source_columns)
 		scroll_area.setWidget(source_grid_container)
 
 		return scroll_area
