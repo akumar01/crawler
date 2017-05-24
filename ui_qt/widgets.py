@@ -2,13 +2,23 @@ import pdb
 from PyQt5.QtWidgets import (QWidget, QDockWidget, QTabWidget, QLabel,
 							QPushButton, QHBoxLayout, QVBoxLayout,
 							QGraphicsOpacityEffect, QSizePolicy,
-							QToolBar)
+							QToolBar, QScrollArea)
 from PyQt5.QtCore import QSize, QSequentialAnimationGroup, QRect
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt, QPropertyAnimation, QTimer
 from crawler.project_vars import Paths, Spiders
 
 lorem_ipsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum tempor tortor, vitae molestie lorem mattis et. Mauris consectetur massa non metus blandit scelerisque vestibulum nec augue. Donec eu venenatis dui. Praesent consectetur facilisis justo, quis porta odio convallis sit amet. Praesent congue quam eros, malesuada feugiat velit lacinia sit amet. Integer condimentum in nibh consectetur accumsan. Aliquam erat volutpat. Morbi eget vulputate dolor, quis malesuada nisl. Ut quis tincidunt purus, quis cursus augue. Vivamus vitae pellentesque elit, a sagittis nulla. Praesent varius, magna sit amet blandit porttitor, leo mauris sodales risus, varius vehicula quam elit vitae odio.'
+
+class TileLayout(QScrollArea):
+
+	def __init__(self, app):
+		super(TileLayout, self).__init__()
+		self.app = app
+
+		self.setAttribute(Qt.WA_AcceptTouchEvents, on = True)
+
+
 
 
 class DockWidget(QDockWidget):
@@ -58,8 +68,12 @@ class DockWidget(QDockWidget):
 	# Make the dock take up the whole screen:
 	# Hide the content area widget:
 
-		self.docked_geometry = [self.x(), self.y(),
-								self.width(), self.height()]
+
+		# Record the dock widget's width as a fraction of the window
+		# width so that we can restore it when exiting full screen mode
+
+		self.docked_width = self.width()/self.app.width()
+
 		self.app.content_area_widget.hide()
 
 		target_geometry = QRect(self.app.geometry().x(),
@@ -81,15 +95,12 @@ class DockWidget(QDockWidget):
 
 		self.setTitleBarWidget(toolbar)
 
-
-		target_geometry = QRect(self.docked_geometry[0],
-								self.docked_geometry[1],
-								self.docked_geometry[2],
-								self.docked_geometry[3])
-
 		self.app.content_area_widget.show()
-		self.setGeometry(target_geometry)
-		pdb.set_trace()
+
+		# For some reason, we have to use resizeDocks when existing full screen
+		# or else it won't work
+		self.app.resizeDocks([self], [self.docked_width * self.app.width()],\
+							 Qt.Horizontal)
 
 
 	def closeEvent(self, event):
@@ -116,6 +127,8 @@ class TabWidget(QTabWidget):
 			dock_widget = self.app.findChildren(DockWidget)[0]
 			self.app.removeDockWidget(dock_widget)
 			dock_widget.setParent(None)
+			self.setAttribute(Qt.QA_AcceptTouchEvents, on = True)
+
 
 
 class Content_Area_Widget(QWidget):
@@ -168,6 +181,7 @@ class SourceTile(QWidget):
 		tile_layout = QVBoxLayout()
 		self.app_window = kwargs["app"]
 		article = kwargs["article"]
+		self.setAttribute(Qt.WA_AcceptTouchEvents, on = True)
 
 		self.title = article["title"]
 		self.authors = article["authors"]

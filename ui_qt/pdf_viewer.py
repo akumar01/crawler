@@ -10,6 +10,7 @@ from PyQt5.QtCore import QSize, QSequentialAnimationGroup, QRect
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt, QPropertyAnimation, QTimer
 from PyQt5.QAxContainer import QAxWidget
+import pdb
 
 class PDFViewerContainer(QWidget):
 
@@ -37,7 +38,6 @@ class PDF_Viewer(QAxWidget):
 	def __init__(self):
 		super(PDF_Viewer, self).__init__()
 		self.setControl('AcroPDF.PDF')
-
 	def set_pdf(self, pdf_path):
 		self.dynamicCall("LoadFile(const QString)", pdf_path)
 
