@@ -5,122 +5,31 @@ from win32api import GetSystemMetrics
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QHBoxLayout, QWidget,
 							 QLabel, QPushButton, QScrollArea, QGridLayout,
 							 QGroupBox, QStackedLayout, QMainWindow, QToolBar,
-							 QSizePolicy)
-from PyQt5.QtCore import QSize
+							 QSizePolicy, QGraphicsOpacityEffect, QDockWidget,
+							 QTabWidget)
+from PyQt5.QtCore import QSize, QSequentialAnimationGroup, QRect
 from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt, QPropertyAnimation, QTimer
+
 from crawler.agg.json_out import read_json
 from crawler.project_vars import Paths, Spiders
-from PyQt5.QtCore import Qt
+from pdf_viewer import PDFViewerContainer
+from widgets import (DockWidget, TabWidget, SourceTile,
+					Content_Area_Widget, SourceSelector,
+					BackButton)
+
 import pdb
 
 active_sources = Spiders.spiders
-
-lorem_ipsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum tempor tortor, vitae molestie lorem mattis et. Mauris consectetur massa non metus blandit scelerisque vestibulum nec augue. Donec eu venenatis dui. Praesent consectetur facilisis justo, quis porta odio convallis sit amet. Praesent congue quam eros, malesuada feugiat velit lacinia sit amet. Integer condimentum in nibh consectetur accumsan. Aliquam erat volutpat. Morbi eget vulputate dolor, quis malesuada nisl. Ut quis tincidunt purus, quis cursus augue. Vivamus vitae pellentesque elit, a sagittis nulla. Praesent varius, magna sit amet blandit porttitor, leo mauris sodales risus, varius vehicula quam elit vitae odio.'
-
-
-class SourceSelector(QLabel):
-
-	def __init__(self, text, **kwargs):
-		super(SourceSelector, self).__init__(text)
-		self.app = kwargs["app"]
-		self.source = kwargs["source"]
-
-	def mousePressEvent(self, event):
-		self.app.switch_to_source(self.source)
-
-class BackButton(QPushButton):
-
-	def __init__(self, text, **kwargs):
-		super(BackButton, self).__init__(text)
-		self.app = kwargs["app"]
-
-	def mousePressEvent(self, event):
-		self.app.return_home()
-
-class SourceTile(QWidget):
-
-	def __init__(self, **kwargs):
-		super().__init__()
-
-		tile_layout = QVBoxLayout()
-
-		article = kwargs["article"]
-
-		self.title = article["title"]
-		self.authors = article["authors"]
-		self.tags = article["tags"]
-#		self.desc = article["desc"]
-		self.desc = lorem_ipsum
-		self.path = article["files"][0]["path"]
-
-
-		title = QLabel(self.title)
-
-		# Set Font size to 18pt for article title.
-		title.setFont(QFont("Helvetica", 18))
-
-
-		# Wrap if title is too long
-		title.setWordWrap(True)
-
-		# This function sets the size hint to its contents
-		title.adjustSize()
-
-		# Set the title sizepolicy. The horizontal size is left
-		# unconstrained, and handled instead by the layout
-		title.sizePolicy().setHorizontalPolicy(5)
-
-		# In the veritcal direction, we do not let the height change
-		# from that needed to display
-		title.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
-
-
-		tile_layout.addWidget(title)
-
-
-		secondary_text = "By %s" % self.authors
-		secondary_text += "| "
-		secondary_text += self.tags
-
-		secondary_text = QLabel(secondary_text)
-
-		secondary_text.setWordWrap(True)
-		secondary_text.adjustSize()
-		secondary_text.sizePolicy().setHorizontalPolicy(QSizePolicy.Preferred)
-		secondary_text.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
-
-		tile_layout.addWidget(secondary_text)
-		PDF_link = QPushButton("PDF")
-		PDF_link.clicked.connect(self.open_pdf)
-		tile_layout.addWidget(PDF_link)
-	
-		desc = QLabel(self.desc)
-		desc.setWordWrap(True)
-		desc.adjustSize()
-		desc.sizePolicy().setHorizontalPolicy(QSizePolicy.Preferred)
-		desc.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
-		tile_layout.addWidget(desc)
-
-		self.setLayout(tile_layout)
-
-		# Resize to fit children
-		self.adjustSize()
-
-		# Mirror size policy of children
-		self.sizePolicy().setVerticalPolicy(QSizePolicy.Minimum)
-		self.sizePolicy().setHorizontalPolicy(QSizePolicy.Preferred)
-
-
-
-	def open_pdf(self):
-		file_path = Paths.files_path + self.path
-		os.startfile(file_path)
 
 
 class App(QMainWindow):
 
 	# Since we begin at home, the active_source is None
 	active_source = None
+
+	# Begin with no pdf dock widget
+	ntabs = 0
 
 	# Sets the spacing between tile columns in source view
 	tile_spacing_x = 10
@@ -150,8 +59,8 @@ class App(QMainWindow):
 	source_area_margin_y = 0
 
 
-	def __init__(self):
-		super().__init__()
+	def __init__(self, parent=None):
+		super(App, self).__init__(parent)
 
 		self.load_data()
 
@@ -159,45 +68,55 @@ class App(QMainWindow):
 
 		self.init_startup_layout()
 
-	# When the user resizes the window, we check to see if
-	# the content_area layout needs to be adjusted to 
-	# fill space. 
-	def resizeEvent(self, event):
-		# If there is no central widget yet, then we do not need
-		# to keep track fo resize
-		if self.centralWidget():
-			content_area_width = self.centralWidget().width()
+	# When the user resizes the window, if there are any docked pdfs
+	# currently attached, update their size to keep track
 
-			# At the moment, we only check for adjustment in the 
-			# source view
-			if self.active_source is None:
-				return
-			else:
-				if content_area_width > self.max_width or\
-					content_area_width < self.min_width:
-					self.redraw_source()
-				else:
-					self.adjust_source()
+	def resizeEvent(self, event):
+		dock_widget = self.findChildren(QDockWidget)
+
+		if dock_widget:
+
+			width_fraction = dock_widget[0].width()/event.oldSize().width()
+
+			self.resizeDocks(dock_widget, [self.width() * width_fraction], Qt.Horizontal)
+
+			try:
+				# Make room for the dock widget reisize
+				target_geometry = QRect(self.centralWidget().geometry().x(), 
+										self.centralWidget().geometry().y(),
+										self.width() * (1 - width_fraction),
+										self.centralWidget().height())
+				self.content_area_widget.resize(target_geometry)
+			except:
+				pass
+		else:
+			# Otherwise change the size of the content area to 
+			# match the window width
+			try:
+				target_geometry = QRect(self.centralWidget().geometry().x(), 
+										self.centralWidget().geometry().y(),
+										self.width(), self.centralWidget().height())
+				self.content_area_widget.resize(target_geometry)
+			except:
+				pass
+
 	def adjust_source(self):
 		spacing_x = self.tile_spacing_x
 		padding_x = self.tile_area_margin_x
 
 		available_width = self.centralWidget().width() - 2 * padding_x
 		# Don't have to calculate n_tiles_across as it should not have changed
-		columns = self.scroll_area.findChildren(QHBoxLayout)[0].findChildren(QVBoxLayout)
-
-		n_tiles_across = len(columns)
+		n_tiles_across = self.scroll_area.widget().layout().itemAt(0).count()
 		available_width -= spacing_x * (n_tiles_across - 1)
-		tile_width = available_width/n_tiles_across
+		available_width = max(0, available_width)
+		# Tile width is always the target dim
+		tile_width = self.target_dim
 
-		for i in range(n_tiles_across):
-			for j in range(columns[i].count()):
-				try:
-					columns[i].itemAt(j).widget().setFixedWidth(tile_width)
-				except:
-					continue
+		# Add extra space to the margins
+		extra_padding = max(0, (available_width/n_tiles_across - tile_width)/2)
+		padding_x  += extra_padding
 
-
+		self.scroll_area.widget().layout().setContentsMargins(int(padding_x), 11, int(padding_x), 11)
 
 	def redraw_source(self):
 		# Remove exisiting scroll area widget
@@ -217,6 +136,8 @@ class App(QMainWindow):
 		
 		self.setGeometry(100, 100,  800, 800)
 		self.setWindowTitle("Ankit's Crawler")
+		self.setDockOptions(QMainWindow.ForceTabbedDocks)
+		self.setDockNestingEnabled(True)
 		self.show()
 
 	# Set certain widgets as attributes so that they can 
@@ -226,7 +147,7 @@ class App(QMainWindow):
 		self.topmenu = self.init_topmenu()
 		self.addToolBar(self.topmenu)
 
-		self.content_area_widget = QWidget()
+		self.content_area_widget = Content_Area_Widget(self)
 		self.content_area = QVBoxLayout()
 
 		self.sources = self.init_sources()
@@ -292,20 +213,17 @@ class App(QMainWindow):
 				ind = i * n_columns + j
 				if ind >= len(active_sources):
 					break
-				article_entry = SourceTile(article=new_articles_list[ind])
+				article_entry = SourceTile(article=new_articles_list[ind], app=self)
 				new_articles_layout.addWidget(article_entry, i, j)
 
 		new_articles.setLayout(new_articles_layout)
 		new_articles.sizePolicy().setHorizontalPolicy(4)
 		scroll_area.setWidget(new_articles)
 		return scroll_area
-    
+	
 
 	def init_scrollarea(self, source):
-		# We can only proceed if the central widget has been initialized
-		if self.centralWidget() is None:
-			self.init_startup_layout()
-
+	
 		scroll_area = QScrollArea()
 		# Enable touch screen functionality:
 		scroll_area.setAttribute(Qt.WA_AcceptTouchEvents, on=True)
@@ -350,11 +268,15 @@ class App(QMainWindow):
 		# Assemble the children so that we can determine their heights:
 		tiles = []
 		total_height_needed = 0
+
 		for article in self.data[source]:
-			tile = SourceTile(article=article)
+			tile = SourceTile(article=article, app=self)
 			tile.setFixedWidth(tile_width)
 			total_height_needed += tile.heightForWidth(tile_width)
 			tiles.append(tile)
+
+
+		self.tiles = tiles
 
 		avg_height = float(total_height_needed)/n_tiles_across
 		# Divide the children into stacks of equal height
@@ -399,7 +321,6 @@ class App(QMainWindow):
 			stack_ind += 1
 			stack_ind = stack_ind % n_tiles_across
 
-
 		# Equalize the stack heights with spacer elements:
 		max_height = max(stack_heights)
 
@@ -408,25 +329,86 @@ class App(QMainWindow):
 		for i in range(n_tiles_across):
 			vboxlayout = QVBoxLayout()
 			vboxlayouts.append(vboxlayout)
-
 		for i, tile in enumerate(tiles):
+			tile.column = stack[i]
 			vboxlayouts[stack[i]].addWidget(tile)
 
 		for i in range(n_tiles_across):
 			vboxlayouts[i].addSpacing(max_height - stack_heights[i])
 			source_columns.addLayout(vboxlayouts[i])
 
-		source_columns.setContentsMargins(padding_x, 11, padding_x, 11)
+		source_columns.setContentsMargins(int(padding_x), 11, int(padding_x), 11)
 		source_grid_container.setLayout(source_columns)
 		scroll_area.setWidget(source_grid_container)
-
+		scroll_area.setAlignment(Qt.AlignHCenter)
 		return scroll_area
+
+	# Need to do this to avoid strange rendering issues after dade in animation
+	def remove_widget_kludge(self):
+
+		n_tiles_across = self.scroll_area.widget().layout().count()
+
+		for i in range(n_tiles_across):
+			parent = self.scroll_area.widget().layout().itemAt(i)
+			n_rows = parent.count()
+			for j in range(n_rows):
+				child = parent.itemAt(j).widget()
+				if child:
+					parent.removeWidget(child)
+					child.setParent(None)
+					parent.insertWidget(j, child)
+
+	def animate_source(self):
+
+		for i, tile in enumerate(self.tiles):
+			tile.initialize_animation()
+			if i == len(self.tiles) - 1:
+				tile.opacity_animation.finished.connect(self.remove_widget_kludge)
+			tile.delay.start(i * 25)
+
 
 	# Set up a layout with a pressable button that will bring us back to the home page:
 	def init_navigationbar(self):
 		back_button = BackButton("Back",app=self)
 		return back_button
 
+	# Manage the PDF dockwidget:
+	def add_pdf_dock(self, pdf_path):
+
+		if self.ntabs == 0:
+			# Create a new dock widget
+			self.dockContainer = DockWidget(self)
+			self.dockContainer.setAllowedAreas(Qt.RightDockWidgetArea)
+			dock_tab_area = TabWidget(self)
+
+			tab = PDFViewerContainer(pdf_path)
+			label = "Tab %d"  % (self.ntabs + 1)
+			dock_tab_area.addTab(tab, "Tab %d" % (self.ntabs + 1))
+
+			self.ntabs += 1
+
+			self.dockContainer.setWidget(dock_tab_area)
+
+			self.addDockWidget(Qt.RightDockWidgetArea, self.dockContainer)
+
+		else:
+			# Add a tab to the existing tabwidget
+			dock_tab_area = self.dockContainer.widget()
+
+			tab = PDFViewerContainer(pdf_path)
+
+			dock_tab_area.addTab(tab, "Tab %d" % (self.ntabs + 1))
+			dock_tab_area.setCurrentWidget(tab)
+			self.ntabs +=1 
+
+		self.resizeDocks([self.dockContainer], [self.width()/2], Qt.Horizontal)
+		try:
+			target_geometry = QRect(self.centralWidget().geometry().x(), 
+									self.centralWidget().geometry().y(),
+									self.width()/2, self.centralWidget().height())
+			self.content_area_widget.resize(target_geometry)
+		except:
+			pass
 
 	# Switch to source page
 	def switch_to_source(self, source):
@@ -439,11 +421,16 @@ class App(QMainWindow):
 		try:
 			self.content_area.addWidget(self.navigation_bar)
 			self.content_area.addWidget(self.scroll_area)
+			self.animate_source()
 		except:
 			self.scroll_area = self.init_scrollarea(source)
 			self.navigation_bar = self.init_navigationbar()
+			self.animate_source()
 			self.content_area.addWidget(self.navigation_bar)
 			self.content_area.addWidget(self.scroll_area)
+		# When we switch for the first time, do the fade in
+		# animation
+
 		self.active_source = source
 
 	# Return to home page
@@ -457,7 +444,6 @@ class App(QMainWindow):
 			self.content_area.addWidget(self.sources)
 			self.content_area.addWidget(self.new_articles)
 		except:
-			pdb.set_trace()
 			self.sources = self.init_sourcs()
 			self.new_articles = self.new_articles()
 			self.content_area.addWidget(self.sources)
