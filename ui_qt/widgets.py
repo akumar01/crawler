@@ -1,7 +1,8 @@
 import pdb
 from PyQt5.QtWidgets import (QWidget, QDockWidget, QTabWidget, QLabel,
 							QPushButton, QHBoxLayout, QVBoxLayout,
-							QGraphicsOpacityEffect, QSizePolicy)
+							QGraphicsOpacityEffect, QSizePolicy,
+							QToolBar)
 from PyQt5.QtCore import QSize, QSequentialAnimationGroup, QRect
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt, QPropertyAnimation, QTimer
@@ -18,8 +19,14 @@ class DockWidget(QDockWidget):
 		self.topLevelChanged.connect(self.handoff_float)
 
 		toolbar = QToolBar()
-		full_screen = QB
-		toolbar.addWidget(QPushButton('Full Screen'))
+
+		self.full_screen_btn = QPushButton("Full Screen")
+		self.full_screen_btn.clicked.connect(self.full_screen)
+
+		self.exit_full_screen_btn = QPushButton("Exit Full Screen")
+		self.exit_full_screen_btn.clicked.connect(self.exit_full_screen)
+
+		toolbar.addWidget(self.full_screen_btn)
 
 		self.setTitleBarWidget(toolbar)
 
@@ -30,6 +37,7 @@ class DockWidget(QDockWidget):
 								self.app.centralWidget().y(),
 								self.app.width() - self.width(),
 								self.app.centralWidget().height())
+
 		self.app.content_area_widget.resize(target_geometry)
 
 	def handoff_float(self, floating):
@@ -45,6 +53,44 @@ class DockWidget(QDockWidget):
 									self.app.centralWidget().height())
 
 		self.app.content_area_widget.resize(target_geometry)
+
+	def full_screen(self):
+	# Make the dock take up the whole screen:
+	# Hide the content area widget:
+
+		self.docked_geometry = [self.x(), self.y(),
+								self.width(), self.height()]
+		self.app.content_area_widget.hide()
+
+		target_geometry = QRect(self.app.geometry().x(),
+								self.app.geometry().y(),
+								self.app.width(),
+								self.height())
+		self.setGeometry(target_geometry)
+
+		toolbar = QToolBar()
+		toolbar.addWidget(self.exit_full_screen_btn)
+
+		self.setTitleBarWidget(toolbar)
+
+	def exit_full_screen(self):
+	# Restore the dock widget to its previous configuration
+
+		toolbar = QToolBar()
+		toolbar.addWidget(self.full_screen_btn)
+
+		self.setTitleBarWidget(toolbar)
+
+
+		target_geometry = QRect(self.docked_geometry[0],
+								self.docked_geometry[1],
+								self.docked_geometry[2],
+								self.docked_geometry[3])
+
+		self.app.content_area_widget.show()
+		self.setGeometry(target_geometry)
+		pdb.set_trace()
+
 
 	def closeEvent(self, event):
 		self.app.ntabs = 0
