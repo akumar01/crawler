@@ -12,7 +12,7 @@ lorem_ipsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed inte
 
 class TileLayout(QScrollArea):
 
-	def __init__(self, app, geometry_params):
+	def __init__(self, app, geometry_type):
 		super(TileLayout, self).__init__()
 		self.app = app
 
@@ -25,7 +25,7 @@ class TileLayout(QScrollArea):
 		# box layouts in a horizontal box layout
 
 		self.source_columns = QHBoxLayout()
-
+		self.geometry_params = geometry_params
 		self.init_geometry(geometry_params)
 
 	# Setup basic layout parameters
@@ -143,9 +143,29 @@ class TileLayout(QScrollArea):
 		self.setWidget(self.source_grid_container)
 		self..setAlignment(Qt.AlignHCenter)
 
-	def adjust(self):
+	# Adjust the padding to adjust to a new available_width parameter:
+	def adjust(self, available_width):
+		available_width = available_width - 2 * self.padding_x
 
+		available_width -= self.spacing_x * (self.n_tiles_across - 1)
+		self.available_width = max(0, self.available_width)
 
+		extra_padding = max(0, (self.available_width/self.n_tiles_across \
+												- self.tile_width)/2)
+		self.padding_x += extra_padding
+
+		self.source_grid_container.setContentsMargins(int(self.padding_x), 11,\
+													  int(self.padding_x), 11)
+	# Redraw the 
+	def redraw(self, available_width):
+
+		self.available_width = available_width - 2 * self.padding_x
+
+		# Remove the children of the horizontal box layout
+		for i in reversed(range(self.source_columns.count())):
+			self.source_columns.itemAt(i).widget().setParent(None)
+
+		self.arrange_layout()
 
 class DockWidget(QDockWidget):
 

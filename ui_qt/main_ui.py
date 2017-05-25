@@ -31,32 +31,36 @@ class App(QMainWindow):
 	# Begin with no pdf dock widget
 	ntabs = 0
 
+	# Dictionary of various geometry parameters. Fed into TileLayout
+	global_geometry_params = {}
+
+
 	# Sets the spacing between tile columns in source view
-	tile_spacing_x = 10
+	global_geometry_params["tile_spacing_x"] = 10
 	# Sets the vertical spacing between tiles in source view
-	tile_spacing_y = 10
+	global_geometry_params["tile_spacing_y"] = 10
 	# Sets the margins within the scroll area in the source view
-	tile_area_margin_x = 40
-	tile_area_margin_y = 0
+	global_geometry_params["tile_area_margin_x"] = 40
+	global_geometry_params["tile_area_margin_y"] = 0
 
 	# Ideally, how wide should the article tiles be?
-	target_dim = 400
+	global_geometry_params["target_dim"] = 400
 
 	# Sets the spacing between tile columns in new_articles
-	na_spacing_x = 10
+	global_geometry_params["na_spacing_x"] = 10
 	# Sets the vertical spacing between tiles in new_articles
-	na_spacing_y = 10
+	global_geometry_params["na_spacing_y"] = 10
 	# Sets the margins within the new_articles area in home view
-	na_area_margin_x = 40
-	na_area_margin_y = 0
+	global_geometry_params["na_area_margin_x"] = 40
+	global_geometry_params["na_area_margin_y"] = 0
 
 	# Sets the spacing between tile columns in new_articles
-	source_spacing_x = 10
+	global_geometry_params["source_spacing_x"] = 10
 	# Sets the vertical spacing between tiles in new_articles
-	source_spacing_y = 10
+	global_geometry_params["source_spacing_y"] = 10
 	# Sets the margins within the new_articles area in home view
-	source_area_margin_x = 40
-	source_area_margin_y = 0
+	global_geometry_params["source_area_margin_x"] = 40
+	global_geometry_params["source_area_margin_y"] = 0
 
 
 	def __init__(self, parent=None):
@@ -100,32 +104,32 @@ class App(QMainWindow):
 			except:
 				pass
 
-	def adjust_source(self):
-		spacing_x = self.tile_spacing_x
-		padding_x = self.tile_area_margin_x
+	# def adjust_source(self):
+	# 	spacing_x = self.tile_spacing_x
+	# 	padding_x = self.tile_area_margin_x
 
-		available_width = self.centralWidget().width() - 2 * padding_x
-		# Don't have to calculate n_tiles_across as it should not have changed
-		n_tiles_across = self.scroll_area.widget().layout().itemAt(0).count()
-		available_width -= spacing_x * (n_tiles_across - 1)
-		available_width = max(0, available_width)
-		# Tile width is always the target dim
-		tile_width = self.target_dim
+	# 	available_width = self.centralWidget().width() - 2 * padding_x
+	# 	# Don't have to calculate n_tiles_across as it should not have changed
+	# 	n_tiles_across = self.scroll_area.widget().layout().itemAt(0).count()
+	# 	available_width -= spacing_x * (n_tiles_across - 1)
+	# 	available_width = max(0, available_width)
+	# 	# Tile width is always the target dim
+	# 	tile_width = self.target_dim
 
-		# Add extra space to the margins
-		extra_padding = max(0, (available_width/n_tiles_across - tile_width)/2)
-		padding_x  += extra_padding
+	# 	# Add extra space to the margins
+	# 	extra_padding = max(0, (available_width/n_tiles_across - tile_width)/2)
+	# 	padding_x  += extra_padding
 
-		self.scroll_area.widget().layout().setContentsMargins(int(padding_x), 11, int(padding_x), 11)
+	# 	self.scroll_area.widget().layout().setContentsMargins(int(padding_x), 11, int(padding_x), 11)
 
-	def redraw_source(self):
-		# Remove exisiting scroll area widget
-		self.content_area.removeWidget(self.scroll_area)
-		self.scroll_area.setParent(None)
-		# Redraw with the new window size:
-		self.scroll_area = self.init_scrollarea(self.active_source)
-		# Add the scroll area back
-		self.content_area.addWidget(self.scroll_area)
+	# def redraw_source(self):
+	# 	# Remove exisiting scroll area widget
+	# 	self.content_area.removeWidget(self.scroll_area)
+	# 	self.scroll_area.setParent(None)
+	# 	# Redraw with the new window size:
+	# 	self.scroll_area = self.init_scrollarea(self.active_source)
+	# 	# Add the scroll area back
+	# 	self.content_area.addWidget(self.scroll_area)
 
 	def load_data(self):
 		self.data = {}
@@ -423,6 +427,9 @@ class App(QMainWindow):
 			self.content_area.addWidget(self.scroll_area)
 			self.animate_source()
 		except:
+			self
+			source_scroll_area = TileLayout(self.geometry_params)
+			source_scroll_area.
 			self.scroll_area = self.init_scrollarea(source)
 			self.navigation_bar = self.init_navigationbar()
 			self.animate_source()
