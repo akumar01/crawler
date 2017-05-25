@@ -16,7 +16,7 @@ from crawler.project_vars import Paths, Spiders
 from pdf_viewer import PDFViewerContainer
 from widgets import (DockWidget, TabWidget, SourceTile,
 					Content_Area_Widget, SourceSelector,
-					BackButton)
+					BackButton, TileLayout)
 
 import pdb
 
@@ -34,33 +34,50 @@ class App(QMainWindow):
 	# Dictionary of various geometry parameters. Fed into TileLayout
 	global_geometry_params = {}
 
-
-	# Sets the spacing between tile columns in source view
-	global_geometry_params["tile_spacing_x"] = 10
+	# Source Page
+	global_geometry_params["source_page"] = {}
+	global_geometry_params["source_page"]["tile_spacing_x"] = 10
 	# Sets the vertical spacing between tiles in source view
-	global_geometry_params["tile_spacing_y"] = 10
+	global_geometry_params["source_page"]["tile_spacing_y"] = 10
 	# Sets the margins within the scroll area in the source view
-	global_geometry_params["tile_area_margin_x"] = 40
-	global_geometry_params["tile_area_margin_y"] = 0
+	global_geometry_params["source_page"]["tile_area_margin_x"] = 40
+	global_geometry_params["source_page"]["tile_area_margin_y"] = 0
 
-	# Ideally, how wide should the article tiles be?
-	global_geometry_params["target_dim"] = 400
+	# Ideally, how wide should the tiles be?
+	global_geometry_params["source_page"]["target_dim"] = 400
 
+	# This must be specified at the time of use depending on the current
+	# width of the window's central widget. Right now it is set to None
+	# because on initialization it has no meaning
+	global_geometry_params["source_page"]["central_widget_width"] = None
+
+
+
+	# At a Glance Section
+	global_geometry_params["at_a_glance"] = {}
 	# Sets the spacing between tile columns in new_articles
-	global_geometry_params["na_spacing_x"] = 10
+	global_geometry_params["at_a_glance"]["na_spacing_x"] = 10
 	# Sets the vertical spacing between tiles in new_articles
-	global_geometry_params["na_spacing_y"] = 10
+	global_geometry_params["at_a_glance"]["na_spacing_y"] = 10
 	# Sets the margins within the new_articles area in home view
-	global_geometry_params["na_area_margin_x"] = 40
-	global_geometry_params["na_area_margin_y"] = 0
+	global_geometry_params["at_a_glance"]["na_area_margin_x"] = 40
+	global_geometry_params["at_a_glance"]["na_area_margin_y"] = 0
 
+	global_geometry_params["at_a_glance"]["target_dim"] = 400
+	global_geometry_params["at_a_glance"]["central_widget_width"] = None
+
+
+	# Source Selector Section
+	global_geometry_params["source_selector"] = {}
 	# Sets the spacing between tile columns in new_articles
-	global_geometry_params["source_spacing_x"] = 10
+	global_geometry_params["source_selector"]["source_spacing_x"] = 10
 	# Sets the vertical spacing between tiles in new_articles
-	global_geometry_params["source_spacing_y"] = 10
+	global_geometry_params["source_selector"]["source_spacing_y"] = 10
 	# Sets the margins within the new_articles area in home view
-	global_geometry_params["source_area_margin_x"] = 40
-	global_geometry_params["source_area_margin_y"] = 0
+	global_geometry_params["source_selector"]["source_area_margin_x"] = 40
+	global_geometry_params["source_selector"]["source_area_margin_y"] = 0
+	global_geometry_params["source_selector"]["central_widget_width"] = None
+
 
 
 	def __init__(self, parent=None):
@@ -217,7 +234,7 @@ class App(QMainWindow):
 				ind = i * n_columns + j
 				if ind >= len(active_sources):
 					break
-				article_entry = SourceTile(article=new_articles_list[ind], app=self)
+				article_entry = SourceTile(data=new_articles_list[ind], app=self)
 				new_articles_layout.addWidget(article_entry, i, j)
 
 		new_articles.setLayout(new_articles_layout)
@@ -347,13 +364,13 @@ class App(QMainWindow):
 		scroll_area.setAlignment(Qt.AlignHCenter)
 		return scroll_area
 
-	# Need to do this to avoid strange rendering issues after dade in animation
+	# Need to do this to avoid strange rendering issues after fade in animation
 	def remove_widget_kludge(self):
 
-		n_tiles_across = self.scroll_area.widget().layout().count()
+		n_tiles_across = self.scroll_area.n_tiles_across
 
 		for i in range(n_tiles_across):
-			parent = self.scroll_area.widget().layout().itemAt(i)
+			parent = self.scroll_area.source_columns.itemAt(i)
 			n_rows = parent.count()
 			for j in range(n_rows):
 				child = parent.itemAt(j).widget()
@@ -364,9 +381,9 @@ class App(QMainWindow):
 
 	def animate_source(self):
 
-		for i, tile in enumerate(self.tiles):
+		for i, tile in enumerate(self.scroll_area.tiles):
 			tile.initialize_animation()
-			if i == len(self.tiles) - 1:
+			if i == len(self.scroll_area.tiles) - 1:
 				tile.opacity_animation.finished.connect(self.remove_widget_kludge)
 			tile.delay.start(i * 25)
 
@@ -416,23 +433,28 @@ class App(QMainWindow):
 
 	# Switch to source page
 	def switch_to_source(self, source):
-		# Remove the home page widgets
+		# Remove the home page widgets. Note this does note 
+		# delete them so when we return_home they will be the same
+		# unless they are explicitly adjusted somewhere else
 		self.content_area.removeWidget(self.new_articles)
-		self.new_articles.setParent(None)
 		self.content_area.removeWidget(self.sources)
-		self.sources.setParent(None)
 		# Add the article view scroll area
 		try:
 			self.content_area.addWidget(self.navigation_bar)
 			self.content_area.addWidget(self.scroll_area)
 			self.animate_source()
 		except:
-			self
-			source_scroll_area = TileLayout(self.geometry_params)
-			source_scroll_area.
-			self.scroll_area = self.init_scrollarea(source)
+			self.global_geometry_params["source_page"]["central_widget_width"] =\
+			self.centralWidget().width()
+			source_scroll_area = TileLayout(self,\
+								self.global_geometry_params["source_page"])
+			source_scroll_area.set_children(self.data[source], SourceTile)
+			source_scroll_area.arrange_layout()
+			self.scroll_area = source_scroll_area
 			self.navigation_bar = self.init_navigationbar()
+
 			self.animate_source()
+
 			self.content_area.addWidget(self.navigation_bar)
 			self.content_area.addWidget(self.scroll_area)
 		# When we switch for the first time, do the fade in
@@ -442,11 +464,10 @@ class App(QMainWindow):
 
 	# Return to home page
 	def return_home(self):
-		# Remove the source page widgets
+		# Remove the source page widgets. Similar to switch_to_source
+		# they are not deleted here
 		self.content_area.removeWidget(self.navigation_bar)
-		self.navigation_bar.setParent(None)
 		self.content_area.removeWidget(self.scroll_area)
-		self.scroll_area.setParent(None)
 		try:
 			self.content_area.addWidget(self.sources)
 			self.content_area.addWidget(self.new_articles)

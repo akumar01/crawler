@@ -1,4 +1,5 @@
 import pdb
+from math import floor
 from PyQt5.QtWidgets import (QWidget, QDockWidget, QTabWidget, QLabel,
 							QPushButton, QHBoxLayout, QVBoxLayout,
 							QGraphicsOpacityEffect, QSizePolicy,
@@ -12,7 +13,7 @@ lorem_ipsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed inte
 
 class TileLayout(QScrollArea):
 
-	def __init__(self, app, geometry_type):
+	def __init__(self, app, geometry_params):
 		super(TileLayout, self).__init__()
 		self.app = app
 
@@ -37,25 +38,32 @@ class TileLayout(QScrollArea):
 		self.spacing_x = geometry_params["tile_spacing_x"]
 		self.padding_x = geometry_params["tile_area_margin_x"]
 
-		self.available_width = geometry_params["central_widget_width"] -\
-							2 * padding_x
 
-		self.n_tiles_across =  max(1, int(floor((available_width + spacing_x)/
-										(self.target_dim + spacing_x))))
 
 		# Tile width is always the target dim
 		self.tile_width = geometry_params["target_dim"]
+
+		self.available_width = geometry_params["central_widget_width"] -\
+							2 * self.padding_x
+
+		self.n_tiles_across =  max(1, int(floor((self.available_width\
+				 + self.spacing_x)/(self.tile_width + self.spacing_x))))
+
 		# Add extra space to the margins
-		padding_x += (available_width/n_tiles_across - tile_width)/2
+		self.padding_x += (self.available_width/self.n_tiles_across\
+												 - 	self.tile_width)/2
 
-		# If the window is made wider than the width of an additional tile
-		# plus the spacing, then redraw:
-		self.max_width = available_width + self.target_dim + spacing_x
+		# Sets the maximum width that the layout can be expanded before
+		# we would have enough room to add an additional column across
+		self.max_width = self.available_width + self.tile_width \
+											  + self.spacing_x
 
-		# If the window is made smaller to the point that the tile_width would 
-		# have to be reduced to below the target_dim, then redraw: 
-		self.min_width = max(0, available_width -\
-						(n_tiles_across * (tile_width - self.target_dim))) 
+		# Sets the minimum width that the layout can be contracted in width
+		# before we would have room for one fewer column across. If there is 
+		# currently only one column, then the min_width is set to 0 (i.e. we
+		# let a horizontal scroll bar appear)
+		self.min_width = max(0, self.available_width - self.tile_width \
+													 - self.spacing_x) 
 
 
 	# Assign information necessary to create children to the TileLayout
@@ -68,10 +76,10 @@ class TileLayout(QScrollArea):
 		for child in children:
 			tile = children_cls(data = child, app = self.app)
 			tile.setFixedWidth(self.tile_width)
-			self.total_height_neeeded += tile.heightForWidth(self.tile_width)
+			self.total_height_needed += tile.heightForWidth(self.tile_width)
 			self.tiles.append(tile)
 
-		self.avg_height = float(self.total_height_neeeded)/self.n_tiles_across
+		self.avg_height = float(self.total_height_needed)/self.n_tiles_across
 
 	# Call after children have been correctly assigned to actually sort them 
 	# into the appropriate columns
@@ -80,7 +88,7 @@ class TileLayout(QScrollArea):
 		tiles = self.tiles
 		n_tiles_across = self.n_tiles_across
 		avg_height = self.avg_height
-
+		tile_width = self.tile_width
 		# Which stack should the child be added to?
 		stack = [0] * len(tiles)
 
@@ -135,13 +143,13 @@ class TileLayout(QScrollArea):
 
 		for i in range(n_tiles_across):
 			vboxlayouts[i].addSpacing(max_height - stack_heights[i])
-			source_columns.addLayout(vboxlayouts[i])
+			self.source_columns.addLayout(vboxlayouts[i])
 
 		self.source_columns.setContentsMargins(int(self.padding_x), 11,\
 												int(self.padding_x), 11)
-		self.source_grid_container.setLayout(source_columns)
+		self.source_grid_container.setLayout(self.source_columns)
 		self.setWidget(self.source_grid_container)
-		self..setAlignment(Qt.AlignHCenter)
+		self.setAlignment(Qt.AlignHCenter)
 
 	# Adjust the padding to adjust to a new available_width parameter:
 	def adjust(self, available_width):
@@ -332,7 +340,7 @@ class SourceTile(QWidget):
 
 		tile_layout = QVBoxLayout()
 		self.app_window = kwargs["app"]
-		article = kwargs["article"]
+		article = kwargs["data"]
 		self.setAttribute(Qt.WA_AcceptTouchEvents, on = True)
 
 		self.title = article["title"]
