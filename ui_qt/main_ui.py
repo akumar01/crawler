@@ -437,7 +437,9 @@ class App(QMainWindow):
 		# delete them so when we return_home they will be the same
 		# unless they are explicitly adjusted somewhere else
 		self.content_area.removeWidget(self.new_articles)
+		self.new_articles.hide()
 		self.content_area.removeWidget(self.sources)
+		self.sources.hide()
 		# Add the article view scroll area
 		try:
 			self.content_area.addWidget(self.navigation_bar)
@@ -467,7 +469,9 @@ class App(QMainWindow):
 		# Remove the source page widgets. Similar to switch_to_source
 		# they are not deleted here
 		self.content_area.removeWidget(self.navigation_bar)
+		self.navigation_bar.hide()
 		self.content_area.removeWidget(self.scroll_area)
+		self.scroll_area.hide()
 		try:
 			self.content_area.addWidget(self.sources)
 			self.content_area.addWidget(self.new_articles)
@@ -476,6 +480,9 @@ class App(QMainWindow):
 			self.new_articles = self.new_articles()
 			self.content_area.addWidget(self.sources)
 			self.content_area.addWidget(self.new_articles)
+
+		self.sourcee.show()
+		self.new_articles.show()
 
 		self.active_source = None
 
