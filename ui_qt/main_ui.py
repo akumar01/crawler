@@ -110,16 +110,16 @@ class App(QMainWindow):
 				self.content_area_widget.resize(target_geometry)
 			except:
 				pass
-		else:
+		elif self.centralWidget():
+
 			# Otherwise change the size of the content area to 
 			# match the window width
-			try:
-				target_geometry = QRect(self.centralWidget().geometry().x(), 
-										self.centralWidget().geometry().y(),
-										self.width(), self.centralWidget().height())
-				self.content_area_widget.resize(target_geometry)
-			except:
-				pass
+			target_geometry = QRect(self.centralWidget().geometry().x(), 
+									self.centralWidget().geometry().y(),
+									self.width(), self.centralWidget().height())
+			self.content_area_widget.resize(target_geometry)
+		else:
+			pass
 
 	# def adjust_source(self):
 	# 	spacing_x = self.tile_spacing_x
@@ -445,6 +445,8 @@ class App(QMainWindow):
 			self.content_area.addWidget(self.navigation_bar)
 			self.content_area.addWidget(self.scroll_area)
 			self.animate_source()
+			self.navigation_bar.show()
+			self.scroll_area.show()
 		except:
 			self.global_geometry_params["source_page"]["central_widget_width"] =\
 			self.centralWidget().width()
@@ -481,7 +483,7 @@ class App(QMainWindow):
 			self.content_area.addWidget(self.sources)
 			self.content_area.addWidget(self.new_articles)
 
-		self.sourcee.show()
+		self.sources.show()
 		self.new_articles.show()
 
 		self.active_source = None

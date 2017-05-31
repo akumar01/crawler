@@ -16,8 +16,12 @@ class TileLayout(QScrollArea):
 	def __init__(self, app, geometry_params):
 		super(TileLayout, self).__init__()
 		self.app = app
+		self.geometry_params = geometry_params
 
-		self.setAttribute(Qt.WA_AcceptTouchEvents, on = True)
+		self.init()
+		self.init_geometry(geometry_params)
+
+	def init(self):
 
 		# Container widget
 		self.source_grid_container = QWidget()
@@ -25,9 +29,9 @@ class TileLayout(QScrollArea):
 		# To achive a tile layout like functionality, we arrange vertical
 		# box layouts in a horizontal box layout
 
-		self.source_columns = QHBoxLayout()
-		self.geometry_params = geometry_params
-		self.init_geometry(geometry_params)
+		self.source_columns = QHBoxLayout()											
+		self.source_grid_container.setAttribute(Qt.WA_AcceptTouchEvents, on = True)
+
 
 	# Setup basic layout parameters
 	def init_geometry(self, geometry_params):
@@ -79,12 +83,12 @@ class TileLayout(QScrollArea):
 			self.total_height_needed += tile.heightForWidth(self.tile_width)
 			self.tiles.append(tile)
 
-		self.avg_height = float(self.total_height_needed)/self.n_tiles_across
 
 	# Call after children have been correctly assigned to actually sort them 
 	# into the appropriate columns
 	def arrange_layout(self):
 
+		self.avg_height = float(self.total_height_needed)/self.n_tiles_across
 		tiles = self.tiles
 		n_tiles_across = self.n_tiles_across
 		avg_height = self.avg_height
@@ -146,34 +150,41 @@ class TileLayout(QScrollArea):
 			self.source_columns.addLayout(vboxlayouts[i])
 
 		self.source_columns.setContentsMargins(int(self.padding_x), 11,\
-												int(self.padding_x), 11)
-		self.source_grid_container.setLayout(self.source_columns)
-		self.setWidget(self.source_grid_container)
+		 										int(self.padding_x), 11)
+		
+		if self.source_grid_container.layout() != self.source_columns:
+			self.source_grid_container.setLayout(self.source_columns)
+
+		if self.widget() != self.source_grid_container:
+			self.setWidget(self.source_grid_container)
+
 		self.setAlignment(Qt.AlignHCenter)
 
 	# Adjust the padding to adjust to a new available_width parameter:
 	def adjust(self, available_width):
-		available_width = available_width - 2 * self.padding_x
+		# old_available_width = self.available_width
+		# self.available_width = available_width - 2 * self.padding_x
+		# self.available_width = max(0, self.available_width)
 
-		available_width -= self.spacing_x * (self.n_tiles_across - 1)
-		self.available_width = max(0, self.available_width)
+		# padding_delta = self.available_width - old_available_width
 
-		extra_padding = max(0, (self.available_width/self.n_tiles_across \
-												- self.tile_width)/2)
-		self.padding_x += extra_padding
-
-		self.source_grid_container.setContentsMargins(int(self.padding_x), 11,\
-													  int(self.padding_x), 11)
+		# # extra_padding = max(0, (self.available_width/self.n_tiles_across \
+		# # 										- self.tile_width)/2)
+		# self.padding_x += padding_delta
+		# self.padding_x = max(0, self.padding_x)
+		pass
+#		self.source_columns.setContentsMargins(int(self.padding_x), 11,\
+#											   int(self.padding_x), 11)
 	# Redraw the 
 	def redraw(self, available_width):
+		self.geometry_params["central_widget_width"] = available_width
 
-		self.available_width = available_width - 2 * self.padding_x
+		self.init()
 
-		# Remove the children of the horizontal box layout
-		for i in reversed(range(self.source_columns.count())):
-			self.source_columns.itemAt(i).widget().setParent(None)
+		self.init_geometry(self.geometry_params)
 
 		self.arrange_layout()
+
 
 class DockWidget(QDockWidget):
 
@@ -265,7 +276,11 @@ class DockWidget(QDockWidget):
 	# outside of Qt event system
 	def close(self):
 		self.app.ntabs = 0
-		self.app.content_area_widget.show()
+		target_geometry = QRect(self.app.geometry().x(),
+								self.app.geometry().y(),
+								self.app.width(),
+								self.height())
+		self.app.content_area_widget.resize(target_geometry)
 
 class TabWidget(QTabWidget):
 
@@ -304,14 +319,17 @@ class Content_Area_Widget(QWidget):
 			return
 		else:
 			self.setGeometry(target_geometry)
-			# If the widget has only been resized by +- 1, it is 
-			# due to the resize_kludge and it is important that we 
-			# do nothing in response
-			if target_width > self.app.max_width or\
-				target_width < self.app.min_width:
-				self.app.redraw_source()
+
+			if target_width > self.app.scroll_area.max_width or\
+				target_width < self.app.scroll_area.min_width:
+				self.app.scroll_area.redraw(target_width)
 			else:
-				self.app.adjust_source()
+				self.app.scroll_area.adjust(target_width)
+
+	def restore(self):
+		if self.app.active_source is not None:
+			self.setGeometry()
+
 
 
 class SourceSelector(QLabel):
@@ -372,6 +390,7 @@ class SourceTile(QWidget):
 		# from that needed to display
 		title.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
 
+		title.setAttribute(Qt.WA_AcceptTouchEvents, on = True)
 
 		tile_layout.addWidget(title)
 
@@ -386,10 +405,13 @@ class SourceTile(QWidget):
 		secondary_text.adjustSize()
 		secondary_text.sizePolicy().setHorizontalPolicy(QSizePolicy.Preferred)
 		secondary_text.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
+		secondary_text.setAttribute(Qt.WA_AcceptTouchEvents, on = True)
 
 		tile_layout.addWidget(secondary_text)
 		PDF_link = QPushButton("PDF")
 		PDF_link.clicked.connect(self.open_pdf)
+		PDF_link.setAttribute(Qt.WA_AcceptTouchEvents, on = True)
+
 		tile_layout.addWidget(PDF_link)
 	
 		desc = QLabel(self.desc)
@@ -397,6 +419,7 @@ class SourceTile(QWidget):
 		desc.adjustSize()
 		desc.sizePolicy().setHorizontalPolicy(QSizePolicy.Preferred)
 		desc.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
+		desc.setAttribute(Qt.WA_AcceptTouchEvents, on = True)
 		tile_layout.addWidget(desc)
 
 		self.setLayout(tile_layout)
