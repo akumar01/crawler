@@ -16,8 +16,8 @@ from crawler.project_vars import Paths, Spiders
 from pdf_viewer import PDFViewerContainer
 from widgets import (DockWidget, TabWidget, SourceTile,
 					Content_Area_Widget, SourceSelector,
-					BackButton, TileLayout)
-
+					BackButton, SourceThumbnail)
+from tile_layout import TileLayout
 import pdb
 
 active_sources = Spiders.spiders
@@ -194,6 +194,11 @@ class App(QMainWindow):
 
 	# List of sources
 	def init_sources(self):
+
+		sources = TileLayout(self, self.global_geometry_params["source_selector"])
+		sources.set_children(active_sources, SourceThumbnail)
+
+
 		sources = QGroupBox("Sources")
 		sources_layout = QGridLayout()
 
@@ -242,150 +247,17 @@ class App(QMainWindow):
 		scroll_area.setWidget(new_articles)
 		return scroll_area
 	
+	def animate_tile_layouts(self):
 
-	def init_scrollarea(self, source):
-	
-		scroll_area = QScrollArea()
-		# Enable touch screen functionality:
-		scroll_area.setAttribute(Qt.WA_AcceptTouchEvents, on=True)
+		# Find all the currently active tile layouts
+		tile_layouts = self.content_area_widget.findChildren(TileLayout)
 
-		source_grid_container = QWidget()
-		# To achive a tile layout like functionality, we arrange vertical
-		# box layouts in a horizontal box layout
-
-		source_columns = QHBoxLayout()
-
-		# Calculate the available width from the width and the margins.
-		# This calculation is ported over from kivy TileLayout
-
-		spacing_x = self.tile_spacing_x
-		padding_x = self.tile_area_margin_x
-
-		available_width = self.centralWidget().width() - 2 * padding_x
-
-
-		n_tiles_across = max(1, int(floor((available_width + spacing_x)/
-										(self.target_dim + spacing_x))))
-		available_width -= spacing_x * (n_tiles_across - 1)
-
-		# Tile width is always the target dim
-		tile_width = self.target_dim
-		# Add extra space to the margins
-		padding_x  += (available_width/n_tiles_across - tile_width)/2
-
-		# Assign a maximum and minimum width. If the window is resized outside
-		# these bounds, then this method will be triggered and the layout will
-		# be recalculated:
-
-		# If the window is made wider than the width of an additional tile
-		# plus the spacing, then redraw:
-		self.max_width = available_width + self.target_dim + spacing_x
-
-		# If the window is made smaller to the point that the tile_width would 
-		# have to be reduced to below the target_dim, then redraw: 
-		self.min_width = max(0, available_width -\
-						(n_tiles_across * (tile_width - self.target_dim))) 
-
-		# Assemble the children so that we can determine their heights:
-		tiles = []
-		total_height_needed = 0
-
-		for article in self.data[source]:
-			tile = SourceTile(article=article, app=self)
-			tile.setFixedWidth(tile_width)
-			total_height_needed += tile.heightForWidth(tile_width)
-			tiles.append(tile)
-
-
-		self.tiles = tiles
-
-		avg_height = float(total_height_needed)/n_tiles_across
-		# Divide the children into stacks of equal height
-
-		# Which stack should the child be added to?
-		stack = [0] * len(tiles)
-
-		# stack_ind goes from 0 to n_tiles_across - 1
-		stack_ind = 0
-
-		# How high is each stack?
-		stack_heights = [0] * n_tiles_across
-
-		# How many tiles are in each stack? 
-		stack_occupancy = [0] * n_tiles_across
-
-		# We want to assign each child to a stack. The reason this is
-		# not so straightforward is that we want to add entries left 
-		# to right, but it is the vertical height we want to take care of.
-		# Thus, do the following: iterate through children left to right and
-		# as long as the the current stack height does not exceed the average 
-		# height, add it. If the current stack is filled up, then shift one 
-		# over until we find the first available stack.
-
-		for i in range(len(tiles)):
-			if stack_heights[stack_ind] <= avg_height:
-				stack[i] = stack_ind
-				stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
-				stack_occupancy[stack_ind] += 1
-			else:
-			# If the stack is full, proceed to the next one.
-				stack_ind += 1
-				stack_ind = stack_ind % n_tiles_across
-				# Keep moving over stacks until we find a free one:
-				while stack_heights[stack_ind] > avg_height:
-					stack_ind += 1
-				# Assign this child to that 
-				stack[i] = stack_ind % n_tiles_across
-				stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
-				stack_occupancy[stack_ind] += 1
-
-			stack_ind += 1
-			stack_ind = stack_ind % n_tiles_across
-
-		# Equalize the stack heights with spacer elements:
-		max_height = max(stack_heights)
-
-		vboxlayouts = []
-
-		for i in range(n_tiles_across):
-			vboxlayout = QVBoxLayout()
-			vboxlayouts.append(vboxlayout)
-		for i, tile in enumerate(tiles):
-			tile.column = stack[i]
-			vboxlayouts[stack[i]].addWidget(tile)
-
-		for i in range(n_tiles_across):
-			vboxlayouts[i].addSpacing(max_height - stack_heights[i])
-			source_columns.addLayout(vboxlayouts[i])
-
-		source_columns.setContentsMargins(int(padding_x), 11, int(padding_x), 11)
-		source_grid_container.setLayout(source_columns)
-		scroll_area.setWidget(source_grid_container)
-		scroll_area.setAlignment(Qt.AlignHCenter)
-		return scroll_area
-
-	# Need to do this to avoid strange rendering issues after fade in animation
-	def remove_widget_kludge(self):
-
-		n_tiles_across = self.scroll_area.n_tiles_across
-
-		for i in range(n_tiles_across):
-			parent = self.scroll_area.source_columns.itemAt(i)
-			n_rows = parent.count()
-			for j in range(n_rows):
-				child = parent.itemAt(j).widget()
-				if child:
-					parent.removeWidget(child)
-					child.setParent(None)
-					parent.insertWidget(j, child)
-
-	def animate_source(self):
-
-		for i, tile in enumerate(self.scroll_area.tiles):
-			tile.initialize_animation()
-			if i == len(self.scroll_area.tiles) - 1:
-				tile.opacity_animation.finished.connect(self.remove_widget_kludge)
-			tile.delay.start(i * 25)
+		for tile_layout in tile_layouts:
+			for i, tile in enumerate(tile_layout.tiles):
+				tile.initialize_animation()
+				if i == len(tile_layout.tiles) - 1:
+					tile.opacity_animation.finished.connect(tile_layout.reinsert_all_tiles)
+				tile.delay.start(i * 25)
 
 
 	# Set up a layout with a pressable button that will bring us back to the home page:
@@ -444,7 +316,7 @@ class App(QMainWindow):
 		try:
 			self.content_area.addWidget(self.navigation_bar)
 			self.content_area.addWidget(self.scroll_area)
-			self.animate_source()
+			self.animate_tile_layouts()
 			self.navigation_bar.show()
 			self.scroll_area.show()
 		except:
@@ -457,10 +329,10 @@ class App(QMainWindow):
 			self.scroll_area = source_scroll_area
 			self.navigation_bar = self.init_navigationbar()
 
-			self.animate_source()
-
 			self.content_area.addWidget(self.navigation_bar)
 			self.content_area.addWidget(self.scroll_area)
+			self.animate_tile_layouts()
+
 		# When we switch for the first time, do the fade in
 		# animation
 
