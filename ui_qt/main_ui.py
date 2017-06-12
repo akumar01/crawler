@@ -1,12 +1,13 @@
 import sys
 import os
 from math import ceil, floor
+from copy import copy
 from win32api import GetSystemMetrics
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QHBoxLayout, QWidget,
 							 QLabel, QPushButton, QScrollArea, QGridLayout,
 							 QGroupBox, QStackedLayout, QMainWindow, QToolBar,
 							 QSizePolicy, QGraphicsOpacityEffect, QDockWidget,
-							 QTabWidget)
+							 QTabWidget, QDialog, QCheckBox)
 from PyQt5.QtCore import QSize, QSequentialAnimationGroup, QRect
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt, QPropertyAnimation, QTimer
@@ -16,7 +17,8 @@ from crawler.project_vars import Paths, Spiders
 from pdf_viewer import PDFViewerContainer
 from widgets import (DockWidget, TabWidget, SourceTile,
 					Content_Area_Widget, SourceSelector,
-					BackButton, SourceThumbnail)
+					BackButton, Thumbnail, SettingsDialog,
+					initialize_animation)
 from tile_layout import TileLayout
 import pdb
 
@@ -56,12 +58,12 @@ class App(QMainWindow):
 	# At a Glance Section
 	global_geometry_params["at_a_glance"] = {}
 	# Sets the spacing between tile columns in new_articles
-	global_geometry_params["at_a_glance"]["na_spacing_x"] = 10
+	global_geometry_params["at_a_glance"]["tile_spacing_x"] = 10
 	# Sets the vertical spacing between tiles in new_articles
-	global_geometry_params["at_a_glance"]["na_spacing_y"] = 10
+	global_geometry_params["at_a_glance"]["tile_spacing_y"] = 10
 	# Sets the margins within the new_articles area in home view
-	global_geometry_params["at_a_glance"]["na_area_margin_x"] = 40
-	global_geometry_params["at_a_glance"]["na_area_margin_y"] = 0
+	global_geometry_params["at_a_glance"]["tile_area_margin_x"] = 40
+	global_geometry_params["at_a_glance"]["tile_area_margin_y"] = 0
 
 	global_geometry_params["at_a_glance"]["target_dim"] = 400
 	global_geometry_params["at_a_glance"]["central_widget_width"] = None
@@ -70,14 +72,24 @@ class App(QMainWindow):
 	# Source Selector Section
 	global_geometry_params["source_selector"] = {}
 	# Sets the spacing between tile columns in new_articles
-	global_geometry_params["source_selector"]["source_spacing_x"] = 10
+	global_geometry_params["source_selector"]["tile_spacing_x"] = 10
 	# Sets the vertical spacing between tiles in new_articles
-	global_geometry_params["source_selector"]["source_spacing_y"] = 10
+	global_geometry_params["source_selector"]["tile_spacing_y"] = 10
 	# Sets the margins within the new_articles area in home view
-	global_geometry_params["source_selector"]["source_area_margin_x"] = 40
-	global_geometry_params["source_selector"]["source_area_margin_y"] = 0
+	global_geometry_params["source_selector"]["tile_area_margin_x"] = 40
+	global_geometry_params["source_selector"]["tile_area_margin_y"] = 0
 	global_geometry_params["source_selector"]["central_widget_width"] = None
 
+
+	global_geometry_params["source_selector"]["target_dim"] = 250
+	# Source Selector Thumbnail Size
+	global_geometry_params["source_selector"]["thumbnail"] = {}
+	# Keep aspect ratio
+	global_geometry_params["source_selector"]["thumbnail"]["maintain_aspect_ratio"] =\
+	1
+	# Shoot for 200 by 100 thumbnails
+	global_geometry_params["source_selector"]["thumbnail"]["geometry_target"] =\
+	[250, 125]
 
 
 	def __init__(self, parent=None):
@@ -151,7 +163,53 @@ class App(QMainWindow):
 	def load_data(self):
 		self.data = {}
 		for src in active_sources:
-			self.data[src] = read_json.read_data(src)
+			self.data[src] = {}
+			self.data[src]["entries"] = read_json.read_data(src)
+			self.data[src]["thumbnail"] = '%s/source_thumbnails/%s.PNG'\
+											% (Paths.ui_path, src)
+
+	# When the sync button is clicked, actually perform the sync, and update the
+	# view to incorporate any new articles found
+	def do_sync(self):
+		sync_button = self.topmenu.findChildren(QPushButton)[0]
+		sync_button.setEnabled(False)
+		sync_button.setText("Syncing...")
+		# Performs the web crawl in a subprocess
+		do_crawl()
+		sync_button.setText("Sync")
+		sync_button.setEnabled(True)
+		self.update_views()
+
+	# Redraw all views on the data
+	def update_views(self):
+		# Re-read all the JSON files
+		self.data = self.load_data()
+
+		# If we're on the home page, need to 
+		# update new_articles and sources
+		if self.source is None:
+
+			# Take the newest article from each source:
+			new_articles_list = []
+
+			# Source Thumbnails
+			children = []
+
+			for i, src in enumerate(active_sources):
+				children.append(copy(geometry_params))
+				children[i]["image"] = self.data[src]["thumbnail"]
+				children[i]["source"] = src
+				if len(src) > 0:
+					new_articles_list.append(self.data[src]["entries"][0])
+
+				self.new_articles.update_children(new_articles_list)
+				self.sources.update_children(children)
+		# Update the children of the scroll_area
+		else:
+
+			self.scroll_area.update_children(self.data)
+
+
 
 	def init_window(self):
 		
@@ -171,23 +229,36 @@ class App(QMainWindow):
 		self.content_area_widget = Content_Area_Widget(self)
 		self.content_area = QVBoxLayout()
 
+		# Need to add the content_area_widget to the main window 
+		# before initializing its contents so we have information 
+		# about widths
+		self.content_area_widget.setLayout(self.content_area)
+		self.setCentralWidget(self.content_area_widget)
+
+
 		self.sources = self.init_sources()
 		self.new_articles = self.init_new_articles()
 
 		self.content_area.addWidget(self.sources)
 		self.content_area.addWidget(self.new_articles)
 
-		self.content_area_widget.setLayout(self.content_area)
-		self.setCentralWidget(self.content_area_widget)
+	def popup_settings(self):
+		settings = self.load_settings()
+		settings_dialog = SettingsDialog(app=self)
+		settings_dialog.exec_()
+
 
 	def init_topmenu(self):
 		topmenu = QToolBar()
 		Sync_Button = QPushButton("Sync")
+		Sync_Button.clicked.connect(self.do_sync)
 		Last_Updated = QLabel("Last Updated:")
+		settings = QPushButton("Settings")
+		settings.clicked.connect(self.popup_settings)
 		topmenu.addWidget(Sync_Button)
 		topmenu.addSeparator()
-		topmenu.addWidget(Last_Updated)
-
+		topmenu.addWidget(Last_Updated)	
+		topmenu.addWidget(settings)
 		# Do not let the user drag the toolbar around
 		topmenu.setMovable(False)
 		return topmenu
@@ -195,69 +266,44 @@ class App(QMainWindow):
 	# List of sources
 	def init_sources(self):
 
-		sources = TileLayout(self, self.global_geometry_params["source_selector"])
-		sources.set_children(active_sources, SourceThumbnail)
+#		sources = QGroupBox("Sources")
 
+		children = []
+		geometry_params = self.global_geometry_params["source_selector"]["thumbnail"]
+		for i, src in enumerate(active_sources):
+			children.append(copy(geometry_params))
+			children[i]["image"] = self.data[src]["thumbnail"]
+			children[i]["source"] = src
 
-		sources = QGroupBox("Sources")
-		sources_layout = QGridLayout()
+		self.global_geometry_params["source_selector"]["central_widget_width"] =\
+		self.content_area_widget.width()
 
-		n_columns = 3
-		n_rows = int(ceil(len(active_sources)/n_columns))
-
-		for i in range(n_rows):
-			for j in range(n_columns):
-				ind = i * n_columns + j
-				if ind >= len(active_sources):
-					break
-				label = SourceSelector(active_sources[ind], app=self,
-															source=active_sources[ind])
-				sources_layout.addWidget(label, i, j)
-
-		sources.setLayout(sources_layout)
-		return sources
+		source_tile_layout = TileLayout(self, self.global_geometry_params["source_selector"])
+		source_tile_layout.set_children(children, Thumbnail)
+		source_tile_layout.arrange_layout()
+#		source_layout = QVBoxLayout()
+#		source_layout.addWidget(source_tile_layout)
+#		sources.setLayout(source_layout)
+		return source_tile_layout
 
 	# Newest stories
 	def init_new_articles(self):
-		scroll_area = QScrollArea()
-		scroll_area.setAttribute(Qt.WA_AcceptTouchEvents, on=True)
 
-		new_articles = QGroupBox("At a Glance")
-		new_articles_layout = QGridLayout()
+		geometry_params = self.global_geometry_params["at_a_glance"]
+		geometry_params["central_widget_width"] = self.content_area_widget.width()
+		new_articles = TileLayout(self, geometry_params)
 
 		# Take the newest article from each source:
 		new_articles_list = []
 		for src in active_sources:
 			if len(src) > 0:
-				new_articles_list.append(self.data[src][0])
+				new_articles_list.append(self.data[src]["entries"][0])
 
-		n_columns = 3
-		n_rows = int(ceil(len(new_articles_list)/n_columns))
+		new_articles.set_children(new_articles_list, SourceTile)
+		new_articles.arrange_layout()
 
-		for i in range(n_rows):
-			for j in range(n_columns):
-				ind = i * n_columns + j
-				if ind >= len(active_sources):
-					break
-				article_entry = SourceTile(data=new_articles_list[ind], app=self)
-				new_articles_layout.addWidget(article_entry, i, j)
-
-		new_articles.setLayout(new_articles_layout)
-		new_articles.sizePolicy().setHorizontalPolicy(4)
-		scroll_area.setWidget(new_articles)
-		return scroll_area
+		return new_articles
 	
-	def animate_tile_layouts(self):
-
-		# Find all the currently active tile layouts
-		tile_layouts = self.content_area_widget.findChildren(TileLayout)
-
-		for tile_layout in tile_layouts:
-			for i, tile in enumerate(tile_layout.tiles):
-				tile.initialize_animation()
-				if i == len(tile_layout.tiles) - 1:
-					tile.opacity_animation.finished.connect(tile_layout.reinsert_all_tiles)
-				tile.delay.start(i * 25)
 
 
 	# Set up a layout with a pressable button that will bring us back to the home page:
@@ -307,31 +353,29 @@ class App(QMainWindow):
 	def switch_to_source(self, source):
 		# Remove the home page widgets. Note this does note 
 		# delete them so when we return_home they will be the same
-		# unless they are explicitly adjusted somewhere else
+		# unless they are explicitly  somewhere else
 		self.content_area.removeWidget(self.new_articles)
 		self.new_articles.hide()
 		self.content_area.removeWidget(self.sources)
 		self.sources.hide()
-		# Add the article view scroll area
-		try:
-			self.content_area.addWidget(self.navigation_bar)
-			self.content_area.addWidget(self.scroll_area)
-			self.animate_tile_layouts()
-			self.navigation_bar.show()
-			self.scroll_area.show()
-		except:
-			self.global_geometry_params["source_page"]["central_widget_width"] =\
-			self.centralWidget().width()
-			source_scroll_area = TileLayout(self,\
-								self.global_geometry_params["source_page"])
-			source_scroll_area.set_children(self.data[source], SourceTile)
-			source_scroll_area.arrange_layout()
-			self.scroll_area = source_scroll_area
+
+		# Add the article view scroll area. 
+
+		self.global_geometry_params["source_page"]["central_widget_width"] =\
+		self.centralWidget().width()
+		source_scroll_area = TileLayout(self,\
+							self.global_geometry_params["source_page"])
+		source_scroll_area.set_children(self.data[source]["entries"], SourceTile)
+		source_scroll_area.arrange_layout()
+		self.scroll_area = source_scroll_area
+
+		if ~hasattr(self, 'navigation_bar'):
 			self.navigation_bar = self.init_navigationbar()
 
-			self.content_area.addWidget(self.navigation_bar)
-			self.content_area.addWidget(self.scroll_area)
-			self.animate_tile_layouts()
+		self.content_area.addWidget(self.navigation_bar)
+		self.content_area.addWidget(self.scroll_area)
+
+		self.scroll_area.animate_tiles()
 
 		# When we switch for the first time, do the fade in
 		# animation
@@ -340,23 +384,30 @@ class App(QMainWindow):
 
 	# Return to home page
 	def return_home(self):
-		# Remove the source page widgets. Similar to switch_to_source
-		# they are not deleted here
+		# Remove the source page widgets. Unlike switch_to_source,
+		# we delete the scroll area because it is likely that we 
+		# will switch to a difference source next time, in which 
+		# case it has to be re-initialized anyways
+
 		self.content_area.removeWidget(self.navigation_bar)
 		self.navigation_bar.hide()
 		self.content_area.removeWidget(self.scroll_area)
 		self.scroll_area.hide()
-		try:
-			self.content_area.addWidget(self.sources)
-			self.content_area.addWidget(self.new_articles)
-		except:
-			self.sources = self.init_sourcs()
-			self.new_articles = self.new_articles()
-			self.content_area.addWidget(self.sources)
-			self.content_area.addWidget(self.new_articles)
+
+		if ~hasattr(self, 'sources'):
+			self.sources = self.init_sources()
+		if ~hasattr(self, 'new_articles'):
+			self.new_articles = self.init_new_articles()
+	
+		self.content_area.addWidget(self.sources)
+		self.content_area.addWidget(self.new_articles)
 
 		self.sources.show()
 		self.new_articles.show()
+
+		self.sources.animate_tiles()
+		self.new_articles.animate_tiles()
+
 
 		self.active_source = None
 

@@ -3,15 +3,81 @@ from math import floor
 from PyQt5.QtWidgets import (QWidget, QDockWidget, QTabWidget, QLabel,
 							QPushButton, QHBoxLayout, QVBoxLayout,
 							QGraphicsOpacityEffect, QSizePolicy,
-							QToolBar, QScrollArea)
+							QToolBar, QScrollArea, QDialog, QGridLayout,
+							QCheckBox, QLineEdit)
 from PyQt5.QtCore import QSize, QSequentialAnimationGroup, QRect
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QImage, QPixmap, QIntValidator
 from PyQt5.QtCore import Qt, QPropertyAnimation, QTimer
 from crawler.project_vars import Paths, Spiders
 from tile_layout import TileLayout
 
 lorem_ipsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum tempor tortor, vitae molestie lorem mattis et. Mauris consectetur massa non metus blandit scelerisque vestibulum nec augue. Donec eu venenatis dui. Praesent consectetur facilisis justo, quis porta odio convallis sit amet. Praesent congue quam eros, malesuada feugiat velit lacinia sit amet. Integer condimentum in nibh consectetur accumsan. Aliquam erat volutpat. Morbi eget vulputate dolor, quis malesuada nisl. Ut quis tincidunt purus, quis cursus augue. Vivamus vitae pellentesque elit, a sagittis nulla. Praesent varius, magna sit amet blandit porttitor, leo mauris sodales risus, varius vehicula quam elit vitae odio.'
 
+def initialize_animation(obj):
+	# Create an opacity animation that can be started later:
+	# Set up the fade in animation now, initiate later:
+	opacity = QGraphicsOpacityEffect()
+	opacity.setOpacity(0)
+	obj.setGraphicsEffect(opacity)
+
+	obj.opacity_animation = QPropertyAnimation(obj.graphicsEffect(), "opacity".encode())
+	obj.opacity_animation.setDuration(200)
+	obj.opacity_animation.setStartValue(0)
+	obj.opacity_animation.setEndValue(1)
+
+	obj.delay = QTimer()
+	obj.delay.setSingleShot(True)
+	obj.delay.timeout.connect(obj.opacity_animation.start)
+
+# Thumbnail class that can be used to create images with given geometry
+class Thumbnail(QLabel):
+
+	# maintain_aspect_ratio: Keep aspect ratio when resizing
+
+	def __init__(self, **kwargs):
+		super(Thumbnail, self).__init__()
+		data = kwargs["data"]
+		self.app = kwargs["app"]
+		self.maintain_aspect_ratio = data["maintain_aspect_ratio"]
+
+		self.geometry_target = data["geometry_target"]
+
+		self.image = QImage()
+		self.image.load(data["image"])
+
+		self.src = data["source"]
+
+		self.resize(self.geometry_target)
+		self.setPixmap(QPixmap.fromImage(self.image))
+
+		# This function sets the size hint to its contents
+		self.adjustSize()
+
+		# The horizontal size is left unconstrained, and
+		# handled instead by the layout
+		self.sizePolicy().setHorizontalPolicy(5)
+
+		# In the veritcal direction, we do not let the height change
+		# from that needed to display
+		self.sizePolicy().setVerticalPolicy(QSizePolicy.Fixed)
+	
+
+
+	def resize(self, geometry_target):
+
+		if self.maintain_aspect_ratio:
+			self.image = self.image.scaled(QSize(geometry_target[0],
+												geometry_target[1]),
+						aspectRatioMode = Qt.KeepAspectRatio)
+		else:
+			self.image = self.image.scaled(QSize(geometry_target[0],
+												 geometry_target[1]),
+						 aspectRatioMode = Qt.IgnoreAspectRatio)
+
+	# When clicked, tell the app to switch to the corresponding source
+	def mousePressEvent(self, event):
+
+		self.app.switch_to_source(self.src)
 
 
 
@@ -96,7 +162,6 @@ class DockWidget(QDockWidget):
 		self.app.resizeDocks([self], [self.docked_width * self.app.width()],\
 							 Qt.Horizontal)
 
-
 	def closeEvent(self, event):
 		self.app.ntabs = 0
 		super(DockWidget, self).closeEvent(event)
@@ -143,17 +208,18 @@ class Content_Area_Widget(QWidget):
 
 	def resize(self, target_geometry):
 		target_width = target_geometry.width()
+		# Collect all tile_layouts:
+		tile_layouts = self.findChildren(TileLayout)
 
-		if self.app.active_source is None:
-			return
-		else:
-			self.setGeometry(target_geometry)
+		self.setGeometry(target_geometry)
 
-			if target_width > self.app.scroll_area.max_width or\
-				target_width < self.app.scroll_area.min_width:
-				self.app.scroll_area.redraw(target_width)
+		for tile_layout in tile_layouts:
+
+			if target_width > tile_layout.max_width or\
+				target_width < tile_layout.min_width:
+				tile_layout.redraw(target_width)
 			else:
-				self.app.scroll_area.adjust(target_width)
+				tile_layout.adjust(target_width)
 
 	def restore(self):
 		if self.app.active_source is not None:
@@ -260,28 +326,69 @@ class SourceTile(QWidget):
 		self.sizePolicy().setVerticalPolicy(QSizePolicy.Minimum)
 		self.sizePolicy().setHorizontalPolicy(QSizePolicy.Preferred)
 
-
-	def initialize_animation(self):
-		# Create an opacity animation that can be started later:
-		# Set up the fade in animation now, initiate later:
-		opacity = QGraphicsOpacityEffect()
-		opacity.setOpacity(0)
-		self.setGraphicsEffect(opacity)
-
-		self.opacity_animation = QPropertyAnimation(self.graphicsEffect(), "opacity".encode())
-		self.opacity_animation.setDuration(200)
-		self.opacity_animation.setStartValue(0)
-		self.opacity_animation.setEndValue(1)
-
-		self.delay = QTimer()
-		self.delay.setSingleShot(True)
-		self.delay.timeout.connect(self.opacity_animation.start)
-
-
-
-
 	def open_pdf(self):
 		file_path = Paths.files_path + self.path
 #			os.startfile(file_path)
 	
 		self.app_window.add_pdf_dock(file_path)
+
+class SettingsDialog(QDialog):
+
+	def __init__(self, **kwargs):
+		super(SettingsDialog, self).__init__()
+		self.app = kwargs["app"]
+		app_geom = self.app.geometry()
+		width = 500
+		height = 500
+
+		x = (app_geom.width() - width)/2
+		y = (app_geom.height() - height)/2
+
+		self.setGeometry(x, y, width, height)
+		self.layout = QGridLayout()
+
+		# Dictionary of settings values
+		self.settings = {}
+
+		self.layout.addWidget(QLabel("Enabled"), 0, 1)
+		self.layout.addWidget(QLabel("Sync Back For (days)"), 0, 2)
+		for i, src in enumerate(Spiders.spiders):
+			self.settings[src] = {}
+			self.settings[src]["enabled"] = False
+			self.settings[src]["sync_length"] = 30
+			self.layout.addWidget(QLabel(Spiders.spider_names[i]),\
+											i+1, 0)
+			chkbox = QCheckBox("")
+			chkbox.setObjectName(src)
+			self.layout.addWidget(chkbox, i + 1, 1)
+			
+			dayinput = QLineEdit()
+			dayinput.setObjectName(src)
+			day_validator = QIntValidator(0, Spiders.max_range[i])
+			dayinput.setValidator(day_validator)
+			# Hovering over the input will show the maximum range
+			dayinput.setToolTip("Max: %d days" % Spiders.max_range[i])
+
+
+			self.layout.addWidget(dayinput, i + 1, 2)
+
+		accept_button = QPushButton('OK')
+		accept_button.setDefault(True)
+		accept_button.clicked.connect(self.accept)
+
+
+		self.layout.addWidget(accept_button, len(Spiders.spiders) + 2, 1)
+
+		self.setWindowTitle('Crawler Settings')
+		self.setLayout(self.layout)
+		# This will prevent user from doing anything until the dialog has 
+		# been dismissed
+		self.setWindowModality(Qt.ApplicationModal)
+
+	def accept(self):
+		# Read out values of all fields:
+		for src in Spiders.spiders:
+			self.settings[src]["enabled"] = self.findChild(QCheckBox, src).isChecked()
+			self.settings[src]["sync_length"] = self.findChild(QLineEdit, src).text()
+
+		self.done(1)

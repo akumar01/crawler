@@ -1,5 +1,6 @@
 import pdb
 from math import floor
+import numpy as np
 from PyQt5.QtWidgets import (QWidget, QDockWidget, QTabWidget, QLabel,
 							QPushButton, QHBoxLayout, QVBoxLayout,
 							QGraphicsOpacityEffect, QSizePolicy,
@@ -8,6 +9,23 @@ from PyQt5.QtCore import QSize, QSequentialAnimationGroup, QRect
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt, QPropertyAnimation, QTimer
 from crawler.project_vars import Paths, Spiders
+
+def initialize_animation(obj):
+	# Create an opacity animation that can be started later:
+	# Set up the fade in animation now, initiate later:
+	opacity = QGraphicsOpacityEffect()
+	opacity.setOpacity(0)
+	obj.setGraphicsEffect(opacity)
+
+	obj.opacity_animation = QPropertyAnimation(obj.graphicsEffect(), "opacity".encode())
+	obj.opacity_animation.setDuration(200)
+	obj.opacity_animation.setStartValue(0)
+	obj.opacity_animation.setEndValue(1)
+
+	obj.delay = QTimer()
+	obj.delay.setSingleShot(True)
+	obj.delay.timeout.connect(obj.opacity_animation.start)
+
 
 class TileLayout(QScrollArea):
 
@@ -18,6 +36,7 @@ class TileLayout(QScrollArea):
 
 		self.init()
 		self.init_geometry(geometry_params)
+		self.setWidgetResizable(True)
 
 	def init(self):
 
@@ -40,11 +59,8 @@ class TileLayout(QScrollArea):
 		self.spacing_x = geometry_params["tile_spacing_x"]
 		self.padding_x = geometry_params["tile_area_margin_x"]
 
-
-
 		# Tile width is always the target dim
 		self.tile_width = geometry_params["target_dim"]
-
 		self.available_width = geometry_params["central_widget_width"] -\
 							2 * self.padding_x
 
@@ -74,19 +90,48 @@ class TileLayout(QScrollArea):
 
 		self.tiles = []
 		self.total_height_needed = 0
-
+		self.cls = children_cls
 		for child in children:
 			tile = children_cls(data = child, app = self.app)
 			tile.setFixedWidth(self.tile_width)
-			self.total_height_needed += tile.heightForWidth(self.tile_width)
+			# Use height if the tile is a widget, heightForWidth if the
+			# the tile is a layout. In the case that we use height, it is
+			# a good idea to make sure that the widget is already scaled to
+			# the right width, and that it matches self.tile_width
+			if tile.heightForWidth(self.tile_width) > 0:
+				self.total_height_needed += tile.heightForWidth(self.tile_width)
+			else:
+				self.total_height_needed += tile.height()
 			self.tiles.append(tile)
 
+	# Update the children, keeping track of differences between new and old children/
+	def update_children(self, new_children):
+
+		old_children = self.tiles
+		self.tiles = []
+		for child in new_children:
+			tile = self.cls(data = child, app = self.app)
+			tile.setFixedWidth(self.tile_width)
+			if tile.heightForWidth(self.tile_width) > 0:
+				self.total_height_needed += tile.heightForWidth(self.tile_width)
+			else:
+				self.total_height_needed += tile.height()
+			self.tiles.append(tile)
+
+		# Compare differences between old and new tiles
+		diff_children = np.setdiff1d(self.tiles, old_children)
+
+		# Do something with this difference:
+
+		# Need to re-arrange the layout:
+		self.arrange_layout()
 
 	# Call after children have been correctly assigned to actually sort them 
 	# into the appropriate columns
 	def arrange_layout(self):
 
 		self.avg_height = float(self.total_height_needed)/self.n_tiles_across
+		self.n_tiles_across = min(self.n_tiles_across, len(self.tiles))
 		tiles = self.tiles
 		n_tiles_across = self.n_tiles_across
 		avg_height = self.avg_height
@@ -110,11 +155,13 @@ class TileLayout(QScrollArea):
 		# as long as the the current stack height does not exceed the average 
 		# height, add it. If the current stack is filled up, then shift one 
 		# over until we find the first available stack.
-
 		for i in range(len(tiles)):
 			if stack_heights[stack_ind] <= avg_height:
 				stack[i] = stack_ind
-				stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
+				if tiles[i].heightForWidth(tile_width) > 0:	
+					stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
+				else:
+					stack_heights[stack_ind] += tiles[i].height()
 				stack_occupancy[stack_ind] += 1
 			else:
 			# If the stack is full, proceed to the next one.
@@ -125,7 +172,10 @@ class TileLayout(QScrollArea):
 					stack_ind += 1
 				# Assign this child to that 
 				stack[i] = stack_ind % n_tiles_across
-				stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
+				if tiles[i].heightForWidth(tile_width) > 0:
+					stack_heights[stack_ind] += tiles[i].heightForWidth(tile_width)
+				else:
+					stack_heights[stack_ind] += tiles[i].height()
 				stack_occupancy[stack_ind] += 1
 
 			stack_ind += 1
@@ -198,4 +248,13 @@ class TileLayout(QScrollArea):
 					parent.removeWidget(child)
 					child.setParent(None)
 					parent.insertWidget(j, child)
+#	Define an animation to apply to all tiles
+	def animate_tiles(self):
+
+		for i, tile in enumerate(self.tiles):
+			initialize_animation(tile)
+			if i == len(self.tiles) - 1:
+				tile.opacity_animation.finished.connect(self.reinsert_all_tiles)
+			tile.delay.start(i * 25)
+
 
