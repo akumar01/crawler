@@ -1,0 +1,1 @@
+{"nature_news": {"enabled": true, "sync_length": "30"}, "aps_news": {"enabled": false, "sync_length": "30"}, "science_news": {"enabled": false, "sync_length": "10"}, "washpost": {"enabled": true, "sync_length": "2"}}

@@ -20,6 +20,7 @@ from widgets import (DockWidget, TabWidget, SourceTile,
 					BackButton, Thumbnail, SettingsDialog,
 					initialize_animation)
 from tile_layout import TileLayout
+from crawler.crawling import do_crawl
 import pdb
 
 active_sources = Spiders.spiders
@@ -243,7 +244,6 @@ class App(QMainWindow):
 		self.content_area.addWidget(self.new_articles)
 
 	def popup_settings(self):
-		settings = self.load_settings()
 		settings_dialog = SettingsDialog(app=self)
 		settings_dialog.exec_()
 

@@ -10,6 +10,7 @@ from PyQt5.QtGui import QFont, QImage, QPixmap, QIntValidator
 from PyQt5.QtCore import Qt, QPropertyAnimation, QTimer
 from crawler.project_vars import Paths, Spiders
 from tile_layout import TileLayout
+from crawler.settings import load_settings, save_settings
 
 lorem_ipsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum tempor tortor, vitae molestie lorem mattis et. Mauris consectetur massa non metus blandit scelerisque vestibulum nec augue. Donec eu venenatis dui. Praesent consectetur facilisis justo, quis porta odio convallis sit amet. Praesent congue quam eros, malesuada feugiat velit lacinia sit amet. Integer condimentum in nibh consectetur accumsan. Aliquam erat volutpat. Morbi eget vulputate dolor, quis malesuada nisl. Ut quis tincidunt purus, quis cursus augue. Vivamus vitae pellentesque elit, a sagittis nulla. Praesent varius, magna sit amet blandit porttitor, leo mauris sodales risus, varius vehicula quam elit vitae odio.'
 
@@ -347,25 +348,27 @@ class SettingsDialog(QDialog):
 		self.setGeometry(x, y, width, height)
 		self.layout = QGridLayout()
 
-		# Dictionary of settings values
-		self.settings = {}
-
+		# Dictionary of settings values loaded in from file
+		self.settings = load_settings()
+		# Table headers
 		self.layout.addWidget(QLabel("Enabled"), 0, 1)
 		self.layout.addWidget(QLabel("Sync Back For (days)"), 0, 2)
+
+		# Create settings widgets and initialize to default values
 		for i, src in enumerate(Spiders.spiders):
-			self.settings[src] = {}
-			self.settings[src]["enabled"] = False
-			self.settings[src]["sync_length"] = 30
+
 			self.layout.addWidget(QLabel(Spiders.spider_names[i]),\
 											i+1, 0)
 			chkbox = QCheckBox("")
 			chkbox.setObjectName(src)
+			chkbox.setChecked(self.settings[src]["enabled"])
 			self.layout.addWidget(chkbox, i + 1, 1)
 			
 			dayinput = QLineEdit()
 			dayinput.setObjectName(src)
 			day_validator = QIntValidator(0, Spiders.max_range[i])
 			dayinput.setValidator(day_validator)
+			dayinput.setText(self.settings[src]["sync_length"])
 			# Hovering over the input will show the maximum range
 			dayinput.setToolTip("Max: %d days" % Spiders.max_range[i])
 
@@ -391,4 +394,5 @@ class SettingsDialog(QDialog):
 			self.settings[src]["enabled"] = self.findChild(QCheckBox, src).isChecked()
 			self.settings[src]["sync_length"] = self.findChild(QLineEdit, src).text()
 
+		save_settings(self.settings)
 		self.done(1)

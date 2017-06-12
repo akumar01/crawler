@@ -15,7 +15,7 @@ class Spiders(object):
 	# How many days back into the past can we reliably sync?
 	max_range = [30, 30, 10, 2]
 
-# Master list for use in the settings panel of the UI
+# Master list for use in the settings panel of the UI (Kivy version)
 def settings_master_list():
 	settings = {}
 	for spider in Spiders.spiders:

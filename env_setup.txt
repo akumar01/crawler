@@ -11,3 +11,5 @@ packages installed:
 pyqt5
 pypiwin32
 json_lines
+jsonlines
+numpy
